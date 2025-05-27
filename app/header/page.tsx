@@ -9,10 +9,12 @@
 */
 
 "use client"
-import NavMT from '../_components/nav/NavMT';
-import { AppShell, useMantineTheme, Container, Title, Text, Box } from '@mantine/core';
 
-import BoxComp from '../_components/otherComponents/boxComp'
+import { AppShell, useMantineTheme, Container, Title, Text, Box } from '@mantine/core';
+import NavMT from "@/app/_components/navcomps/navmt";
+import BoxComp from "@/app/_components/othercomps/boxcomp";
+
+
 
 export default function MantineNavPage() {
     const theme = useMantineTheme()

@@ -12,8 +12,8 @@ export default function Home() {
           <Flex direction="column" gap={20}>
             <Button component={Link} href="market">Market Map</Button>
             <Button component={Link} href='map'>Map</Button>
-            <Button component={Link} href='stickyHeaderAndCompTest'>Header</Button>
-            <Button component={Link} href='index'>Index</Button>
+            <Button component={Link} href='header'>Header</Button>
+            <Button component={Link} href='vendor'>Vendor</Button>
             <Board/>
           </Flex>
         </Container>
