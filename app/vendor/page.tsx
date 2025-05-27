@@ -3,12 +3,13 @@ import { useState } from "react";
 import { Title, Modal, Text } from "@mantine/core";
 import vendorList from "@/app/_components/vendorcomps/vendordata";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
+import {VendorData} from "@/app/_types/interfaces";
 
 export default function Page() {
-    const [selectedVendor, setSelectedVendor] = useState(null);
+    const [selectedVendor, setSelectedVendor] = useState<VendorData | null>(null);
     const [opened, setOpened] = useState(false);
 
-    const handleCardClick = (vendor) => {
+    const handleCardClick = (vendor : VendorData) => {
         setSelectedVendor(vendor);
         setOpened(true);
     };

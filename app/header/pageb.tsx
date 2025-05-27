@@ -8,10 +8,10 @@
 
 'use client';
 import React, { useRef } from 'react';
-import Nav from '../_components/nav/Nav';
-import NavMT from '../_components/nav/NavMT';
 import Link from 'next/link';
 import {Button} from "@mantine/core";
+import NavMT from "@/app/_components/navcomps/navmt";
+import {SectionRef} from "@/app/_types/interfaces";
 
 export default function TestableStickyHeader() {
     const marketRef = useRef(null);
@@ -20,7 +20,7 @@ export default function TestableStickyHeader() {
     const vendorRef = useRef(null);
     const contactRef = useRef(null);
 
-    const scrollToSection = (ref) => {
+    const scrollToSection = (ref : SectionRef) => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
 

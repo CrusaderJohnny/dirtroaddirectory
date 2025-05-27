@@ -40,3 +40,7 @@ a {
     color-scheme: dark;
   }
 }
+
+#map {
+  height: 100%;
+}

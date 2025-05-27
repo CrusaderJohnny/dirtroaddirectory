@@ -11,8 +11,9 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from '@mantine/core';
 import Link from 'next/link';
+import {NavProps, Ref} from "@/app/_types/interfaces";
 
-function Nav({ onNavigate, refs }) {
+function Nav({ onNavigate, refs } : NavProps) {
     const [header, setHeader] = useState(false);
 
     const scrollHeader = () => {
@@ -30,7 +31,7 @@ function Nav({ onNavigate, refs }) {
         };
     }, []);
 
-    const handleNavigation = (ref) => {
+    const handleNavigation = (ref : Ref) => {
         onNavigate(ref);
     };
 

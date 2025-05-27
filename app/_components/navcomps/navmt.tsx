@@ -54,7 +54,7 @@ export default function NavMT() {
                     </div>
 
                     {/* Header let side where nav to sections of the page */}
-                    <Group spacing='md' >
+                    <Group gap='md' >
                         <Button
                             component='a'
                             href='#section1'
