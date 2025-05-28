@@ -31,3 +31,7 @@ export interface Poi {
 export interface PoiMarkerProps {
     pois: Poi[];
 }
+
+export interface SectionRef {
+    ref: HTMLElement | null;
+}
