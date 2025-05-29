@@ -46,10 +46,13 @@ a {
 }
 
 .signin-button {
-  background-color: deepskyblue;
+  background-color: var(--mantine-color-blue-light-color);
+  color: white;
   padding-left: 20px;
   padding-right: 20px;
-  margin-right: 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 3px;
 }
 
 .signin-button:hover {
@@ -57,10 +60,13 @@ a {
 }
 
 .signup-button {
-  background-color: deepskyblue;
+  background-color: var(--mantine-color-blue-light-color);
+  color: white;
   padding-left: 20px;
   padding-right: 20px;
-  margin-right: 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 3px;
 }
 
 .signup-button:hover {
