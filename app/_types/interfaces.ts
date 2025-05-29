@@ -18,6 +18,20 @@ export interface VendorData {
     description: string;
 }
 
+export interface UserInfoInterface {
+    user: {
+        primaryEmail: string;
+        firstName: string;
+        fullName: string;
+        primaryPhone: string;
+        verifiedEmail: boolean;
+        verifiedPhone: boolean;
+        hasPicture: boolean;
+        profilePicture: string;
+        createdAt: Date;
+    }
+}
+
 export type MapCoords = {
     lat: number;
     lng: number;
