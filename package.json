@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.20.1",
     "@mantine/core": "^8.0.2",
     "@mantine/hooks": "^8.0.2",
+    "@vis.gl/react-google-maps": "^1.5.2",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

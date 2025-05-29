@@ -1,6 +1,7 @@
 "use client"
-import { Button, Center, Container, Text } from "@mantine/core";
+import { Button, Center, Container, Flex, Text } from "@mantine/core";
 import Link from "next/link";
+import Board from "@/app/_components/tiktaktoe/board";
 
 export default function Home() {
   return (
@@ -8,10 +9,14 @@ export default function Home() {
       <Center>
         <Container>
           <Text p={20}>Hello World, What the....</Text>
-          <Button component={Link} href="marketcards">Market Map</Button>
-          <Button component={Link} href='map'>Map</Button>
-          <Button component={Link} href='stickyHeaderAndCompTest'>Header</Button>
-          <Button component={Link} href='index'>Index</Button>
+          <Flex direction="column" gap={20}>
+            <Button component={Link} href="market">Market Map</Button>
+            <Button component={Link} href='map'>Map</Button>
+            <Button component={Link} href='header'>Header</Button>
+            <Button component={Link} href='vendor'>Vendor</Button>
+            <Button component={Link} href='userpage'>User Profile</Button>
+            <Board/>
+          </Flex>
         </Container>
       </Center>
     </Container>

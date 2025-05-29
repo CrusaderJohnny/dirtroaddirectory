@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-// import "./globals.css";
+import "./globals.css";
 import '@mantine/core/styles.css';
-import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from "@mantine/core";
+import {ColorSchemeScript, MantineProvider, mantineHtmlProps} from "@mantine/core";
 import {
   ClerkProvider,
   SignInButton,
@@ -41,8 +41,16 @@ export default function RootLayout({
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
           <header>
             <SignedOut>
-              <SignInButton />
-              <SignUpButton />
+              <SignInButton>
+                <button className="signin-button">
+                  Sign in here
+                </button>
+              </SignInButton>
+              <SignUpButton>
+                <button className="signup-button">
+                  Sign up here
+                </button>
+              </SignUpButton>
             </SignedOut>
             <SignedIn>
               <UserButton />

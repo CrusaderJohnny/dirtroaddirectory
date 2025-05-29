@@ -40,3 +40,29 @@ a {
     color-scheme: dark;
   }
 }
+
+#map {
+  height: 100%;
+}
+
+.signin-button {
+  background-color: deepskyblue;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-right: 20px;
+}
+
+.signin-button:hover {
+  cursor: pointer;
+}
+
+.signup-button {
+  background-color: deepskyblue;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-right: 20px;
+}
+
+.signup-button:hover {
+  cursor: pointer;
+}
