@@ -12,6 +12,7 @@ import { Text, AppShell, Button, Center, ScrollArea , AppShellMain, AppShellNavb
 import { useDisclosure } from '@mantine/hooks';
 import MarketAccordion from "@/app/_components/marketcomps/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
+import { useState } from "react";
 
 
 export default function App() {
@@ -19,7 +20,15 @@ export default function App() {
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
+    const [openMarketId, setOpenMarketId] = useState<string | null>(null);
+
+    const handleOpenMarket = (marketId: string | null) => {
+        setOpenMarketId(marketId);
+    };
+
     //const farmHeader = require("../assets/Alberta-farming.jpg")
+
+
 
 
 
@@ -43,7 +52,7 @@ export default function App() {
             </AppShellHeader>
             <AppShellNavbar>
                 <ScrollArea>
-                    <MarketAccordion/>
+                    <MarketAccordion defaultOpenItemId={openMarketId} />
                 </ScrollArea>
             </AppShellNavbar>
             <AppShellMain>
@@ -53,6 +62,8 @@ export default function App() {
                 <Button onClick={toggleMobile} hiddenFrom="sm">
                     Toggle navbar
                 </Button>
+                <Button onClick={() => handleOpenMarket("cfm") }>Open Test</Button>
+                <Button onClick={() => handleOpenMarket(null) }>Close Test</Button>
 
                 <Center>
                     <MapComponent/>
