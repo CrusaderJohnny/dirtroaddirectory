@@ -35,7 +35,7 @@ export default function App() {
         >
             <AppShellHeader>
                 <BackgroundImage src="https://letspasta.com/wp-content/uploads/2022/08/Alberta-farming.jpg"
-                                 style={{ height: '100%' }} >
+                                style={{ height: '100%' }} >
                     <Center style={{ height: '100%' }}>
                         <Text size='xl' c='white' fw='bold'>Example Header Here</Text>
                     </Center>
