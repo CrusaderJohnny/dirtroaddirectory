@@ -7,7 +7,7 @@ const vendorList = [
     image: "https://tentcraft-cdn.s3.amazonaws.com/images/blog/FarmersMarket/ValentinesFarm.jpg",
     contact: "valentinesfarm@email.com",
     markets: ["Calgary Farmers Market", "Okotoks Saturday Market"],
-    description: "We sell raw, unfiltered wildflower honey harvested from Alberta bees."
+    description: "Beck Farms, owned and operated by the Bradshaw family was started in 1987, and has been growing what our customers call the best carrots in the world! We are proud to produce not only great tasting carrots but several other vegetables as well. With the next generation joining us in the management of the farm, we plan to keep producing local, high quality produce for many years to come. Our produce can be found at farmers markets in Central Alberta and Calgary at the Innisfail Growers Booth. Produce can also be purchased at our farm."
   },
   {
     id: 2,

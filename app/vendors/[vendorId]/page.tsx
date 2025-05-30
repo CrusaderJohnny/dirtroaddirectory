@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Text, Title, Container, Image, Divider, Space } from "@mantine/core";
+import { Text, Title, Container, Image, Divider, Space, Grid, Card } from "@mantine/core";
 import vendorList from "@/app/_components/vendorcomps/vendordata";
 
 interface VendorParams {
@@ -13,9 +13,9 @@ export default async function VendorDetailPage({ params }: VendorParams) {
   const vendor = vendorList.find((v) => v.id === parseInt(vendorId));
 
   if (!vendor) {
-    notFound(); 
+    notFound();
   }
-
+  
   return (
     <Container size="lg" py="xl">
       <Image
@@ -27,7 +27,7 @@ export default async function VendorDetailPage({ params }: VendorParams) {
         mb="lg"
       />
 
-      <Title order={1} className="text-green-700">
+      <Title order={1} className="text-green-700" ta="center">
         {vendor.name.toUpperCase()}
       </Title>
 
@@ -37,20 +37,28 @@ export default async function VendorDetailPage({ params }: VendorParams) {
         {vendor.category.toUpperCase()}
       </Text>
 
-      <Space h="lg" />
+      <Space h="xl" />
 
-      <Text size="sm" className="mb-2 text-gray-600">
-        <strong>Location:</strong> {vendor.location}
+      <Title order={2} mb="sm"> About </Title>
+      <Text size="sm" className="text-gray-800">
+        {vendor.description || "No description available."}
       </Text>
-      <Text size="sm" className="mb-2 text-gray-600">
-        <strong>Contact:</strong> {vendor.contact || "Not available"}
-      </Text>
-      <Text size="sm" className="mb-2 text-gray-600">
-        <strong>Markets:</strong> {vendor.markets?.join(", ") || "Not listed"}
-      </Text>
-      <Text size="sm" className="text-gray-800 mt-4">
-        <strong>Description:</strong> {vendor.description || "No description available."}
-      </Text>
+
+      <Space h="xl" />
+      
+      <Card withBorder radius="md" shadow="sm" p="md">
+        <Title order={3} className="mb-2 text-green-700">Markets</Title>
+        <Text size="sm">{vendor.markets?.join(", ") || "Not listed"}</Text>
+      </Card>
+
+      <Space h="xl" />
+
+      <Card withBorder radius="md" shadow="sm" p="md" mb="xl">
+        <Title order={3} className="mb-2 text-green-700">Contact</Title>
+        <Text size="sm"><strong>Email:</strong> {vendor.contact || "Not available"}</Text>
+        <Text size="sm"><strong>Website:</strong> www.vendorwebsite.com</Text>
+      </Card>
+
     </Container>
   );
 }
