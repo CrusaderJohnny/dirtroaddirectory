@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Text, Title, Container } from "@mantine/core";
+import { Text, Title, Container, Image, Divider, Space } from "@mantine/core";
 import vendorList from "@/app/_components/vendorcomps/vendordata";
 
 interface VendorParams {
@@ -17,14 +17,28 @@ export default async function VendorDetailPage({ params }: VendorParams) {
   }
 
   return (
-    <Container size="md" py="xl">
-      <Title order={1} className="text-3xl font-bold mb-4">
-        {vendor.name}
+    <Container size="lg" py="xl">
+      <Image
+        src={vendor.image}
+        alt={vendor.name}
+        radius="md"
+        height={300}
+        fit="cover"
+        mb="lg"
+      />
+
+      <Title order={1} className="text-green-700">
+        {vendor.name.toUpperCase()}
       </Title>
 
-      <Text size="sm" className="mb-2 text-gray-600">
-        <strong>Category:</strong> {vendor.category}
+      <Divider my="sm" />
+
+      <Text ta="center" fw={700} size="lg" c="green">
+        {vendor.category.toUpperCase()}
       </Text>
+
+      <Space h="lg" />
+
       <Text size="sm" className="mb-2 text-gray-600">
         <strong>Location:</strong> {vendor.location}
       </Text>
