@@ -1,6 +1,6 @@
 "use client";
 
-import { Title, Container } from "@mantine/core";
+import { Title, Container, Grid } from "@mantine/core";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 import vendorList from "@/app/_components/vendorcomps/vendordata";
 import { VendorsInterface } from "@/app/_types/interfaces";
@@ -12,11 +12,13 @@ export default function VendorsPage() {
         Our Vendors
       </Title>
 
-      <div className="flex flex-col gap-4">
+      <Grid gutter="xl">
         {vendorList.map((vendor: VendorsInterface) => (
-          <VendorCard key={vendor.id} vendor={vendor} />
+            <Grid.Col key={vendor.id} span={{ base: 12, sm: 6, md: 4 }}>
+                <VendorCard vendor={vendor} />
+            </Grid.Col>
         ))}
-      </div>
+      </Grid>
     </Container>
   );
 }

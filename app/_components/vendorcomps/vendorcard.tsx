@@ -2,12 +2,7 @@ import { Card, Text, Image } from '@mantine/core';
 import {VendorsInterface} from "@/app/_types/interfaces";
 import Link from "next/link";
 
-
-interface VendorCardProps {
-  vendor: VendorsInterface;
-}
-
-export default function VendorCard({ vendor }: VendorCardProps) {
+export default function VendorCard({ vendor }: { vendor: VendorsInterface }) {
     return (
         <Card withBorder component={Link} href={`/vendors/${vendor.id}`} className="w-full max-w-4xl mx-auto cursor-pointer p-4" radius="md">
             <div className="flex items-center gap-4">
