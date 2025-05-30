@@ -13,7 +13,7 @@ export default function Home() {
             <Button component={Link} href="market">Market Map</Button>
             <Button component={Link} href='map'>Map</Button>
             <Button component={Link} href='header'>Header</Button>
-            <Button component={Link} href='vendor'>Vendor</Button>
+            <Button component={Link} href='vendor'>Vendors</Button>
             <Button component={Link} href='userpage'>User Profile</Button>
             <Board/>
           </Flex>
