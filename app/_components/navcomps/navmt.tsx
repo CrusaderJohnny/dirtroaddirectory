@@ -8,7 +8,7 @@ References:
 
 */
 "use client"
-import { AppShell, useMantineTheme, Button, Group, BackgroundImage, Title, Image } from '@mantine/core';
+import { AppShell, useMantineTheme, Button, Group, BackgroundImage, Title, Image, Box } from '@mantine/core';
 
 export default function NavMT() {
 
@@ -21,7 +21,7 @@ export default function NavMT() {
                 {/* main div containing the header */}
                 <BackgroundImage src="https://letspasta.com/wp-content/uploads/2022/08/Alberta-farming.jpg"
                     style={{
-                        backgroundColor: theme.colors.red[6], // Use if color preferred over image (team not decided)
+                        //backgroundColor: theme.colors.red[6], // Use if color preferred over image (team not decided)
                         height: '100%',
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -48,9 +48,9 @@ export default function NavMT() {
                         <div>
                             <Title order={1} c='white'>
                                 Market
-                                <Title pl='5vw'>
+                                <Box pl='5vw'>
                                     Fresh
-                                </Title>
+                                </Box>
                             </Title>
                         </div>
                     </div>

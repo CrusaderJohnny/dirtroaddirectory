@@ -28,7 +28,7 @@ export default function MantineNavPage() {
                 <NavMT />
 
                 <AppShell.Main>
-                    <Container size="lg" >
+                    <Container size="responsive" >
 
                         {/* Section 1 - Markets */}
                         <Box
