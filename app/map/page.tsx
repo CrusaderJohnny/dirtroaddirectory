@@ -63,8 +63,6 @@ export default function App() {
                 <Button onClick={toggleMobile} hiddenFrom="sm">
                     Toggle navbar
                 </Button>
-                <Button onClick={() => handleOpenMarket("cfm") }>Open Test</Button>
-                <Button onClick={() => handleOpenMarket(null) }>Close Test</Button>
 
                 <Center>
                     <MapComponent onMarkerClick={handleOpenMarket}/>
