@@ -15,6 +15,7 @@ import MapComponent from "@/app/_components/mapcomps/map";
 import { useState } from "react";
 
 
+
 export default function App() {
 
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -66,7 +67,7 @@ export default function App() {
                 <Button onClick={() => handleOpenMarket(null) }>Close Test</Button>
 
                 <Center>
-                    <MapComponent/>
+                    <MapComponent onMarkerClick={handleOpenMarket}/>
                 </Center>
 
 
