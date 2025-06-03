@@ -42,9 +42,8 @@ export interface Poi {
     location: MapCoords;
 }
 
-export interface PoiMarkerProps {
-    pois: Poi[];
-}
+export type PoiMarkersArray = Poi[];
+
 
 export interface SectionRef {
     ref: HTMLElement | null;
@@ -57,6 +56,6 @@ export interface MarketItem {
     description: string;
     content: string;
     link: string;
-    lat: string;
-    lng: string;
+    lat: number;
+    lng: number;
 }
