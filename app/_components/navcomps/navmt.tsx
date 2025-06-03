@@ -8,11 +8,12 @@ References:
 
 */
 "use client"
-import { AppShell, useMantineTheme, Button, Group, BackgroundImage, Title, Image, Box } from '@mantine/core';
+import { AppShell, Button, Group, BackgroundImage, Title, Image } from '@mantine/core';
+import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
 
 export default function NavMT() {
 
-    const theme = useMantineTheme()
+    // const theme = useMantineTheme()
 
     return (
         <AppShell
@@ -43,6 +44,7 @@ export default function NavMT() {
                             w='auto'
                             fit='contain'
                             radius='md'
+                            alt="Farmers Market Logo"
                         />
 
                         <div>
@@ -99,6 +101,23 @@ export default function NavMT() {
                         >
                             Contact
                         </Button>
+                    </Group>
+                    <Group>
+                        <SignedOut>
+                            <SignInButton>
+                                <button className="signin-button">
+                                    Sign in here
+                                </button>
+                            </SignInButton>
+                            <SignUpButton>
+                                <button className="signup-button">
+                                    Sign up here
+                                </button>
+                            </SignUpButton>
+                        </SignedOut>
+                        <SignedIn>
+                            <UserButton />
+                        </SignedIn>
                     </Group>
                 </BackgroundImage>
 
