@@ -13,6 +13,7 @@
 import { AppShell, useMantineTheme, Container, Title, Text, Box } from '@mantine/core';
 import NavMT from "@/app/_components/navcomps/navmt";
 import BoxComp from "@/app/_components/othercomps/boxcomp";
+import NewsPage from "@/app/news-page/page";
 
 
 
@@ -28,7 +29,12 @@ export default function MantineNavPage() {
                 <NavMT />
 
                 <AppShell.Main>
-                    <Container size="responsive" >
+                    <Container
+                        style={{
+                            width: '1920px',
+                            maxWidth: '100%',
+                        }}
+                    >
 
                         {/* Section 1 - Markets */}
                         <Box
@@ -66,14 +72,11 @@ export default function MantineNavPage() {
                             id="section3"
                             style={{
                                 minHeight: '86vh',
-                                backgroundColor: theme.colors.green[3],
+                                backgroundColor: theme.colors.gray[7],
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
                         >
-                            <Title order={2}>Section 3: News</Title>
-                            <Text>
-                                This section is for testing News Components
-                            </Text>
+                            <NewsPage />
                         </Box>
 
                         {/* Section 4 */}
