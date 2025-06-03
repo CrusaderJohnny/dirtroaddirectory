@@ -39,7 +39,7 @@ export default function NavMT() {
                     >
                         <Image
                             src='https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8='
-                            h={80}
+                            h={40}
                             w='auto'
                             fit='contain'
                             radius='md'
@@ -47,10 +47,7 @@ export default function NavMT() {
 
                         <div>
                             <Title order={1} c='white'>
-                                Market
-                                <Box pl='5vw'>
-                                    Fresh
-                                </Box>
+                                Market Fresh
                             </Title>
                         </div>
                     </div>

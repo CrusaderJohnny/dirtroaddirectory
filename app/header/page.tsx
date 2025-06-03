@@ -19,12 +19,13 @@ import NewsPage from "@/app/news-page/page";
 
 export default function MantineNavPage() {
     const theme = useMantineTheme()
-    const headerHeightVh = 14;
+    const headerHeightVh = 7;
 
     return (
         <>
             <AppShell
-                header={{ height: '14vh' }}
+                header={{ height: '7vh' }}
+                // style={{'height': '50%'}}
             >
                 <NavMT />
 
