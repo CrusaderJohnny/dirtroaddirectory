@@ -21,7 +21,7 @@ const charactersList: MarketItem[] = data;
 // Image URL was copied as well as description and content was taken from the websites for each respective market
 
 
-//displays the information before the accordion is opened
+// Displays the information before the accordion is opened
 function AccordionLabel({ label, image, description } : MarketsInterface) {
     return (
         <Group wrap="nowrap">
