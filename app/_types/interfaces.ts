@@ -49,3 +49,14 @@ export interface PoiMarkerProps {
 export interface SectionRef {
     ref: HTMLElement | null;
 }
+
+export interface MarketItem {
+    id: string;
+    image: string;
+    label: string;
+    description: string;
+    content: string;
+    link: string;
+    lat: string;
+    lng: string;
+}
