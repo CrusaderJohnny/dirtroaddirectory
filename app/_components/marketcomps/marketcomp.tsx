@@ -1,3 +1,4 @@
+"use client"
 import {
     Group,
     Avatar,
@@ -11,6 +12,7 @@ import {
     Flex,
 } from "@mantine/core";
 import Link from "next/link";
+import { useEffect, useState } from "react"
 import {MarketsInterface} from "@/app/_types/interfaces";
 const charactersList = [
     //all information taken from respective websites for each individual farmers market. Pictures taken from their websites. Image URL was copied as well as description and content was taken from the websites for each respective market
@@ -59,9 +61,24 @@ function AccordionLabel({ label, image, description } : MarketsInterface) {
             </div>
         </Group>
     );
+
 }
+
+// Define props for MarketAccordion()
+interface MarketAccordionProps {
+    defaultOpenItemId?: string | null; // ? allows the prompt to be optional
+}
+
 //displays the accordion information. essentially a read more pop out
-export default function MarketAccordion() {
+export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProps) {
+    const [activeItem, setActiveItem] = useState<string | null>(defaultOpenItemId ?? null); // if defaultOpenItemId is null or undefined set to null
+
+    // rerender the component when changing the value of "defaultOpenItemId"
+    useEffect(() => {
+        setActiveItem(defaultOpenItemId ?? null);
+    }, [defaultOpenItemId]);
+
+
     const items = charactersList.map((item) => (
         <AccordionItem value={item.id} key={item.label}>
             <AccordionControl>
@@ -79,7 +96,11 @@ export default function MarketAccordion() {
     ));
     return (
         <Container>
-            <Accordion chevronPosition="right" variant="contained">
+            <Accordion chevronPosition="right" variant="contained"
+            value={activeItem} // Control the active item
+            onChange={setActiveItem} // Update the active item when a user clicks 
+            // FIX BUG HERE ------ closing the item doesn't set active to null
+            >
                 {items}
             </Accordion>
         </Container>
