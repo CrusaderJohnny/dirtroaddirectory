@@ -7,7 +7,7 @@ export interface MarketsInterface {
     link: string;
 }
 
-export interface VendorData {
+export interface VendorsInterface {
     id: number;
     name: string;
     category: string;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import '@mantine/core/styles.css';
+import '@mantine/core/styles/Button.css';
 import {ColorSchemeScript, MantineProvider, mantineHtmlProps} from "@mantine/core";
 import {
   ClerkProvider,
