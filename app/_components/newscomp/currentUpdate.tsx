@@ -1,19 +1,12 @@
 
-import { Container, Title, Text, Image, Button } from '@mantine/core';
+import { Container, Title, Text, Image } from '@mantine/core';
 
 
 export default function CurrentUpdate() {
 
-    // Set up 4 Props that are passed to this page
-    // 1. Title as      NewsTitle
-    // 2. Date          NewsDate
-    // 3. Image         NewsImage
-    // 4. Content       NewsContent
-
-
 
     return (
-        <Container>
+        <Container >
             {/* Name of article */}
             <Title order={2} >Sample title for an update article</Title>
 
@@ -33,6 +26,21 @@ export default function CurrentUpdate() {
 
             {/* Update Content Here */}
             <Text>
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
                 Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
                 sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
                 at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.

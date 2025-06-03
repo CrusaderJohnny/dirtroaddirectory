@@ -1,10 +1,21 @@
-import { Title, Flex, Center, Text, Container, Box, useMantineTheme } from '@mantine/core';
+"use client"
+import { useState, useEffect } from 'react';
+import { Title, Flex, Center, Container, ScrollArea, useMantineTheme } from '@mantine/core';
 import CurrentUpdate from "./currentUpdate";
 import UpdateList from "./updateList";
+import ContactOrNewPost from "./contactOr-newPost";
 
 
 export default function NewsPage() {
     const theme = useMantineTheme()
+
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+      setTimeout(() => {
+        setIsAdmin(true);
+      }, 10000);
+    }, []);
 
     return(
         <>
@@ -23,34 +34,49 @@ export default function NewsPage() {
                 }}
             >
                 {/* Box for current currentUpdate.js */}
-
-                <Container
-                    style={{
-                        width: '75%',
-                        backgroundColor: theme.colors.gray[4],
-                        borderRadius: '5%',
-                        padding: '2%',
-                        marginTop: '1%',
-                        height: '70%',
-                        maxWidth: '60%',
-                        maxHeight: '80%',
-                    }}
+                <Flex
+                    justify="center"
+                    align="center"
+                    direction="column"
+                    gap={"lg"}
+                    style={{width: '100%'}}
                 >
+                    <ScrollArea
+                        h={500}
+                        style={{
+                            width: '100%',
+                            backgroundColor: theme.colors.gray[5],
+                            borderRadius: '5%',
+                            padding: '2%',
+                            height: '70%',
+                            maxWidth: '80%',
+                            maxHeight: '75%',
+                        }}
+                    >
+                        <CurrentUpdate />
+                    </ScrollArea>
 
-                    <CurrentUpdate />
-
-                    {/*Create Component for vendors to email and request to post their updates*/}
-                    {/*Place it below CurrentUpdate in it's own gray box*/}
-                    Place Holder
-                </Container>
-
+                    <ScrollArea
+                        style={{
+                            width: '100%',
+                            backgroundColor: theme.colors.gray[5],
+                            borderRadius: '1%',
+                            // padding: '2%',
+                            height: '10%',
+                            maxWidth: '30%',
+                            maxHeight: '150%',
+                        }}
+                    >
+                        <ContactOrNewPost isAdmin={isAdmin} />
+                    </ScrollArea>
+                </Flex>
 
                 {/* Box for updatesList.js */}
-                <Container
+                <ScrollArea
                     style={{
                         width: '25%',
                         borderRadius: '5%',
-                        backgroundColor: theme.colors.gray[4],
+                        backgroundColor: theme.colors.gray[5],
                         padding: '2%',
                         marginRight: '2%',
                         maxWidth: '20%',
@@ -59,7 +85,7 @@ export default function NewsPage() {
                     }}
                 >
                     <UpdateList />
-                </Container>
+                </ScrollArea>
             </Flex>
         </>
 

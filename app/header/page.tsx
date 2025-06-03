@@ -72,7 +72,7 @@ export default function MantineNavPage() {
                             id="section3"
                             style={{
                                 minHeight: '86vh',
-                                backgroundColor: theme.colors.gray[7],
+                                backgroundColor: theme.colors.gray[4],
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
                         >
