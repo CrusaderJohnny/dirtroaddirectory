@@ -1,26 +1,36 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
+import {Container, TextInput, Text, Group, Button} from "@mantine/core";
+import {useState} from "react";
 
 export const SearchUsers = () => {
     const router = useRouter()
     const pathname = usePathname()
+    const [searchUsers, setSearchUsers] = useState('');
+
+    const handleSearch = () => {
+        const trimmedSearchTerm = searchUsers.trim();
+        if(trimmedSearchTerm) {
+            router.push(pathname + '?search=' + trimmedSearchTerm);
+        } else {
+            router.push(pathname);
+        }
+    }
 
     return (
-        <div>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    const form = e.currentTarget
-                    const formData = new FormData(form)
-                    const queryTerm = formData.get('search') as string
-                    router.push(pathname + '?search=' + queryTerm)
-                }}
-            >
-                <label htmlFor="search">Search for users</label>
-                <input id="search" name="search" type="text" />
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+        <Container>
+            <Group>
+                <Text>
+                    Search for users
+                </Text>
+                <TextInput
+                    value={searchUsers}
+                    onChange={(event) => setSearchUsers(event.target.value)}
+                    placeholder="Enter user name"
+                />
+                <Button onClick={handleSearch}>Submit</Button>
+            </Group>
+        </Container>
     )
 }

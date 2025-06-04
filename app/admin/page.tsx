@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
 import { SearchUsers } from './searchUsers'
-import { clerkClient } from '@clerk/nextjs/server'
+import {clerkClient, EmailAddress} from '@clerk/nextjs/server'
 import { removeRole, setRole } from './_actions'
+import NavMT from "@/app/_components/navcomps/navmt";
+import {Button, Center, Container, Group, Stack, Text} from "@mantine/core";
 
 export default async function AdminDashboard(params: {
     searchParams: Promise<{ search?: string }>
@@ -19,45 +21,57 @@ export default async function AdminDashboard(params: {
 
     return (
         <>
-            <p>This is the protected admin dashboard restricted to users with the `admin` role.</p>
-
-            <SearchUsers />
-
-            {users.map((user) => {
-                return (
-                    <div key={user.id}>
-                        <div>
-                            {user.firstName} {user.lastName}
-                        </div>
-
-                        <div>
-                            {
-                                user.emailAddresses.find((email) => email.id === user.primaryEmailAddressId)
-                                    ?.emailAddress
-                            }
-                        </div>
-
-                        <div>{user.publicMetadata.role as string}</div>
-
-                        <form action={setRole}>
-                            <input type="hidden" value={user.id} name="id" />
-                            <input type="hidden" value="admin" name="role" />
-                            <button type="submit">Make Admin</button>
-                        </form>
-
-                        <form action={setRole}>
-                            <input type="hidden" value={user.id} name="id" />
-                            <input type="hidden" value="moderator" name="role" />
-                            <button type="submit">Make Moderator</button>
-                        </form>
-
-                        <form action={removeRole}>
-                            <input type="hidden" value={user.id} name="id" />
-                            <button type="submit">Remove Role</button>
-                        </form>
-                    </div>
-                )
-            })}
+            <NavMT/>
+            <Container>
+                <Center>
+                    <Text>
+                        This is a protected admin dashboard. Assign user roles with the search function.
+                    </Text>
+                </Center>
+                <Center p={20}>
+                    <SearchUsers/>
+                </Center>
+                <Center>
+                    {users.map((user) => {
+                        return(
+                            <Container key={user.id}>
+                                <Group>
+                                    <Stack>
+                                        <Container>
+                                            {user.firstName} {user.lastName}
+                                        </Container>
+                                        <Container>
+                                            {
+                                                user.emailAddresses.find((email: EmailAddress) => email.id === user.primaryEmailAddressId)
+                                                    ?.emailAddress
+                                            }
+                                        </Container>
+                                        <Container>
+                                            {user.publicMetadata.role as string}
+                                        </Container>
+                                    </Stack>
+                                <Stack>
+                                    <Button formAction={setRole}>
+                                        <input type="hidden" value={user.id} name="id"/>
+                                        <input type="hidden" value="admin" name="role"/>
+                                        Make Admin
+                                    </Button>
+                                    <Button formAction={setRole}>
+                                        <input type="hidden" value={user.id} name="id"/>
+                                        <input type="hidden" value="moderator" name="role"/>
+                                        Make Moderator
+                                    </Button>
+                                    <Button formAction={removeRole}>
+                                        <input type="hidden" value={user.id} name="id"/>
+                                        Remove Role
+                                    </Button>
+                                </Stack>
+                                </Group>
+                            </Container>
+                        )
+                    })}
+                </Center>
+            </Container>
         </>
     )
 }
