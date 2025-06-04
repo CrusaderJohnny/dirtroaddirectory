@@ -6,11 +6,6 @@ import '@mantine/core/styles/Button.css';
 import {ColorSchemeScript, MantineProvider, mantineHtmlProps} from "@mantine/core";
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from '@clerk/nextjs'
 
 const geistSans = Geist({
@@ -37,26 +32,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" {...mantineHtmlProps}>
         <head>
-          <ColorSchemeScript/>
+          <ColorSchemeScript/><title></title>
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
-          <header>
-            <SignedOut>
-              <SignInButton>
-                <button className="signin-button">
-                  Sign in here
-                </button>
-              </SignInButton>
-              <SignUpButton>
-                <button className="signup-button">
-                  Sign up here
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
           <MantineProvider>{children}</MantineProvider>
         </body>
       </html>
