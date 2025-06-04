@@ -4,7 +4,18 @@ import { SearchUsers } from './searchUsers'
 import {clerkClient, EmailAddress} from '@clerk/nextjs/server'
 import { removeRole, setRole } from './_actions'
 import NavMT from "@/app/_components/navcomps/navmt";
-import {Button, Card, Center, Container, Flex, Group, Stack, Text} from "@mantine/core";
+import {
+    AppShell,
+    AppShellHeader,
+    AppShellMain,
+    Button,
+    Card,
+    Center,
+    Flex,
+    Group,
+    Stack,
+    Text
+} from "@mantine/core";
 
 export default async function AdminDashboard(params: {
     searchParams: Promise<{ search?: string }>
@@ -20,9 +31,11 @@ export default async function AdminDashboard(params: {
     const users = query ? (await client.users.getUserList({ query })).data : []
 
     return (
-        <>
-            <NavMT/>
-            <Container>
+        <AppShell>
+            <AppShellHeader>
+                <NavMT/>
+            </AppShellHeader>
+            <AppShellMain>
                 <Center>
                     <Text>
                         This is a protected admin dashboard. Assign user roles with the search function.
@@ -86,7 +99,7 @@ export default async function AdminDashboard(params: {
                         )
                     })}
                 </Center>
-            </Container>
-        </>
+            </AppShellMain>
+        </AppShell>
     )
 }

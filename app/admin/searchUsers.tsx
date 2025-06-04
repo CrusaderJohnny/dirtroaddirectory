@@ -19,7 +19,7 @@ export const SearchUsers = () => {
     }
 
     return (
-        <Container>
+        <Container bg="lightgray">
             <Group>
                 <Text>
                     Search for users
