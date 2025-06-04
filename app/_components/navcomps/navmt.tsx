@@ -20,7 +20,7 @@ export default function NavMT() {
         >
             <AppShell.Header>
                 {/* main div containing the header */}
-                <BackgroundImage src="https://letspasta.com/wp-content/uploads/2022/08/Alberta-farming.jpg"
+                <BackgroundImage src="https://d27p2a3djqwgnt.cloudfront.net/wp-content/uploads/2024/05/15165226/dirt-road.jpeg"
                     style={{
                         //backgroundColor: theme.colors.red[6], // Use if color preferred over image (team not decided)
                         height: '100%',
@@ -28,6 +28,7 @@ export default function NavMT() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         padding: '0 3vh',
+                        backgroundPosition: "500% 80%"
                     }}
                 >
                     {/* Header right side */}
@@ -47,11 +48,9 @@ export default function NavMT() {
                             alt="Farmers Market Logo"
                         />
 
-                        <div>
                             <Title order={1} c='white'>
-                                Market Fresh
+                                Dirt Road Directory
                             </Title>
-                        </div>
                     </div>
 
                     {/* Header let side where nav to sections of the page */}
