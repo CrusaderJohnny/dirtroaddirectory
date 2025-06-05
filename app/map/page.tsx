@@ -13,6 +13,8 @@ import { useDisclosure } from '@mantine/hooks';
 import MarketAccordion from "@/app/_components/marketcomps/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
 import { useState } from "react";
+import NavMT from '../_components/navcomps/navmt';
+
 
 
 export default function App() {
@@ -42,14 +44,8 @@ export default function App() {
                 collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
             }}
         >
-            <AppShellHeader>
-                <BackgroundImage src="https://letspasta.com/wp-content/uploads/2022/08/Alberta-farming.jpg"
-                                style={{ height: '100%' }} >
-                    <Center style={{ height: '100%' }}>
-                        <Text size='xl' c='white' fw='bold'>Example Header Here</Text>
-                    </Center>
-                </BackgroundImage>
-            </AppShellHeader>
+            <NavMT>
+            </NavMT>
             <AppShellNavbar>
                 <ScrollArea>
                     <MarketAccordion defaultOpenItemId={openMarketId} />
@@ -62,11 +58,9 @@ export default function App() {
                 <Button onClick={toggleMobile} hiddenFrom="sm">
                     Toggle navbar
                 </Button>
-                <Button onClick={() => handleOpenMarket("cfm") }>Open Test</Button>
-                <Button onClick={() => handleOpenMarket(null) }>Close Test</Button>
 
                 <Center>
-                    <MapComponent/>
+                    <MapComponent onMarkerClick={handleOpenMarket}/>
                 </Center>
 
 

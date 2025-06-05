@@ -1,19 +1,18 @@
+/*
+Written by Mace Howald 06-03-2025
+Referenced: https://developers.google.com/codelabs/maps-platform/maps-platform-101-react-js#1
+Maps the markets from markets.json to the POIs array for the google maps api
+*/
 import {Poi} from "@/app/_types/interfaces";
+import data from "../../_res/markets.json";
+import {MarketItem} from "@/app/_types/interfaces";
+const marketList: MarketItem[] = data;
 
 export const MapLocations : Poi[] = [
-    {key: 'operaHouse', location: { lat: -33.8567844, lng: 151.213108  }},
-    {key: 'tarongaZoo', location: { lat: -33.8472767, lng: 151.2188164 }},
-    {key: 'manlyBeach', location: { lat: -33.8209738, lng: 151.2563253 }},
-    {key: 'hyderPark', location: { lat: -33.8690081, lng: 151.2052393 }},
-    {key: 'theRocks', location: { lat: -33.8587568, lng: 151.2058246 }},
-    {key: 'circularQuay', location: { lat: -33.858761, lng: 151.2055688 }},
-    {key: 'harbourBridge', location: { lat: -33.852228, lng: 151.2038374 }},
-    {key: 'kingsCross', location: { lat: -33.8737375, lng: 151.222569 }},
-    {key: 'botanicGardens', location: { lat: -33.864167, lng: 151.216387 }},
-    {key: 'museumOfSydney', location: { lat: -33.8636005, lng: 151.2092542 }},
-    {key: 'maritimeMuseum', location: { lat: -33.869395, lng: 151.198648 }},
-    {key: 'kingStreetWharf', location: { lat: -33.8665445, lng: 151.1989808 }},
-    {key: 'aquarium', location: { lat: -33.869627, lng: 151.202146 }},
-    {key: 'darlingHarbour', location: { lat: -33.87488, lng: 151.1987113 }},
-    {key: 'barangaroo', location: { lat: - 33.8605523, lng: 151.1972205 }},
+// Create empty array of Points of interest (POI)
 ];
+
+// Add a POI for each item in the market list
+const items = marketList.map((item) => (
+    MapLocations.push({key: item.id, location: { lat: item.lat, lng: item.lng  }})
+))

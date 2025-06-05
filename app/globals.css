@@ -16,6 +16,8 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   overflow-y: auto;
+  padding-top: 2rem;
+
 }
 
 body {
