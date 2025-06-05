@@ -1,8 +1,9 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group, List } from '@mantine/core';
-import { IconPhone, IconMail, IconWorld, IconBrandFacebook, IconBrandInstagram, IconShare2, IconCheck } from '@tabler/icons-react';
+import React, { useState } from 'react';
+import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group, List, TextInput, Select } from '@mantine/core';
+import { IconPhone, IconMail, IconWorld, IconBrandFacebook, IconBrandInstagram, IconShare2, IconCheck, IconSearch } from '@tabler/icons-react';
 import vendorList from '@/app/_components/vendorcomps/vendordata';
 import VendorCard from '@/app/_components/vendorcomps/vendorcard';
 
@@ -11,14 +12,26 @@ export default function VendorsPage() {
   const vendorIdParam = searchParams.get('vendorId');
   const selectedVendor = vendorList.find((v) => v.id === Number(vendorIdParam));
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const filteredVendors = vendorList.filter((vendor) => {
+    const matchesName = vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory ? vendor.category === selectedCategory : true;
+    return matchesName && matchesCategory;
+  });
+
+  const allCategories = [...new Set(vendorList.map((v) => v.category))];
+
+
   if (selectedVendor) {
     return (
       <Container size="lg" py="xl">
         <Image src={selectedVendor.image} alt={selectedVendor.name} height={300} radius="md" />
         <Space h="md" />
-        <Title order={1} c="green.8" ta="center">{selectedVendor.name}</Title>
-        <Divider my="md" />
-        <Text ta="center" fw={700} size="xl" c="green.8">{selectedVendor.category}</Text>
+        <Title order={1} ta="center" fw={900} size="2.5rem" c="dark.9" mb="xs">{selectedVendor.name}</Title>
+        <Divider my="md" size="xs" />
+        <Text ta="center" fw={600} size="lg" c="green.7">{selectedVendor.category}</Text>
 
         <Text mt="md"><strong>Description:</strong> {selectedVendor.description || 'No description available'}</Text>
         <Space h="xl" />
@@ -86,8 +99,25 @@ export default function VendorsPage() {
   return (
     <Container size="xl" py="xl">
       <Title order={1} className="text-3xl font-bold mb-6 text-center">Our Vendors</Title>
+
+      <Group mb="lg" grow>
+        <TextInput
+          placeholder="Search by name"
+          leftSection={<IconSearch size={16} />}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.currentTarget.value)}
+        />
+        <Select
+          data={allCategories}
+          placeholder="Filter by category"
+          clearable
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+        />
+      </Group>
+
       <Grid gutter="xl">
-        {vendorList.map((vendor) => (
+        {filteredVendors.map((vendor) => (
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
             <VendorCard vendor={vendor} />
           </Grid.Col>
