@@ -19,7 +19,6 @@ export default function NavMT() {
     return (
         <AppShell
             header={{ height: 60 }}
-            padding="md"
         >
             <AppShell.Header>
                 {/* main div containing the header */}
