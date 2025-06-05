@@ -25,15 +25,13 @@ export default function MantineNavPage() {
         <>
             <AppShell
                 header={{ height: '7vh' }}
-                // style={{'height': '50%'}}
             >
                 <NavMT />
 
                 <AppShell.Main>
-                    <Container
+                    <Box
                         style={{
-                            width: '1920px',
-                            maxWidth: '100%',
+                            width: '100%',
                         }}
                     >
 
@@ -41,7 +39,7 @@ export default function MantineNavPage() {
                         <Box
                             id="section1"
                             style={{
-                                minHeight: '86vh',
+                                minHeight: '93vh',
                                 backgroundColor: theme.colors.green[3], // Color added to show size of Box (Delete later)
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
@@ -56,7 +54,7 @@ export default function MantineNavPage() {
                         <Box
                             id="section2"
                             style={{
-                                minHeight: '86vh',
+                                minHeight: '93vh',
                                 backgroundColor: theme.colors.green[0],
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
@@ -72,7 +70,7 @@ export default function MantineNavPage() {
                         <Box
                             id="section3"
                             style={{
-                                minHeight: '86vh',
+                                minHeight: '93vh',
                                 backgroundColor: theme.colors.gray[4],
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
@@ -84,7 +82,7 @@ export default function MantineNavPage() {
                         <Box
                             id="section4"
                             style={{
-                                minHeight: '86vh',
+                                minHeight: '93vh',
                                 backgroundColor: theme.colors.green[0],
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
@@ -99,7 +97,7 @@ export default function MantineNavPage() {
                         <Box
                             id="section5"
                             style={{
-                                minHeight: '86vh',
+                                minHeight: '93vh',
                                 backgroundColor: theme.colors.green[3],
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
@@ -109,7 +107,7 @@ export default function MantineNavPage() {
                                 This section is for testing Contact Components
                             </Text>
                         </Box>
-                    </Container>
+                    </Box>
                 </AppShell.Main>
 
             </AppShell>
