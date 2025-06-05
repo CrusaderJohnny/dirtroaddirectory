@@ -8,7 +8,7 @@ Used Mantine component library
 
 "use client"
 import React from 'react';
-import { Text, AppShell, Button, Center, ScrollArea , AppShellMain, AppShellNavbar, AppShellHeader, BackgroundImage } from '@mantine/core';
+import { AppShell, Button, Center } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import MarketAccordion from "@/app/_components/marketcomps/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
@@ -37,21 +37,17 @@ export default function App() {
     return (
         <AppShell
             padding="md"
-            header={{ height: 100 }}
             navbar={{
                 width: 300,
                 breakpoint: 'sm',
                 collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
             }}
         >
-            <NavMT>
-            </NavMT>
-            <AppShellNavbar>
-                <ScrollArea>
-                    <MarketAccordion defaultOpenItemId={openMarketId} />
-                </ScrollArea>
-            </AppShellNavbar>
-            <AppShellMain>
+            <AppShell.Header component={NavMT}/>
+            <AppShell.Navbar>
+                <MarketAccordion/>
+            </AppShell.Navbar>
+            <AppShell.Main>
                 <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
                     Toggle navbar
                 </Button>
@@ -62,10 +58,7 @@ export default function App() {
                 <Center>
                     <MapComponent onMarkerClick={handleOpenMarket}/>
                 </Center>
-
-
-
-            </AppShellMain>
+            </AppShell.Main>
         </AppShell>
 
     );

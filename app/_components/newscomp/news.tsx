@@ -1,8 +1,7 @@
 "use client"
-import { useState, useEffect } from 'react';
-import { Title, Flex, Box, Center, Container, ScrollArea, useMantineTheme } from '@mantine/core';
+import {useState, useEffect} from 'react';
+import {Title, Flex, ScrollArea, useMantineTheme, AppShell} from '@mantine/core';
 import CurrentUpdate from "./currentUpdate";
-import UpdateList from "./updateList";
 import ContactOrNewPost from "./contactOr-newPost";
 
 
@@ -12,17 +11,18 @@ export default function NewsPage() {
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-      setTimeout(() => {
-        setIsAdmin(true);
-      }, 10000);
+        setTimeout(() => {
+            setIsAdmin(true);
+        }, 10000);
     }, []);
 
-    return(
-        <>
-            <Flex
+    return (
+        <AppShell
+        >
+            <AppShell.Main
                 style={{
-                    height: '93vh',
-                    paddingTop: '5vh',
+                    // height: '93vh',
+                    // paddingTop: '5vh',
                     background: `linear-gradient(to right, ${theme.colors.gray[4]}, ${theme.colors.gray[5]})`,
                 }}
             >
@@ -57,7 +57,7 @@ export default function NewsPage() {
                             borderBottom: '3px solid #D2B48C',
                         }}
                     >
-                        <CurrentUpdate />
+                        <CurrentUpdate/>
                     </ScrollArea>
 
                     <ScrollArea
@@ -68,43 +68,48 @@ export default function NewsPage() {
                             maxHeight: '150%',
                         }}
                     >
-                        <ContactOrNewPost isAdmin={isAdmin} />
+                        <ContactOrNewPost isAdmin={isAdmin}/>
                     </ScrollArea>
                 </Flex>
                 {/*</Box>*/}
 
-                {/* Box for updatesList.js */}
-                <Container
-                    style={{
-                        width: '25%',
-                    }}
-                >
-                    <Title
-                        order={2}
-                        ml={'10%'}
-                        style={{
-                            fontFamily: 'Monospace',
-                            alignSelf: 'flex-start',
-                        }}
-                    >
-                        Top Updates
-                    </Title>
+                {/*/!* Box for updatesList.js *!/*/}
+                {/*<Container*/}
+                {/*    style={{*/}
+                {/*        width: '25%',*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    <Title*/}
+                {/*        order={2}*/}
+                {/*        ml={'10%'}*/}
+                {/*        style={{*/}
+                {/*            fontFamily: 'Monospace',*/}
+                {/*            alignSelf: 'flex-start',*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        Top Updates*/}
+                {/*    </Title>*/}
 
-                <ScrollArea
-                    style={{
-                        padding: '1.5%',
-                        marginRight: '2%',
-                        height: '90%',
-                        borderTop: '3px solid #8B4513',
-                        borderBottom: '3px solid #D2B48C',
+                {/*    <ScrollArea*/}
+                {/*        style={{*/}
+                {/*            padding: '1.5%',*/}
+                {/*            marginRight: '2%',*/}
+                {/*            height: '90%',*/}
+                {/*            borderTop: '3px solid #8B4513',*/}
+                {/*            borderBottom: '3px solid #D2B48C',*/}
 
-                    }}
-                >
-                    <UpdateList />
-                </ScrollArea>
-                </Container>
-            </Flex>
-        </>
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <UpdateList/>*/}
+                {/*        <Center>*/}
+                {/*            <Container>*/}
+                {/*                <Board/>*/}
+                {/*            </Container>*/}
+                {/*        </Center>*/}
+                {/*    </ScrollArea>*/}
+                {/*</Container>*/}
+            </AppShell.Main>
+        </AppShell>
 
     );
 }

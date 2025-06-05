@@ -1,5 +1,5 @@
 
-import { Container, Center, Box, Title, Text, Image } from '@mantine/core';
+import { Center, Box, Title, Text, Image } from '@mantine/core';
 
 
 export default function CurrentUpdate() {
