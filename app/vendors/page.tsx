@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
-import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group, List, TextInput, Select } from '@mantine/core';
+import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group, List, TextInput, Select, Paper } from '@mantine/core';
 import { IconPhone, IconMail, IconWorld, IconBrandFacebook, IconBrandInstagram, IconShare2, IconCheck, IconSearch } from '@tabler/icons-react';
 import vendorList from '@/app/_components/vendorcomps/vendordata';
 import VendorCard from '@/app/_components/vendorcomps/vendorcard';
@@ -97,8 +97,12 @@ export default function VendorsPage() {
   }
 
   return (
-    <Container size="xl" py="xl">
-      <Title order={1} className="text-3xl font-bold mb-6 text-center">Our Vendors</Title>
+    <Container size="xl" py="xl" style={{ backgroundColor: '#f9f9f9', borderRadius: 12 }}>
+      <Paper shadow="xs" p="md" mb="md" withBorder radius="md">
+      <Title order={1} c="black">Our Vendors</Title>
+      <Text size="sm" c="dimmed" mb="md">
+      Browse our trusted vendors by name or category
+      </Text>
 
       <Group mb="lg" grow>
         <TextInput
@@ -106,6 +110,7 @@ export default function VendorsPage() {
           leftSection={<IconSearch size={16} />}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.currentTarget.value)}
+          radius="md"
         />
         <Select
           data={allCategories}
@@ -113,8 +118,10 @@ export default function VendorsPage() {
           clearable
           value={selectedCategory}
           onChange={setSelectedCategory}
+          radius="md"
         />
       </Group>
+      </Paper>
 
       <Grid gutter="xl">
         {filteredVendors.map((vendor) => (
