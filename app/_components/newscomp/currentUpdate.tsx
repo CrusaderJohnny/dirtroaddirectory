@@ -8,7 +8,11 @@ export default function CurrentUpdate() {
     return (
         <Container >
             {/* Name of article */}
-            <Title order={2} >Sample title for an update article</Title>
+            <Title order={2}
+                style={{
+                    fontFamily: 'Monospace',
+                }}
+            >Seasonal Delights: What&#39;s Ripe and Ready This Week</Title>
 
             {/* Date */}
             <Text>September 20, 2025</Text>
