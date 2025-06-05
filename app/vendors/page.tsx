@@ -1,8 +1,8 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group } from '@mantine/core';
-import { IconPhone, IconMail, IconWorld, IconBrandFacebook, IconBrandInstagram, IconShare2 } from '@tabler/icons-react';
+import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group, List } from '@mantine/core';
+import { IconPhone, IconMail, IconWorld, IconBrandFacebook, IconBrandInstagram, IconShare2, IconCheck } from '@tabler/icons-react';
 import vendorList from '@/app/_components/vendorcomps/vendordata';
 import VendorCard from '@/app/_components/vendorcomps/vendorcard';
 
@@ -18,10 +18,31 @@ export default function VendorsPage() {
         <Space h="md" />
         <Title order={1} c="green.8" ta="center">{selectedVendor.name}</Title>
         <Divider my="md" />
-        <Text ta="center" fw={700} size="lg" c="green">{selectedVendor.category}</Text>
+        <Text ta="center" fw={700} size="xl" c="green.8">{selectedVendor.category}</Text>
 
         <Text mt="md"><strong>Description:</strong> {selectedVendor.description || 'No description available'}</Text>
         <Space h="xl" />
+
+        <Grid gutter="xl">
+        <Grid.Col span={{ base: 12 }}>
+          <Card shadow="sm" radius="md" withBorder p="md">
+            <Title order={3} ta="center" c="green.8">
+              Products Offered
+            </Title>
+            <Divider my="sm" />
+            
+            {selectedVendor.products && selectedVendor.products.length > 0 ? (
+              <List spacing="xs" size="sm">
+                {selectedVendor.products.map((item, index) => (
+                  <List.Item key={index}>{item}</List.Item>
+                ))}
+              </List>
+            ) : (
+              <Text size="sm" c="dimmed">No product list available</Text>
+            )}
+          </Card>
+        </Grid.Col>
+        </Grid>
 
         <Grid gutter="xl">
           <Grid.Col span={{ base: 12, sm: 6 }}>
