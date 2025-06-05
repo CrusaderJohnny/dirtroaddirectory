@@ -8,56 +8,58 @@ References:
 
 */
 "use client"
-import { AppShell, useMantineTheme, Button, Group, BackgroundImage, Title, Image } from '@mantine/core';
+import {AppShell, Button, Group, BackgroundImage, Title, Image} from '@mantine/core';
+import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function NavMT() {
 
-    const theme = useMantineTheme()
+    // const theme = useMantineTheme()
 
     return (
         <AppShell
+            header={{ height: 60 }}
+            padding="md"
         >
             <AppShell.Header>
                 {/* main div containing the header */}
-                <BackgroundImage src="https://letspasta.com/wp-content/uploads/2022/08/Alberta-farming.jpg"
-                                 style={{
-                                     backgroundColor: theme.colors.red[6], // Use if color preferred over image (team not decided)
-                                     height: '100%',
-                                     display: 'flex',
-                                     justifyContent: 'space-between',
-                                     alignItems: 'center',
-                                     padding: '0 3vh',
-                                 }}
+                <BackgroundImage
+                    src="https://d27p2a3djqwgnt.cloudfront.net/wp-content/uploads/2024/05/15165226/dirt-road.jpeg"
+                    style={{
+                        //backgroundColor: theme.colors.red[6], // Use if color preferred over image (team not decided)
+                        height: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '0 3vh',
+                        backgroundPosition: "500% 80%"
+                    }}
                 >
                     {/* Header right side */}
-                    <div
-                        style={{width:'25%',
-                            display: 'flex',
-                            justifyContent: 'space-between' }}
+                    <Group
+                        component={Link}
+                        href="/"
+                        justify="space-evenly"
                     >
                         <Image
                             src='https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8='
-                            h={80}
+                            h={40}
                             w='auto'
                             fit='contain'
                             radius='md'
+                            alt="Farmers Market Logo"
                         />
-
-                        <div>
-                            <Title order={1} c='white'>
-                                Market
-                                <Title pl='5vw'>
-                                    Fresh
-                                </Title>
-                            </Title>
-                        </div>
-                    </div>
+                        <Title
+                            order={1} c='white'>
+                            Dirt Road Directory
+                        </Title>
+                    </Group>
 
                     {/* Header let side where nav to sections of the page */}
                     <Group gap='md' >
                         <Button
                             component='a'
-                            href='#section1'
+                            href='/market'
                             variant='subtle'
                             color='white'
                             size='lg'
@@ -66,21 +68,21 @@ export default function NavMT() {
                         </Button>
                         <Button
                             component='a'
-                            href='#section2'
+                            href='/vendors'
                             variant='subtle'
                             color='white'
                             size='lg'
                         >
-                            Categories
+                            Vendors
                         </Button>
                         <Button
                             component='a'
-                            href='#section3'
+                            href='/map'
                             variant='subtle'
                             color='white'
                             size='lg'
                         >
-                            News
+                            Market Map
                         </Button>
                         <Button
                             component='a'
@@ -89,7 +91,7 @@ export default function NavMT() {
                             color='white'
                             size='lg'
                         >
-                            Vendors
+                            About Us
                         </Button>
                         <Button
                             component='a'
@@ -101,8 +103,24 @@ export default function NavMT() {
                             Contact
                         </Button>
                     </Group>
+                    <Group>
+                        <SignedOut>
+                            <SignInButton>
+                                <button className="signin-button">
+                                    Sign in here
+                                </button>
+                            </SignInButton>
+                            <SignUpButton>
+                                <button className="signup-button">
+                                    Sign up here
+                                </button>
+                            </SignUpButton>
+                        </SignedOut>
+                        <SignedIn>
+                            <UserButton />
+                        </SignedIn>
+                    </Group>
                 </BackgroundImage>
-
             </AppShell.Header>
         </AppShell>
 

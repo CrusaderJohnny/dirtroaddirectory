@@ -28,6 +28,10 @@ export default function Page() {
         )
     }
     return (
-        <UserProfile/>
+        <Container>
+            <Center>
+                <UserProfile />
+            </Center>
+        </Container>
     )
 }
