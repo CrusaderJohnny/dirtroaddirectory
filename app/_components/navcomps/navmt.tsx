@@ -59,7 +59,7 @@ export default function NavMT() {
                     <Group gap='md' >
                         <Button
                             component='a'
-                            href='/market'
+                            href='/markets'
                             variant='subtle'
                             color='white'
                             size='lg'
