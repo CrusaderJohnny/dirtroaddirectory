@@ -1,7 +1,8 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card } from '@mantine/core';
+import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group } from '@mantine/core';
+import { IconPhone, IconMail, IconWorld, IconBrandFacebook, IconBrandInstagram, IconShare2 } from '@tabler/icons-react';
 import vendorList from '@/app/_components/vendorcomps/vendordata';
 import VendorCard from '@/app/_components/vendorcomps/vendorcard';
 
@@ -15,7 +16,7 @@ export default function VendorsPage() {
       <Container size="lg" py="xl">
         <Image src={selectedVendor.image} alt={selectedVendor.name} height={300} radius="md" />
         <Space h="md" />
-        <Title order={1} className="text-green-700" ta="center">{selectedVendor.name}</Title>
+        <Title order={1} c="green.8" ta="center">{selectedVendor.name}</Title>
         <Divider my="md" />
         <Text ta="center" fw={700} size="lg" c="green">{selectedVendor.category}</Text>
 
@@ -23,35 +24,36 @@ export default function VendorsPage() {
         <Space h="xl" />
 
         <Grid gutter="xl">
-
-        <Grid.Col span={{ base: 12, sm: 6 }}>
-          <Card shadow="sm" radius="md" withBorder p="md">
-            <Title order={3} mb="sm" className="text-green-700">
-              Contact
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <Card shadow="sm" radius="md" withBorder p="md">
+              <Group justify="center" mb="sm">
+                <ThemeIcon size="xl" radius="xl" color="green">
+                  <IconPhone size={28} />
+                </ThemeIcon>
+              </Group>
+            <Title order={3} ta="center" className="green.8">
+              CONTACT
             </Title>
-            <Text size="sm">
-              <strong>Email:</strong> {selectedVendor.contact || "Not available"}
-            </Text>
-            <Text size="sm">
-              <strong>Website:</strong>{" "}
-              <a href="https://www.vendorwebsite.com" target="_blank" className="text-blue-600 underline">
-                www.vendorwebsite.com
-              </a>
-            </Text>
-          </Card>
+            <Divider my="sm" />
+            <Text size="sm"><strong> Phone: </strong>{selectedVendor.contact || 'Not available'}</Text>
+            <Text size="sm"><strong> Email: </strong> {selectedVendor.email || 'Not available'}</Text>
+            <Text size="sm"><strong> Website:</strong> {selectedVendor.website || 'Not available'}</Text>
+            </Card>
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 6 }}>
           <Card shadow="sm" radius="md" withBorder p="md">
-            <Title order={3} mb="sm" className="text-green-700">
-              Markets
-            </Title>
-            <Text size="sm">
-              {selectedVendor.markets?.join(", ") || "Not listed"}
-            </Text>
+            <Group justify="center" mb="sm">
+              <ThemeIcon size="xl" radius="xl" color="lime"><IconShare2 size={28} /></ThemeIcon>
+            </Group>
+            <Title order={3} ta="center" c="green.8">SOCIAL MEDIA</Title>
+            <Divider my="sm" />
+            <Group justify="space-evenly" mt="md">
+              <Group gap={6}><IconBrandFacebook color="orange" /><Text size="sm">Facebook</Text></Group>
+              <Group gap={6}><IconBrandInstagram color="orange" /><Text size="sm">Instagram</Text></Group>
+            </Group>
           </Card>
         </Grid.Col>
-        
         </Grid>
         <Space h="xl" />
         
