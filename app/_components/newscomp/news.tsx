@@ -21,18 +21,18 @@ export default function NewsPage() {
         <>
             <Flex
                 style={{
-                    minHeight: '80vh',
-                    height: '80vh',
+                    height: '93vh',
                     paddingTop: '5vh',
+                    background: `linear-gradient(to right, ${theme.colors.gray[4]}, ${theme.colors.gray[5]})`,
                 }}
             >
                 {/*<Box>*/}
 
                 {/* Box for current currentUpdate.js */}
                 <Flex
-                    justify="center"
                     align="center"
                     direction="column"
+                    justify="space-around"
                     gap={"lg"}
 
                     style={{width: '100%'}}
@@ -40,30 +40,20 @@ export default function NewsPage() {
                     <Title
                         order={2}
                         ml={'10%'}
-
                         style={{
-                            // fontFamily: 'Montserrat', Articles?
                             fontFamily: 'Monospace',
                             alignSelf: 'flex-start',
-
-
                         }}
                     >
                         What&#39;s New with local farmers markets!
                     </Title>
 
                     <ScrollArea
-                        h={500}
+                        h={600}
                         style={{
                             width: '80%',
-                            // backgroundColor: theme.colors.gray[5],
-                            // borderRadius: '5%',
-                            padding: '1.5%',
-                            height: '70%',
-                            // background: `linear-gradient(to right, ${theme.colors.gray[6]}, ${theme.colors.gray[5]})`,
+                            padding: '1%',
                             borderTop: '3px solid #8B4513',
-                            // borderLeft: '3px solid #8B4513',
-                            // borderRight: '3px solid #D2B48C',
                             borderBottom: '3px solid #D2B48C',
                         }}
                     >
@@ -73,9 +63,6 @@ export default function NewsPage() {
                     <ScrollArea
                         style={{
                             width: '100%',
-                            // backgroundColor: theme.colors.gray[5],
-                            // borderRadius: '1%',
-                            // background: `linear-gradient(to right, ${theme.colors.gray[6]}, ${theme.colors.gray[5]})`,
                             height: '10%',
                             maxWidth: '30%',
                             maxHeight: '150%',
@@ -87,23 +74,35 @@ export default function NewsPage() {
                 {/*</Box>*/}
 
                 {/* Box for updatesList.js */}
-                <ScrollArea
+                <Container
                     style={{
                         width: '25%',
-                        // borderRadius: '5%',
-                        // background: `linear-gradient(to right, ${theme.colors.gray[6]}, ${theme.colors.gray[5]})`,
+                    }}
+                >
+                    <Title
+                        order={2}
+                        ml={'10%'}
+                        style={{
+                            fontFamily: 'Monospace',
+                            alignSelf: 'flex-start',
+                        }}
+                    >
+                        Top Updates
+                    </Title>
+
+                <ScrollArea
+                    style={{
                         padding: '1.5%',
                         marginRight: '2%',
                         height: '90%',
                         borderTop: '3px solid #8B4513',
-                        // borderLeft: '3px solid #8B4513',
-                        // borderRight: '3px solid #D2B48C',
                         borderBottom: '3px solid #D2B48C',
 
                     }}
                 >
                     <UpdateList />
                 </ScrollArea>
+                </Container>
             </Flex>
         </>
 

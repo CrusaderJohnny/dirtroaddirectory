@@ -1,12 +1,16 @@
 
-import { Container, Title, Text, Image } from '@mantine/core';
+import { Container, Center, Box, Title, Text, Image } from '@mantine/core';
 
 
 export default function CurrentUpdate() {
 
 
     return (
-        <Container >
+        <Box
+            style={{
+                width: '95%',
+            }}
+        >
             {/* Name of article */}
             <Title order={2}
                 style={{
@@ -18,15 +22,18 @@ export default function CurrentUpdate() {
             <Text>September 20, 2025</Text>
 
             {/* Page Image Here */}
+            <Center>
+
             <Image
                 src='https://media.istockphoto.com/id/1193489879/photo/counter-with-fresh-vegetables-and-a-sign-of-local-products.jpg?s=2048x2048&w=is&k=20&c=S2ZrZqmzx8G4sgiic3ljJFhcblLey_Wf3LJ_4kSLUUE='
-                h={150}
+                h={'20rem'}
                 w='auto'
                 fit='contain'
                 radius='md'
                 m='5px'
-
+                alt='Article Image from istockphoto.com'
             />
+            </Center>
 
             {/* Update Content Here */}
             <Text>
@@ -52,6 +59,6 @@ export default function CurrentUpdate() {
                 consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
             </Text>
 
-        </Container>
+        </Box>
     );
 }
