@@ -8,7 +8,7 @@ Used Mantine component library
 
 "use client"
 import React from 'react';
-import { AppShell, Button, Center } from '@mantine/core';
+import { AppShell, Button, Center, Select, Autocomplete } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import MarketAccordion from "@/app/_components/marketcomps/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
@@ -28,6 +28,10 @@ export default function App() {
         setOpenMarketId(marketId);
     };
 
+
+    const reigons = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
+    // This is just for testing the search, have this reference the json later
+    const markets = ['Calgary Farmers Market', 'Cochrane Farmers Market', 'Dalhousie Farmers Market'];
     //const farmHeader = require("../assets/Alberta-farming.jpg")
 
 
@@ -54,6 +58,18 @@ export default function App() {
                 <Button onClick={toggleMobile} hiddenFrom="sm">
                     Toggle navbar
                 </Button>
+                <Autocomplete
+                    label="Search Markets"
+                    placeholder="Search"
+                    data={markets}
+                />
+                <Select
+                    label="Region"
+                    placeholder="Region"
+                    data={reigons}
+                />
+                
+                
 
                 <Center>
                     <MapComponent onMarkerClick={handleOpenMarket}/>
