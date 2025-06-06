@@ -8,7 +8,7 @@ Used Mantine component library
 
 "use client"
 import React from 'react';
-import { AppShell, Button, Center, Select, Autocomplete } from '@mantine/core';
+import { AppShell, Button, Center, Select, Autocomplete, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import MarketAccordion from "@/app/_components/marketcomps/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
@@ -25,7 +25,16 @@ export default function App() {
     const [openMarketId, setOpenMarketId] = useState<string | null>(null);
 
     const handleOpenMarket = (marketId: string | null) => {
-        setOpenMarketId(marketId);
+        console.log("Marker clicked with id:"+marketId)
+
+        if (marketId == openMarketId) {
+            setOpenMarketId(null);
+        }
+        else{
+            setOpenMarketId(marketId);
+        }
+
+        
     };
 
 
@@ -49,26 +58,25 @@ export default function App() {
         >
             <AppShell.Header component={NavMT}/>
             <AppShell.Navbar>
-                <MarketAccordion/>
+                <MarketAccordion defaultOpenItemId={openMarketId}/>
             </AppShell.Navbar>
             <AppShell.Main>
-                <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
-                    Toggle navbar
-                </Button>
-                <Button onClick={toggleMobile} hiddenFrom="sm">
-                    Toggle navbar
-                </Button>
-                <Autocomplete
-                    label="Search Markets"
-                    placeholder="Search"
-                    data={markets}
-                />
-                <Select
-                    label="Region"
-                    placeholder="Region"
-                    data={reigons}
-                />
-                
+                <Group align='center'>
+                    <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
+                        Toggle navbar
+                    </Button>
+                    <Button onClick={toggleMobile} hiddenFrom="sm">
+                        Toggle navbar
+                    </Button>
+                    <Autocomplete
+                        placeholder="Search"
+                        data={markets}
+                    />
+                    <Select
+                        placeholder="Region"
+                        data={reigons}
+                    />
+                </Group>
                 
 
                 <Center>
