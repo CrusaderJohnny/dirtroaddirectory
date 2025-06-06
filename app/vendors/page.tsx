@@ -29,50 +29,74 @@ export default function VendorsPage() {
         <AppShell.Header>
           <NavMT />
         </AppShell.Header>
-        <AppShell.Main>
+        <AppShell.Main style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
           <Container size="lg" py="xl">
-            <Image src={selectedVendor.image} alt={selectedVendor.name} height={300} radius="md" />
-            <Space h="md" />
-            <Title order={1} ta="center" fw={900} size="2.5rem" c="dark.9" mb="xs">{selectedVendor.name}</Title>
-            <Divider my="md" size="xs" />
+            <Card withBorder shadow="sm" radius="md" p="md" mb="xl">
+            <Image src={selectedVendor.image} alt={selectedVendor.name} height={300} radius="md" fit="cover" />
+            </Card>
+
+            <Title order={1} ta="center" fw={800} mb={4} c="dark.8">{selectedVendor.name}</Title>
             <Text ta="center" fw={600} size="lg" c="green.7">{selectedVendor.category}</Text>
 
-            <Text mt="md"><strong>Description:</strong> {selectedVendor.description || 'No description available'}</Text>
-            <Space h="xl" />
+            <Divider my="lg" />
 
-            <Grid gutter="xl">
-              <Grid.Col span={{ base: 12 }}>
-                <Card shadow="sm" radius="md" withBorder p="md">
-                  <Title order={3} ta="center" c="green.8">
-                    Products Offered
-                  </Title>
-                  <Divider my="sm" />
-                  
-                  {selectedVendor.products && selectedVendor.products.length > 0 ? (
-                    <List spacing="xs" size="sm">
-                      {selectedVendor.products.map((item, index) => (
-                        <List.Item key={index}>{item}</List.Item>
-                      ))}
-                    </List>
-                  ) : (
-                    <Text size="sm" c="dimmed">No product list available</Text>
-                  )}
-                </Card>
-              </Grid.Col>
-            </Grid>
+            <Card withBorder shadow="xs" radius="md" p="lg" mb="lg" style={{ backgroundColor: '#fff' }}>
+            <Text size="sm" c="gray.8"><strong>Description:</strong> {selectedVendor.description || 'No description available'}</Text>
+            </Card>
+
+            <Card withBorder shadow="xs" radius="md" p="lg" mb="xl" style={{ backgroundColor: '#ffffff' }}>
+              <Title order={3} ta="center" c="green.8" mb="md">
+                Products Offered
+              </Title>
+              <Grid>
+                {selectedVendor.products && selectedVendor.products.length > 0 ? (
+                  selectedVendor.products.map((product, index) => (
+                    <Grid.Col span={{ base: 12, sm: 6 }} key={index}>
+                      <Text>• {product}</Text>
+                    </Grid.Col>
+                  ))
+                ) : (
+                  <Grid.Col span={{ base: 12 }}>
+                    <Text ta="center" size="sm" c="dimmed">
+                      No product list available.
+                    </Text>
+                  </Grid.Col>
+                )}
+              </Grid>
+            </Card>
+
+            <Card withBorder shadow="xs" radius="md" p="lg" mb="xl" style={{ backgroundColor: '#ffffff' }}>
+              <Title order={3} ta="center" c="green.8" mb="md">
+                Find Us at Markets
+              </Title>
+              
+              {selectedVendor.markets && selectedVendor.markets.length > 0 ? (
+                <Grid>
+                  {selectedVendor.markets.map((market, index) => (
+                    <Grid.Col span={{ base: 12, sm: 6 }} key={index}>
+                      <Text>• {market}</Text>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              ) : (
+              <Text ta="center" size="sm" c="dimmed">
+                No market information available.
+              </Text>
+              )}
+            </Card>
+
 
             <Grid gutter="xl">
               <Grid.Col span={{ base: 12, sm: 6 }}>
-                <Card shadow="sm" radius="md" withBorder p="md">
+                <Card shadow="sm" radius="md" withBorder p="lg" style={{ backgroundColor: '#e6f4ea' }}>
                   <Group justify="center" mb="sm">
                     <ThemeIcon size="xl" radius="xl" color="green">
                       <IconPhone size={28} />
                     </ThemeIcon>
                   </Group>
-                  <Title order={3} ta="center" className="green.8">
+                  <Title order={4} ta="center" c="dark.8" mb="sm">
                     CONTACT
                   </Title>
-                  <Divider my="sm" />
                   <Text size="sm"><strong> Phone: </strong>{selectedVendor.contact || 'Not available'}</Text>
                   <Text size="sm"><strong> Email: </strong> {selectedVendor.email || 'Not available'}</Text>
                   <Text size="sm"><strong> Website:</strong> {selectedVendor.website || 'Not available'}</Text>
@@ -80,15 +104,15 @@ export default function VendorsPage() {
               </Grid.Col>
 
               <Grid.Col span={{ base: 12, sm: 6 }}>
-                <Card shadow="sm" radius="md" withBorder p="md">
+                <Card shadow="sm" radius="md" withBorder p="lg" style={{ backgroundColor: '#d3d3d3' }}>
                   <Group justify="center" mb="sm">
-                    <ThemeIcon size="xl" radius="xl" color="lime"><IconShare2 size={28} /></ThemeIcon>
+                    <ThemeIcon size="xl" radius="xl" color="gray"><IconShare2 size={28} /></ThemeIcon>
                   </Group>
-                  <Title order={3} ta="center" c="green.8">SOCIAL MEDIA</Title>
+                  <Title order={4} ta="center" c="dark.7">SOCIAL MEDIA</Title>
                   <Divider my="sm" />
                   <Group justify="space-evenly" mt="md">
-                    <Group gap={6}><IconBrandFacebook color="orange" /><Text size="sm">Facebook</Text></Group>
-                    <Group gap={6}><IconBrandInstagram color="orange" /><Text size="sm">Instagram</Text></Group>
+                    <Group gap={6}><IconBrandFacebook color="darkblue" /><Text size="sm">Facebook</Text></Group>
+                    <Group gap={6}><IconBrandInstagram color="purple" /><Text size="sm">Instagram</Text></Group>
                   </Group>
                 </Card>
               </Grid.Col>
