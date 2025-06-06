@@ -25,10 +25,7 @@ export default function VendorsPage() {
 
   if (selectedVendor) {
     return (
-      <AppShell
-        header={{ height: 60 }}
-        padding="md"
-      >
+      <AppShell>
         <AppShell.Header>
           <NavMT />
         </AppShell.Header>
@@ -100,17 +97,23 @@ export default function VendorsPage() {
             
             <Button component="a" href="/vendors" variant="light">Back to all vendors</Button>
           </Container>
-        </AppShell.Main>
-      </AppShell>
+      </AppShell.Main>
+    </AppShell>
     );
   }
 
   return (
-    <Container size="xl" py="xl" style={{ backgroundColor: '#f9f9f9', borderRadius: 12 }}>
-      <Paper shadow="xs" p="md" mb="md" withBorder radius="md">
-      <Title order={1} c="black">Our Vendors</Title>
+    <AppShell
+    >
+        <AppShell.Header component={NavMT}/>
+        <AppShell.Main style={{ backgroundColor: '#f7f5f2', minHeight: '100vh' }}>
+      
+    <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" style={{ backgroundColor: '#ffffff' }}>
+        <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700 }}>
+          Our Vendors
+        </Title>
       <Text size="sm" c="dimmed" mb="md">
-      Browse our trusted vendors by name or category
+        Browse our trusted vendors by name or category
       </Text>
 
       <Group mb="lg" grow>
@@ -120,6 +123,7 @@ export default function VendorsPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.currentTarget.value)}
           radius="md"
+          size="md"
         />
         <Select
           data={allCategories}
@@ -128,6 +132,7 @@ export default function VendorsPage() {
           value={selectedCategory}
           onChange={setSelectedCategory}
           radius="md"
+          size="md"
         />
       </Group>
       </Paper>
@@ -139,6 +144,7 @@ export default function VendorsPage() {
           </Grid.Col>
         ))}
       </Grid>
-    </Container>
+    </AppShell.Main>
+    </AppShell>
   );
 }
