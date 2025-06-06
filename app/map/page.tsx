@@ -8,7 +8,7 @@ Used Mantine component library
 
 "use client"
 import React from 'react';
-import { AppShell, Button, Center } from '@mantine/core';
+import { AppShell, Button, Center, Select, Autocomplete, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import MarketAccordion from "@/app/_components/marketcomps/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
@@ -25,9 +25,22 @@ export default function App() {
     const [openMarketId, setOpenMarketId] = useState<string | null>(null);
 
     const handleOpenMarket = (marketId: string | null) => {
-        setOpenMarketId(marketId);
+        console.log("Marker clicked with id:"+marketId)
+
+        if (marketId == openMarketId) {
+            setOpenMarketId(null);
+        }
+        else{
+            setOpenMarketId(marketId);
+        }
+
+        
     };
 
+
+    const reigons = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
+    // This is just for testing the search, have this reference the json later
+    const markets = ['Calgary Farmers Market', 'Cochrane Farmers Market', 'Dalhousie Farmers Market'];
     //const farmHeader = require("../assets/Alberta-farming.jpg")
 
 
@@ -45,15 +58,26 @@ export default function App() {
         >
             <AppShell.Header component={NavMT}/>
             <AppShell.Navbar>
-                <MarketAccordion/>
+                <MarketAccordion defaultOpenItemId={openMarketId}/>
             </AppShell.Navbar>
             <AppShell.Main>
-                <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
-                    Toggle navbar
-                </Button>
-                <Button onClick={toggleMobile} hiddenFrom="sm">
-                    Toggle navbar
-                </Button>
+                <Group align='center'>
+                    <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
+                        Toggle navbar
+                    </Button>
+                    <Button onClick={toggleMobile} hiddenFrom="sm">
+                        Toggle navbar
+                    </Button>
+                    <Autocomplete
+                        placeholder="Search"
+                        data={markets}
+                    />
+                    <Select
+                        placeholder="Region"
+                        data={reigons}
+                    />
+                </Group>
+                
 
                 <Center>
                     <MapComponent onMarkerClick={handleOpenMarket}/>
