@@ -9,7 +9,7 @@ References:
 */
 "use client"
 import { AppShell, Button, Group, BackgroundImage, Title, Image } from '@mantine/core';
-import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
 export default function NavMT() {
 
@@ -48,9 +48,9 @@ export default function NavMT() {
                             alt="Farmers Market Logo"
                         />
 
-                            <Title order={1} c='white'>
-                                Dirt Road Directory
-                            </Title>
+                        <Title order={1} c='white'>
+                            Dirt Road Directory
+                        </Title>
                     </div>
 
                     {/* Header let side where nav to sections of the page */}
