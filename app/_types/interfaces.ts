@@ -7,6 +7,10 @@ export interface MarketsInterface {
     link: string;
 }
 
+export interface MarketGridProps {
+    data: MarketsInterface[];
+}
+
 export interface VendorsInterface {
     id: number;
     name: string;
