@@ -19,7 +19,6 @@ export default function NavMT() {
     return (
         <AppShell
             header={{ height: 60 }}
-            padding="md"
         >
             <AppShell.Header>
                 {/* main div containing the header */}
@@ -86,7 +85,7 @@ export default function NavMT() {
                         </Button>
                         <Button
                             component='a'
-                            href='#section4'
+                            href='/aboutus'
                             variant='subtle'
                             color='white'
                             size='lg'
@@ -95,7 +94,7 @@ export default function NavMT() {
                         </Button>
                         <Button
                             component='a'
-                            href='#section5'
+                            href='/contact'
                             variant='subtle'
                             color='white'
                             size='lg'
