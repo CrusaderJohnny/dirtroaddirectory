@@ -1,4 +1,5 @@
 import {Container, Title, Text, Button, Flex} from '@mantine/core';
+import Link from "next/link";
 
 
 interface ContactOrNewPostProps {
@@ -15,7 +16,10 @@ export default function ContactOrNewPost({ isAdmin }: ContactOrNewPostProps) {
                     <Title order={2}>Welcome back Admin!</Title>
                     <Flex>
                         <Text>Click to create</Text>
-                        <Button mx={10}>New Post</Button>
+                        <Button
+                            component={Link}
+                            href="/"
+                            mx={10}>New Post</Button>
                     </Flex>
                 </Container>
             ) : (
@@ -24,7 +28,10 @@ export default function ContactOrNewPost({ isAdmin }: ContactOrNewPostProps) {
                     <Title order={2}>Are you a Vendor?</Title>
                     <Flex>
                         <Text>Want your post on our page?</Text>
-                        <Button mx={10}>Contact Us</Button>
+                        <Button
+                            component={Link}
+                            href="/contact"
+                            mx={10}>Contact Us</Button>
                     </Flex>
                 </Container>
             )}
