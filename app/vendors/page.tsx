@@ -29,7 +29,7 @@ export default function VendorsPage() {
         <AppShell.Header>
           <NavMT />
         </AppShell.Header>
-        <AppShell.Main style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+        <AppShell.Main style={{ backgroundColor: '#f7f5f2', minHeight: '100vh' }}>
           <Container size="lg" py="xl">
             <Card withBorder shadow="sm" radius="md" p="md" mb="xl">
             <Image src={selectedVendor.image} alt={selectedVendor.name} height={300} radius="md" fit="cover" />

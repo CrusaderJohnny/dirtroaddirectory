@@ -25,7 +25,7 @@ export default function Page() {
 
                 <Container size="md" py="xl">
                     <Card shadow="sm" withBorder radius="md" p="lg" style={{ backgroundColor: "#ffffff" }}>
-                        <Title order={2} ta="center" c="green.8" mb="sm"> About Us </Title>
+                        <Title order={2} ta="center" c="dark" mb="sm"> About Us </Title>
                         <Divider my="sm" />
                         <Text size="md" c="gray.8" mb="md">
                             We are a group of students passionate about building a better connection between communities and local farmers.
@@ -43,8 +43,8 @@ export default function Page() {
                     
                     <Grid gutter="xl">
                         <Grid.Col span={{ base: 12, sm: 4 }}>
-                            <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#e6f4ea" }}>
-                                <Title order={4} c="green.7" mb="xs">Local Focus</Title>
+                            <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#ece2d2" }}>
+                                <Title order={4} c="dark" mb="xs">Local Focus</Title>
                                 <Text size="sm" c="gray.7">
                                     We highlight Alberta-based vendors and encourage local economic growth.
                                 </Text>
@@ -52,8 +52,8 @@ export default function Page() {
                         </Grid.Col>
                         
                         <Grid.Col span={{ base: 12, sm: 4 }}>
-                            <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#e6f0ff" }}>
-                                <Title order={4} c="blue.7" mb="xs">Student Project</Title>
+                            <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#ece2d2" }}>
+                                <Title order={4} c="dark" mb="xs">Student Project</Title>
                                 <Text size="sm" c="gray.7">
                                     Developed by students at SAIT to solve real-world problems through tech.
                                 </Text>
@@ -61,8 +61,8 @@ export default function Page() {
                         </Grid.Col>
                         
                         <Grid.Col span={{ base: 12, sm: 4 }}>
-                            <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#fff4e6" }}>
-                                <Title order={4} c="orange.7" mb="xs">Simplified Shopping</Title>
+                            <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#ece2d2" }}>
+                                <Title order={4} c="dark" mb="xs">Simplified Shopping</Title>
                                 <Text size="sm" c="gray.7">
                                     Discover what’s at each market so you can plan better and shop smarter.
                                 </Text>

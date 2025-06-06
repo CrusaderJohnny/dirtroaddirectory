@@ -11,7 +11,9 @@
   "dependencies": {
     "@clerk/nextjs": "^6.20.2",
     "@mantine/core": "^8.0.2",
+    "@mantine/form": "^8.0.2",
     "@mantine/hooks": "^8.0.2",
+    "@mantine/notifications": "^8.0.2",
     "@tabler/icons-react": "^3.34.0",
     "@vis.gl/react-google-maps": "^1.5.2",
     "firebase": "^11.8.1",
