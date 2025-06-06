@@ -61,7 +61,7 @@ export default function App() {
                 <MarketAccordion defaultOpenItemId={openMarketId}/>
             </AppShell.Navbar>
             <AppShell.Main>
-                <Group align='center'>
+                <Group align='center' p={'sm'}>
                     <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
                         Toggle navbar
                     </Button>
