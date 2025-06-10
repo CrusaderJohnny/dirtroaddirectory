@@ -79,17 +79,20 @@ export default async function AdminDashboard(params: {
                                         </Flex>
                                     </Stack>
                                 <Stack>
-                                    <Button formAction={setRole}>
+                                    <Button type={"submit"}
+                                        formAction={setRole}>
                                         <input type="hidden" value={user.id} name="id"/>
                                         <input type="hidden" value="admin" name="role"/>
                                         Make Admin
                                     </Button>
-                                    <Button formAction={setRole}>
+                                    <Button type={"submit"}
+                                        formAction={setRole}>
                                         <input type="hidden" value={user.id} name="id"/>
                                         <input type="hidden" value="moderator" name="role"/>
                                         Make Moderator
                                     </Button>
-                                    <Button formAction={removeRole}>
+                                    <Button type={"submit"}
+                                            formAction={removeRole}>
                                         <input type="hidden" value={user.id} name="id"/>
                                         Remove Role
                                     </Button>

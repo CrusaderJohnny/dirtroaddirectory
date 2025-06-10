@@ -2,8 +2,8 @@
 
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
-import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group, List, TextInput, Select, Paper, AppShell } from '@mantine/core';
-import { IconPhone, IconMail, IconWorld, IconBrandFacebook, IconBrandInstagram, IconShare2, IconCheck, IconSearch } from '@tabler/icons-react';
+import { Container, Grid, Title, Space, Divider, Text, Image, Button, Card, ThemeIcon, Group, TextInput, Select, Paper, AppShell } from '@mantine/core';
+import { IconPhone, IconBrandFacebook, IconBrandInstagram, IconShare2, IconSearch } from '@tabler/icons-react';
 import vendorList from '@/app/_components/vendorcomps/vendordata';
 import VendorCard from '@/app/_components/vendorcomps/vendorcard';
 import NavMT from "@/app/_components/navcomps/navmt";

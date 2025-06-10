@@ -1,5 +1,5 @@
 import {Grid} from "@mantine/core";
-import MarketCard from "@/app/_components/marketcomps/marketcard";
+import MarketCard from "@/app/_components/marketaccordian/marketcard";
 import {MarketGridProps, MarketsInterface} from "@/app/_types/interfaces";
 import React from "react";
 
