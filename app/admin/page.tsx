@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
-import { SearchUsers } from './searchUsers'
+import { SearchUsers } from '../_components/admincomps/searchUsers'
 import {clerkClient, EmailAddress} from '@clerk/nextjs/server'
-import { removeRole, setRole } from './_actions'
+import { removeRole, setRole } from '../_components/admincomps/_actions'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell,
@@ -79,20 +79,17 @@ export default async function AdminDashboard(params: {
                                         </Flex>
                                     </Stack>
                                 <Stack>
-                                    <Button type={"submit"}
-                                        formAction={setRole}>
+                                    <Button formAction={setRole}>
                                         <input type="hidden" value={user.id} name="id"/>
                                         <input type="hidden" value="admin" name="role"/>
                                         Make Admin
                                     </Button>
-                                    <Button type={"submit"}
-                                        formAction={setRole}>
+                                    <Button formAction={setRole}>
                                         <input type="hidden" value={user.id} name="id"/>
                                         <input type="hidden" value="moderator" name="role"/>
                                         Make Moderator
                                     </Button>
-                                    <Button type={"submit"}
-                                            formAction={removeRole}>
+                                    <Button formAction={removeRole}>
                                         <input type="hidden" value={user.id} name="id"/>
                                         Remove Role
                                     </Button>
