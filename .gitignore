@@ -45,3 +45,6 @@ next-env.d.ts
 
 # firebase redundancy
 .env.local
+
+# Idea files
+.idea

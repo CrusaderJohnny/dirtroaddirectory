@@ -2,9 +2,6 @@
 import {Center, Box, Title, Text, Image, Spoiler} from '@mantine/core';
 import {useState} from "react";
 
-interface CurrentUpdateProps {
-    update: UpdateArticle | null;
-}
 
 export default function CurrentUpdate() {
     const [expanded, setExpanded] = useState(false);
@@ -18,25 +15,23 @@ export default function CurrentUpdate() {
                 style={{
                     fontFamily: 'Monospace',
                 }}
-            >
-                {update.title}
-            </Title>
+            >Seasonal Delights: What&#39;s Ripe and Ready This Week</Title>
 
             {/* Date */}
-            <Text>{update.date}</Text>
+            <Text>September 20, 2025</Text>
 
             {/* Page Image Here */}
             <Center>
 
-                <Image
-                    src={update.imgLink}
-                    h={'20rem'}
-                    w='auto'
-                    fit='contain'
-                    radius='md'
-                    m='5px'
-                    alt={`Article Image for ${update.title}`}
-                />
+            <Image
+                src='https://media.istockphoto.com/id/1193489879/photo/counter-with-fresh-vegetables-and-a-sign-of-local-products.jpg?s=2048x2048&w=is&k=20&c=S2ZrZqmzx8G4sgiic3ljJFhcblLey_Wf3LJ_4kSLUUE='
+                h={'20rem'}
+                w='auto'
+                fit='contain'
+                radius='md'
+                m='5px'
+                alt='Article Image from istockphoto.com'
+            />
             </Center>
 
             {/* Update Content Here */}

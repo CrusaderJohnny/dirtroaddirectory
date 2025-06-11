@@ -1,40 +1,26 @@
-// updateList.tsx
-import { Card, Text, Image, Title, Stack } from '@mantine/core';
-import { UpdateArticle } from './types'; // Import the interface
 
-interface UpdateListProps {
-    updateList: UpdateArticle[];
-    onUpdateClick: (update: UpdateArticle) => void;
-}
+import { Text } from '@mantine/core';
 
-export default function UpdateList({ updateList, onUpdateClick }: UpdateListProps) {
-    return (
-        <Stack>
-            {updateList.map((update) => (
-                <Card
-                    key={update.id}
-                    shadow="sm"
-                    padding="lg"
-                    radius="md"
-                    withBorder
-                    onClick={() => onUpdateClick(update)} // Add onClick handler
-                    style={{ cursor: 'pointer' }} // Indicate it's clickable
-                >
-                    <Card.Section>
-                        <Image
-                            src={update.imgLink}
-                            height={100}
-                            alt={update.title}
-                            fit="cover"
-                        />
-                    </Card.Section>
-
-                    <Title order={4} mt="md">{update.title}</Title>
-                    <Text size="sm" c="dimmed">
-                        {update.date}
-                    </Text>
-                </Card>
-            ))}
-        </Stack>
+export default function UpdateList() {
+    return(
+        <>
+            <Text>
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+            </Text>
+        </>
     );
 }
