@@ -8,9 +8,9 @@ Used Mantine component library
 
 "use client"
 import React from 'react';
-import { Text, AppShell, Button, Center, ScrollArea , AppShellMain, AppShellNavbar, AppShellHeader, BackgroundImage } from '@mantine/core';
+import { AppShell, Button, Center, Select, Autocomplete, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import MarketAccordion from "@/app/_components/marketcomps/marketcomp";
+import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
 import { useState } from "react";
 import NavMT from '../_components/navcomps/navmt';
@@ -25,9 +25,22 @@ export default function App() {
     const [openMarketId, setOpenMarketId] = useState<string | null>(null);
 
     const handleOpenMarket = (marketId: string | null) => {
-        setOpenMarketId(marketId);
+        console.log("Marker clicked with id:"+marketId)
+
+        if (marketId == openMarketId) {
+            setOpenMarketId(null);
+        }
+        else{
+            setOpenMarketId(marketId);
+        }
+
+        
     };
 
+
+    const reigons = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
+    // This is just for testing the search, have this reference the json later
+    const markets = ['Calgary Farmers Market', 'Cochrane Farmers Market', 'Dalhousie Farmers Market'];
     //const farmHeader = require("../assets/Alberta-farming.jpg")
 
 
@@ -37,35 +50,39 @@ export default function App() {
     return (
         <AppShell
             padding="md"
-            header={{ height: 100 }}
             navbar={{
                 width: 300,
                 breakpoint: 'sm',
                 collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
             }}
         >
-            <NavMT>
-            </NavMT>
-            <AppShellNavbar>
-                <ScrollArea>
-                    <MarketAccordion defaultOpenItemId={openMarketId} />
-                </ScrollArea>
-            </AppShellNavbar>
-            <AppShellMain>
-                <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
-                    Toggle navbar
-                </Button>
-                <Button onClick={toggleMobile} hiddenFrom="sm">
-                    Toggle navbar
-                </Button>
+            <AppShell.Header component={NavMT}/>
+            <AppShell.Navbar>
+                <MarketAccordion defaultOpenItemId={openMarketId}/>
+            </AppShell.Navbar>
+            <AppShell.Main>
+                <Group align='center' p={'sm'}>
+                    <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
+                        Toggle navbar
+                    </Button>
+                    <Button onClick={toggleMobile} hiddenFrom="sm">
+                        Toggle navbar
+                    </Button>
+                    <Autocomplete
+                        placeholder="Search"
+                        data={markets}
+                    />
+                    <Select
+                        placeholder="Region"
+                        data={reigons}
+                    />
+                </Group>
+                
 
                 <Center>
                     <MapComponent onMarkerClick={handleOpenMarket}/>
                 </Center>
-
-
-
-            </AppShellMain>
+            </AppShell.Main>
         </AppShell>
 
     );

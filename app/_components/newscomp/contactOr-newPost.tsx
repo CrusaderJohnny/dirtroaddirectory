@@ -1,4 +1,5 @@
-import {Container, Title, Button, Flex} from '@mantine/core';
+import {Container, Title, Text, Button, Flex} from '@mantine/core';
+import Link from "next/link";
 
 
 interface ContactOrNewPostProps {
@@ -11,38 +12,26 @@ export default function ContactOrNewPost({isAdmin}: ContactOrNewPostProps) {
         <>
             {isAdmin ? (
                 // Container B when user is admin
-                <Container
-                    style={{
-                        // backgroundColor: 'white',
-                    }}
-                >
-                    <Flex justify="flex-end">
-                        <Title order={2}
-                               style={{
-                                   fontFamily: 'Monospace',
-                                   // alignSelf: 'flex-end',
-                               }}
-                        >
-                            Welcome back Admin!
-                        </Title>
-                        <Button mx={10}>Edit Posts</Button>
+                <Container>
+                    <Title order={2}>Welcome back Admin!</Title>
+                    <Flex>
+                        <Text>Click to create</Text>
+                        <Button
+                            component={Link}
+                            href="/"
+                            mx={10}>New Post</Button>
                     </Flex>
                 </Container>
             ) : (
                 // Container A when user is not admin
                 <Container>
-                    <Flex
-                        justify="flex-end"
-                    >
-                        <Title order={2}
-                               style={{
-                                   fontFamily: 'Monospace',
-                                   alignSelf: 'flex-end',
-                               }}
-                        >
-                            Want your story featured?
-                        </Title>
-                        <Button mx={10}>Contact Us</Button>
+                    <Title order={2}>Are you a Vendor?</Title>
+                    <Flex>
+                        <Text>Want your post on our page?</Text>
+                        <Button
+                            component={Link}
+                            href="/contact"
+                            mx={10}>Contact Us</Button>
                     </Flex>
                 </Container>
             )}

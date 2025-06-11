@@ -1,25 +1,17 @@
 
-import { Container, Center, Box, Title, Text, Image } from '@mantine/core';
-import { UpdateArticle } from "@/app/_components/newscomp/types";
+import {Center, Box, Title, Text, Image, Spoiler} from '@mantine/core';
+import {useState} from "react";
 
 interface CurrentUpdateProps {
     update: UpdateArticle | null;
 }
 
-export default function CurrentUpdate({ update }: CurrentUpdateProps) {
-    if (!update) {
-        return (
-            <Center style={{ height: '100%' }}>
-                <Text size="xl" c="dimmed">Select an update to view its content.</Text>
-            </Center>
-        );
-    }
+export default function CurrentUpdate() {
+    const [expanded, setExpanded] = useState(false);
+
 
     return (
         <Box
-            style={{
-                width: '95%',
-            }}
         >
             {/* Name of article */}
             <Title order={2}
@@ -48,9 +40,35 @@ export default function CurrentUpdate({ update }: CurrentUpdateProps) {
             </Center>
 
             {/* Update Content Here */}
-            <Text>
-                {update.content}
-            </Text>
+            <Spoiler
+                maxHeight={200}
+                showLabel="See More"
+                hideLabel="See Less"
+                expanded={expanded}
+                onExpandedChange={setExpanded}
+                transitionDuration={500}
+            >
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+                Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
+                sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
+                at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
+                Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
+                consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus
+            </Spoiler>
 
         </Box>
     );

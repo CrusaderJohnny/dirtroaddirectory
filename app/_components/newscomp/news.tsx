@@ -1,43 +1,29 @@
 "use client"
-import { useState, useEffect } from 'react';
-import { Title, Flex, Container, ScrollArea, useMantineTheme } from '@mantine/core';
+import {useState, useEffect} from 'react';
+import {Title, Flex, ScrollArea, useMantineTheme, AppShell} from '@mantine/core';
 import CurrentUpdate from "./currentUpdate";
-import UpdateList from "./updateList";
 import ContactOrNewPost from "./contactOr-newPost";
-import { updateList, UpdateArticle } from "./types";
 
 
 export default function NewsPage() {
     const theme = useMantineTheme()
 
     const [isAdmin, setIsAdmin] = useState(false);
-    // State to hold the currently selected update article
-    const [selectedUpdate, setSelectedUpdate] = useState<UpdateArticle | null>(null);
 
     useEffect(() => {
-        // Set the first update as the default selected update when the component mounts
-        if (updateList.length > 0) {
-            setSelectedUpdate(updateList[0]);
-        }
-
-        // Temp delete and replace later
         setTimeout(() => {
             setIsAdmin(true);
-        }, 1000000);
+        }, 10000);
     }, []);
 
-    // Function to handle when an update card is clicked
-    const handleUpdateClick = (update: UpdateArticle) => {
-        setSelectedUpdate(update);
-    };
-
     return (
-        <>
-            <Flex
+        <AppShell
+        >
+            <AppShell.Main
                 style={{
-                    height: '93vh',
-                    paddingTop: '1vh',
-                    background: `linear-gradient(to right, ${theme.colors.gray[3]}, ${theme.colors.gray[6]})`,
+                    // height: '93vh',
+                    // paddingTop: '5vh',
+                    background: `linear-gradient(to right, ${theme.colors.gray[4]}, ${theme.colors.gray[5]})`,
                 }}
             >
                 {/*<Box>*/}
@@ -47,9 +33,9 @@ export default function NewsPage() {
                     align="center"
                     direction="column"
                     justify="space-around"
-                    gap={'sm'}
+                    gap={"lg"}
 
-                    style={{ width: '100%' }}
+                    style={{width: '100%'}}
                 >
                     <Title
                         order={2}
@@ -71,53 +57,59 @@ export default function NewsPage() {
                             borderBottom: '3px solid #D2B48C',
                         }}
                     >
-                        <CurrentUpdate update={selectedUpdate} />
+                        <CurrentUpdate/>
                     </ScrollArea>
-
-                    <Container
-                        style={{
-                            width: '90%',
-                            height: '10%',
-                        }}
-                    >
-                        <ContactOrNewPost isAdmin={isAdmin} />
-                    </Container>
-                </Flex>
-                {/*</Box>*/}
-
-                {/* Box for updatesList.js */}
-                <Container
-                    style={{
-                        width: '25%',
-                    }}
-                >
-                    <Title
-                        order={2}
-                        ml={'10%'}
-                        style={{
-                            fontFamily: 'Monospace',
-                            alignSelf: 'flex-start',
-                        }}
-                    >
-                        Top Updates
-                    </Title>
 
                     <ScrollArea
                         style={{
-                            padding: '1.5%',
-                            marginRight: '2%',
-                            height: '90%',
-                            borderTop: '3px solid #8B4513',
-                            borderBottom: '3px solid #D2B48C',
-
+                            width: '100%',
+                            height: '10%',
+                            maxWidth: '30%',
+                            maxHeight: '150%',
                         }}
                     >
-                        <UpdateList updateList={updateList} onUpdateClick={handleUpdateClick} />
+                        <ContactOrNewPost isAdmin={isAdmin}/>
                     </ScrollArea>
-                </Container>
-            </Flex>
-        </>
+                </Flex>
+                {/*</Box>*/}
+
+                {/*/!* Box for updatesList.js *!/*/}
+                {/*<Container*/}
+                {/*    style={{*/}
+                {/*        width: '25%',*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    <Title*/}
+                {/*        order={2}*/}
+                {/*        ml={'10%'}*/}
+                {/*        style={{*/}
+                {/*            fontFamily: 'Monospace',*/}
+                {/*            alignSelf: 'flex-start',*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        Top Updates*/}
+                {/*    </Title>*/}
+
+                {/*    <ScrollArea*/}
+                {/*        style={{*/}
+                {/*            padding: '1.5%',*/}
+                {/*            marginRight: '2%',*/}
+                {/*            height: '90%',*/}
+                {/*            borderTop: '3px solid #8B4513',*/}
+                {/*            borderBottom: '3px solid #D2B48C',*/}
+
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <UpdateList/>*/}
+                {/*        <Center>*/}
+                {/*            <Container>*/}
+                {/*                <Board/>*/}
+                {/*            </Container>*/}
+                {/*        </Center>*/}
+                {/*    </ScrollArea>*/}
+                {/*</Container>*/}
+            </AppShell.Main>
+        </AppShell>
 
     );
 }
-
