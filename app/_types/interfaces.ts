@@ -11,6 +11,16 @@ export interface MarketGridProps {
     data: MarketsInterface[];
 }
 
+export interface MarketPostFormProps {
+    marketName: string;
+    userId: string;
+}
+
+export interface VendorPostFormProps {
+    userId: string;
+    vendorName: string;
+}
+
 export interface VendorsInterface {
     id: number;
     name: string;
