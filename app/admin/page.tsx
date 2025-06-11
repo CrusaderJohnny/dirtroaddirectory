@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
-import { SearchUsers } from './searchUsers'
+import { SearchUsers } from '../_components/admincomps/searchUsers'
 import {clerkClient, EmailAddress} from '@clerk/nextjs/server'
-import { removeRole, setRole } from './_actions'
+import { removeRole, setRole } from '../_components/admincomps/_actions'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell,
