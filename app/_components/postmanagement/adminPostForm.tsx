@@ -49,7 +49,12 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 if(!marketResponse.ok || !vendorResponse.ok){
                     const marketError = await marketResponse.text();
                     const vendorError = await vendorResponse.text();
-                    throw new Error(`Failed to fetch markets: (${marketResponse.status}): ${marketError} or vendors (${vendorResponse.status}): ${vendorError}`);
+                    setSubmissionMessage({
+                        type: 'error',
+                        message: `Failed to load markets/vendors: Market Status: ${marketResponse.status}: ${marketError} | Vendor Status: ${vendorResponse.status}: ${vendorError}`,
+                    })
+                    setIsLoadingOptions(false);
+                    return;
                 }
                 const markets: MarketOption[] = await marketResponse.json();
                 const vendors: VendorOption[] = await vendorResponse.json();
@@ -62,7 +67,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 setIsLoadingOptions(false);
             }
         };
-        fetchOptions();
+        void fetchOptions();
     }, []); //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
     const handleSubmit = async (values: typeof form.values) => {
@@ -83,8 +88,8 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 // if (!uploadResponse.ok) throw new Error('Image upload failed');
                 // const uploadResult = await uploadResponse.json();
                 // imageUrl = uploadResult.url;
-                //placeholder filereader function to demonstrate
-                //converts the image to dataurl and previews locally
+                //placeholder file reader function to demonstrate
+                //converts the image to data url and previews locally
                 const reader = new FileReader();
                 reader.readAsDataURL(values.image);
                 await new Promise<void>((resolve) => {
@@ -116,7 +121,12 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
 
             if(!response.ok){
                 const errorData = await response.json();
-                throw new Error(`Failed to create post: ${errorData.error}`);
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Failed to create post: ${errorData}`,
+                });
+                setIsSubmitting(false);
+                return;
             }
 
             setSubmissionMessage({type: 'success', message: 'Post successfully created!'});
@@ -166,12 +176,12 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             )}
 
             <form onSubmit={form.onSubmit(handleSubmit)}>
-                <Text size='lg' weight={700} mb='lg'>
+                <Text size='lg' w={700} mb='lg'>
                     Admin Post Creation
                 </Text>
                 <TextInput
                     label='Posted by (Admin)'
-                    value={user.username || user.firstName || user.primaryEmailAddressId}
+                    value={user.username || user.firstName || user.primaryEmailAddressId || 'Admin'}
                     readOnly
                     mb='md'
                     styles={{ input: {cursor: 'default'}}}
@@ -180,8 +190,8 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 <Radio.Group
                     label="Post on behalf of:"
                     value={selectedPosterType}
-                    onChange={(value: 'market' | 'vendor') => {
-                        setSelectedPosterType(value);
+                    onChange={(value) => {
+                        setSelectedPosterType(value as 'market' | 'vendor');
                         setSelectedPosterID(null);
                     }}
                     mb='md'
