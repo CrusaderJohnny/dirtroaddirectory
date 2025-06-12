@@ -13,7 +13,7 @@
 import { AppShell, useMantineTheme, Container, Title, Text, Box } from '@mantine/core';
 import NavMT from "@/app/_components/navcomps/navmt";
 import BoxComp from "@/app/_components/othercomps/boxcomp";
-import NewsPage from "@/app/news-page/page";
+import NewsPage from "@/app/news/page";
 
 
 
