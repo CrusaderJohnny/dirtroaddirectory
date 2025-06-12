@@ -8,7 +8,11 @@ import NavMT from "@/app/_components/navcomps/navmt";
 export default async function Page() {
     const user = await currentUser();
 
-    if(!checkMarket(true)) {
+    if(!user) {
+        redirect("/");
+    }
+
+    if(!checkMarket()) {
         redirect("/");
     }
 
