@@ -34,6 +34,10 @@ export interface MarketPostFormProps {
     userId: string;
 }
 
+export interface UserRoleActionsProps {
+    userId: string;
+}
+
 export interface VendorPostFormProps {
     userId: string;
     vendorName: string;

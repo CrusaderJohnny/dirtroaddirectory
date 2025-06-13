@@ -1,11 +1,12 @@
 "use client";
 import {useForm} from "@mantine/form";
-import {Box, Button, FileInput, Image, Text, Textarea, TextInput} from "@mantine/core";
+import {Box, Button, Card, FileInput, Image, Text, Textarea, TextInput, useMantineTheme} from "@mantine/core";
 import {DateInput} from "@mantine/dates";
 import {MarketPostFormProps} from "@/app/_types/interfaces";
 
 export default function MarketPostForm({ marketName, userId } : MarketPostFormProps) {
     const farmersMarketName = marketName || "";
+    const theme = useMantineTheme();
 
     const form = useForm({
         initialValues: {
@@ -29,7 +30,7 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
         };
         console.log('Market Post Data: ', postData);
         // Example for when server side logic is complete:
-        // const response = await fetch('/api/create-market-post', {
+        // const response = await fetch('/api/create-post-market', {
         //     method: 'POST',
         //     headers: { 'Content-Type': 'application/json' },
         //     body: JSON.stringify(postData),
@@ -43,7 +44,14 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
     };
 
     return (
-        <Box maw={600} mx="auto" py="xl" px="md">
+        <Card
+            maw={800}
+            shadow="lg"
+            radius="md"
+            withBorder w={"70rem"}
+            bg={theme.colors.primaryGreen[0]}
+            style={{borderRadius: theme.radius.md, boxShadow: theme.shadows.md, border: `1px solid ${theme.colors.primaryGreen[2]}`}}
+        >
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Text size="lg" w={700} mb="md">
                     Create a New Market Post
@@ -111,7 +119,7 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
                 <Button type="submit" fullWidth mt="lg">Create Market Post</Button>
 
             </form>
-        </Box>
+        </Card>
     )
 
 }
