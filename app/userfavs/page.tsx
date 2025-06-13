@@ -1,4 +1,4 @@
-import {AppShell, Container, Title} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain, Container, Title} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import UserFavs from "@/app/_components/usercomps/userfavs";
 import data from "../_res/usermarkets.json";
