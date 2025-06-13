@@ -91,3 +91,13 @@ export interface MarketItem {
     lat: number;
     lng: number;
 }
+
+export interface ArticleInterface {
+    id: number;
+    title: string;
+    date: string;
+    content: string;
+    imgLink: string;
+    featured:  boolean;
+    summery:  string;
+}

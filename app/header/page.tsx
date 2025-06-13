@@ -13,7 +13,7 @@
 import { AppShell, useMantineTheme, Container, Title, Text, Box } from '@mantine/core';
 import NavMT from "@/app/_components/navcomps/navmt";
 import BoxComp from "@/app/_components/othercomps/boxcomp";
-import NewsPage from "@/app/news-page/page";
+import NewsPage from "@/app/news/page";
 
 
 
@@ -40,7 +40,8 @@ export default function MantineNavPage() {
                             id="section1"
                             style={{
                                 minHeight: '93vh',
-                                backgroundColor: theme.colors.green[3], // Color added to show size of Box (Delete later)
+                                // Issue with space above
+                                // backgroundColor: theme.colors.green[3], // Color added to show size of Box (Delete later)
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
                         >
@@ -71,7 +72,7 @@ export default function MantineNavPage() {
                             id="section3"
                             style={{
                                 minHeight: '93vh',
-                                backgroundColor: theme.colors.gray[4],
+                                // backgroundColor: theme.colors.gray[4],
                                 scrollMarginTop: `${headerHeightVh}vh`,
                             }}
                         >
