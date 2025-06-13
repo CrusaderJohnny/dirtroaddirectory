@@ -5,6 +5,8 @@ export interface MarketsInterface {
     description: string;
     content: string;
     link: string;
+    lat: number;
+    lng: number;
 }
 
 export interface VendorsInterface {
