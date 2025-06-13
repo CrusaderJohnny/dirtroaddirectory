@@ -1,5 +1,5 @@
 import {AppShell, Center, Container, ScrollArea, Title} from "@mantine/core";
-import UpdateList from "@/app/_components/newscomp/updateList";
+// import UpdateList from "@/app/_components/newscomp/updateList";
 import Board from "@/app/_components/tiktaktoe/board";
 
 export default function SidebarDisplay() {
@@ -29,7 +29,7 @@ export default function SidebarDisplay() {
 
                     }}
                 >
-                    <UpdateList/>
+                    {/*<UpdateList/>*/}
                     <Center>
                         <Container>
                             <Board/>

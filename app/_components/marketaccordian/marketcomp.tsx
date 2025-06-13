@@ -13,11 +13,15 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {MarketItem, MarketsInterface} from "@/app/_types/interfaces";
-import data from "../../_res/markets.json";
+//import data from "../../_res/markets.json";
+import { fetchMarketsAsJson } from "../apicomps/marketfetch";
 
-const charactersList: MarketItem[] = data;
+//const charactersList: MarketItem[] = data;
 // All information taken from respective websites for each individual farmers market. Pictures taken from their websites.
 // Image URL was copied as well as description and content was taken from the websites for each respective market
+
+
+
 
 
 // Displays the information before the accordion is opened
@@ -44,6 +48,9 @@ interface MarketAccordionProps {
 //displays the accordion information. essentially a read more pop out
 export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProps) {
     const [activeItem, setActiveItem] = useState<string | null>(defaultOpenItemId ?? null); // if defaultOpenItemId is null or undefined set to null
+    const [markets, setMarkets] = useState<MarketsInterface[]>([]); // State to store fetched markets
+    const [loading, setLoading] = useState<boolean>(true); // State for loading indicator
+    const [error, setError] = useState<string | null>(null); // State for error messages
 
     // rerender the component when changing the value of "defaultOpenItemId"
     useEffect(() => {
@@ -51,8 +58,43 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
     }, [defaultOpenItemId]);
 
 
-    const items = charactersList.map((item) => (
-        <AccordionItem value={item.id} key={item.label}>
+    // Effect to fetch market data when the component mounts
+    useEffect(() => {
+        const loadMarkets = async () => {
+            setLoading(true); // Start loading
+            setError(null); // Clear any previous errors
+            try {
+                const fetchedData = await fetchMarketsAsJson(); // Call the async function
+                setMarkets(fetchedData); // Set the fetched data to state
+            } catch (err: any) {
+                console.error("Failed to load markets:", err);
+                setError(err.message || "Failed to load market data."); // Set error message
+            } finally {
+                setLoading(false); // End loading
+            }
+        };
+
+        loadMarkets(); // Execute the fetch
+    }, []); // Empty dependency array means this runs once on mount
+
+    // Conditional rendering based on loading/error state
+    if (loading) {
+        return <Text>Loading markets...</Text>;
+    }
+
+    if (error) {
+        return <Text color="red">Error: {error}</Text>;
+    }
+
+    if (markets.length === 0) {
+        return <Text>No markets found.</Text>;
+    }
+
+    // --- ADD THIS CONSOLE.LOG ---
+    console.log("Markets data for Accordion:", markets);
+
+    const items = markets.map((item) => (
+        <AccordionItem value={String(item.id)} key={item.label}>
             <AccordionControl>
                 <AccordionLabel {...item} />
             </AccordionControl>

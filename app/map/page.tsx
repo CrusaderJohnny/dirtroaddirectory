@@ -17,6 +17,7 @@ import NavMT from '../_components/navcomps/navmt';
 
 
 
+
 export default function App() {
 
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -36,6 +37,11 @@ export default function App() {
 
         
     };
+
+
+    const handleChangeRegion = (regionID: string | null) => {
+        // set map center to match region
+    }
 
 
     const reigons = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
