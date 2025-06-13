@@ -311,11 +311,9 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                         />
                     </Box>
                 )}
-
                 <Button type={'submit'} disabled={isSubmitting || !selectedPosterID}>
                     Create Post
                 </Button>
-
             </form>
         </Box>
     )

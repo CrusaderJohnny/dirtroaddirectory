@@ -7,6 +7,7 @@ import {checkRole} from "@/utils/roles";
 
 export default async function Page() {
     const user = await currentUser();
+
     if(!user) {
         redirect("/");
     }
@@ -14,7 +15,9 @@ export default async function Page() {
     if(!checkRole('admin')) {
         redirect("/");
     }
+
     const serializedUser = user ? JSON.parse(JSON.stringify(user)) : null;
+
     return (
         <AppShell>
             <AppShellHeader component={NavMT}/>
