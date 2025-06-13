@@ -16,6 +16,8 @@ import {
 import { useForm, hasLength, isEmail } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import NavMT from '@/app/_components/navcomps/navmt';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
 
 export default function Page() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -54,9 +56,20 @@ export default function Page() {
               </Text>
 
               <form
-                onSubmit={form.onSubmit(() => {
-                  open();
-                  form.reset();
+                onSubmit={form.onSubmit(async (values) => {
+                  try {
+                    await addDoc(collection(db, 'contactMessages'), {
+                      name: values.name,
+                      email: values.email,
+                      message: values.message,
+                      timestamp: Timestamp.now(),
+                    });
+                    
+                    open();
+                    form.reset();
+                  } catch (error) {
+                    console.error('Error sending message:', error);
+                  }
                 })}
               >
                 <Grid gutter="md">
