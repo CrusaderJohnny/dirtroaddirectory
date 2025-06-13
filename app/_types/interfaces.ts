@@ -1,3 +1,5 @@
+import {UserResource} from "@clerk/types";
+
 export interface MarketsInterface {
     id: string;
     image: string;
@@ -7,6 +9,34 @@ export interface MarketsInterface {
     link: string;
     lat: number;
     lng: number;
+}
+
+export interface MarketOption {
+    id: string;
+    name: string;
+}
+
+export interface VendorOption {
+    id: string;
+    name: string;
+}
+
+export interface MarketGridProps {
+    data: MarketsInterface[];
+}
+
+export interface AdminPostFormProps {
+    user: UserResource; //UserResource is a clerk type interface to hold all user type info
+}
+
+export interface MarketPostFormProps {
+    marketName: string;
+    userId: string;
+}
+
+export interface VendorPostFormProps {
+    userId: string;
+    vendorName: string;
 }
 
 export interface VendorsInterface {

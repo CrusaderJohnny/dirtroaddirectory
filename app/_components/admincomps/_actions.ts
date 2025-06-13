@@ -8,7 +8,8 @@ export async function setRole(formData: FormData) {
 
     // Check that the user trying to set the role is an admin
     if (!checkRole('admin')) {
-        return { message: 'Not Authorized' }
+        console.error('Not Authorized: User is not an admin.')
+        throw new Error('Not Authorized')
     }
 
     try {

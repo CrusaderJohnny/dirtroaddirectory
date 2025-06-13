@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
-import { SearchUsers } from './searchUsers'
+import { SearchUsers } from '../_components/admincomps/searchUsers'
 import {clerkClient, EmailAddress} from '@clerk/nextjs/server'
-import { removeRole, setRole } from './_actions'
+import { removeRole, setRole } from '../_components/admincomps/_actions'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
-    AppShell,
+    AppShell, AppShellFooter,
     AppShellHeader,
     AppShellMain,
     Button,
@@ -16,6 +16,9 @@ import {
     Stack,
     Text
 } from "@mantine/core";
+import Link from "next/link";
+import {checkMarket} from "@/utils/checkMarket";
+import {checkVendor} from "@/utils/checkVendor";
 
 export default async function AdminDashboard(params: {
     searchParams: Promise<{ search?: string }>
@@ -29,6 +32,12 @@ export default async function AdminDashboard(params: {
     const client = await clerkClient()
 
     const users = query ? (await client.users.getUserList({ query })).data : []
+
+    const hasMarketAccess = await checkMarket();
+
+    const hasVendorAccess = await checkVendor();
+
+    const isAdmin = await checkRole('admin');
 
     return (
         <AppShell>
@@ -74,7 +83,7 @@ export default async function AdminDashboard(params: {
                                                 <Text>
                                                     Role:
                                                 </Text>
-                                                {user.publicMetadata.role as string}
+                                                {user.privateMetadata.role as string}
                                             </Group>
                                         </Flex>
                                     </Stack>
@@ -100,6 +109,29 @@ export default async function AdminDashboard(params: {
                     })}
                 </Center>
             </AppShellMain>
+            <AppShellFooter>
+                <Center>
+                    {hasMarketAccess && (
+                        <Button
+                            component={Link}
+                            href="/market-post">
+                            Market Post
+                        </Button>
+                    )}
+                    {hasVendorAccess && (
+                        <Button component={Link} href="/vendor-post">
+                            Vendor Post
+                        </Button>
+                    )}
+                    {isAdmin && (
+                        <Button
+                            component={Link}
+                            href="admin-post">
+                            Admin Post
+                        </Button>
+                    )}
+                </Center>
+            </AppShellFooter>
         </AppShell>
     )
 }
