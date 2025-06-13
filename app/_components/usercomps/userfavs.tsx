@@ -5,7 +5,7 @@ import React from "react";
 
 
 
-export default function UserFavs({data}: {data: MarketGridProps}){
+export default function UserFavs(data: MarketGridProps){
     return (
         <Grid gutter="xl">
             {data.map((market: MarketsInterface) => (
