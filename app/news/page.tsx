@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 // import React from "react";
-import {AppShell, Container, Text, Divider, Button, Grid} from '@mantine/core';
+import {AppShell, Container, Text, Divider, Button, Box, Grid} from '@mantine/core';
 
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
@@ -69,8 +69,10 @@ export default function Page() {
             <AppShell.Section>
 
                 {/*This container is the for the intro to website section*/}
-                <Container size='xl' p='sm'>
+                <Box pt='md'>
                     <SiteIntroCard/>
+                </Box>
+                <Container size='xl' pt='lg'>
                     <Button component="a" href="/aboutus" mt='sm' variant="light" fullWidth>
                         Learn More About Us
                     </Button>
@@ -79,9 +81,9 @@ export default function Page() {
 
                 <Container size='xl' p='sm' >
                     <Grid mt='sm'>
-                        <Grid.Col span={7} mah={'80vh'}>
+                        <Grid.Col span={7} mah={'80vh'} >
                             {featuredArticle ? (
-                                <FeaturedCard article={featuredArticle}/>
+                                <FeaturedCard article={featuredArticle} />
                             ) : (
                                 <Text>Error: No featured article exists</Text>
                             )

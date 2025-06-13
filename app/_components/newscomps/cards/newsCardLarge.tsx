@@ -13,7 +13,7 @@ export default function NewsCardLarge( { article }: { article: ArticleInterface 
                 <Title order={3} >{article.title}</Title>
                 <Text size="sm" c="dimmed">{article.date}</Text>
                 <Flex justify="center">
-                    <Image src={article.imgLink} alt={article.title} h={'75%'} w={'50%'} radius="md" />
+                    <Image src={article.imgLink} alt={article.title} radius="md" />
                 </Flex>
                 <Spoiler
                     maxHeight={200}
