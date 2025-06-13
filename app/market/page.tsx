@@ -1,4 +1,4 @@
-import MarketAccordion from "@/app/_components/marketcomps/marketaccordian";
+import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
 
 export default function Page() {
     return(

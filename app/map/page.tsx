@@ -10,7 +10,7 @@ Used Mantine component library
 import React from 'react';
 import { AppShell, Button, Center, Select, Autocomplete, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import MarketAccordion from "@/app/_components/marketcomps/marketaccordian";
+import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
 import { useState } from "react";
 import NavMT from '../_components/navcomps/navmt';
