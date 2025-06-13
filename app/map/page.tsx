@@ -15,7 +15,6 @@ import MapComponent from "@/app/_components/mapcomps/map";
 import { useState } from "react";
 import NavMT from '../_components/navcomps/navmt';
 
-import MarketFetcher from '../_components/apicomps/marketfetchTest';
 
 
 
@@ -88,7 +87,6 @@ export default function App() {
 
                 <Center>
                     <MapComponent onMarkerClick={handleOpenMarket}/>
-                    <MarketFetcher/>
                 </Center>
             </AppShell.Main>
         </AppShell>
