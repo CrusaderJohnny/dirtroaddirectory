@@ -4,6 +4,12 @@ import { usePathname, useRouter } from 'next/navigation'
 import {Container, TextInput, Text, Group, Button} from "@mantine/core";
 import {useState} from "react";
 
+
+/*
+    Searches for users by using the url pathname with a search criteria added and the term added behind.
+    Will take any value, like name, email or possibly even phone number and searches
+    Returns with a list of items that match search criteria
+ */
 export const SearchUsers = () => {
     const router = useRouter()
     const pathname = usePathname()
