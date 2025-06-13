@@ -2,7 +2,7 @@
 import {useSearchParams} from "next/navigation";
 import {AppShell, Button, Container, Divider, Grid, Image, Space, Text, Title} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
-import MarketCard from "@/app/_components/marketcomps/marketcard";
+import MarketCard from "@/app/_components/marketaccordian/marketcard";
 import data from "../_res/markets.json"
 
 export default function MarketsPage() {

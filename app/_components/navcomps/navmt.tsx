@@ -116,6 +116,15 @@ export default function NavMT() {
                             </SignUpButton>
                         </SignedOut>
                         <SignedIn>
+                            <Button
+                                component='a'
+                                href="/userfavs"
+                                variant={'subtle'}
+                                c='white'
+                                size='lg'
+                            >
+                                Favs
+                            </Button>
                             <UserButton />
                         </SignedIn>
                     </Group>
