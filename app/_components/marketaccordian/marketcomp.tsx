@@ -90,8 +90,7 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
         return <Text>No markets found.</Text>;
     }
 
-    // --- ADD THIS CONSOLE.LOG ---
-    console.log("Markets data for Accordion:", markets);
+
 
     const items = markets.map((item) => (
         <AccordionItem value={String(item.id)} key={item.label}>
