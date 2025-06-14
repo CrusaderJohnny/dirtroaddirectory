@@ -1,15 +1,13 @@
 "use client";
 import {AppShell} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
-import SidebarDisplay from "@/app/_components/othercomps/sidebarDisplay";
-import {useDisclosure} from "@mantine/hooks";
 // import WhatTheNews from "@/app/_components/newscomp/wtn";
 import NewsPage from "@/app/news/page";
 
 
 export default function Home() {
     // const isAdmin = await checkRole('admin');
-    const [opened] = useDisclosure();
+    // const [opened] = useDisclosure();
     return (
         <AppShell
             // Removed NavBar in this AppShell - Dan

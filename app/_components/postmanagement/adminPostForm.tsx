@@ -2,7 +2,7 @@
 import {isNotEmpty, useForm} from "@mantine/form";
 import {
     Box,
-    Button,
+    Button, Card,
     FileInput,
     Image,
     Loader,
@@ -10,7 +10,7 @@ import {
     Notification, Radio, Select,
     Text,
     Textarea,
-    TextInput
+    TextInput, useMantineTheme
 } from "@mantine/core";
 import {DateInput} from "@mantine/dates";
 import {
@@ -32,6 +32,8 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
+
+    const theme = useMantineTheme();
 
     const form = useForm({
         initialValues: {
@@ -182,7 +184,14 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
     };
 
     return (
-        <Box maw={600} mx='auto' pos='relative'>
+        <Card
+            maw={800}
+            shadow="lg"
+            radius="md"
+            withBorder w={"70rem"}
+            bg={theme.colors.primaryGreen[0]}
+            style={{borderRadius: theme.radius.md, boxShadow: theme.shadows.md, border: `1px solid ${theme.colors.primaryGreen[2]}`}}
+        >
             <LoadingOverlay
                 visible={isSubmitting || isLoadingOptions}
                 loaderProps={{children : isLoadingOptions ? <Loader/> : <Text>Submitting post...</Text>}}
@@ -311,12 +320,10 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                         />
                     </Box>
                 )}
-
                 <Button type={'submit'} disabled={isSubmitting || !selectedPosterID}>
                     Create Post
                 </Button>
-
             </form>
-        </Box>
+        </Card>
     )
 }

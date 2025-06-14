@@ -2,7 +2,7 @@ import MarketPostForm from "@/app/_components/postmanagement/marketPostForm";
 import {checkMarket} from "@/utils/checkMarket";
 import {redirect} from "next/navigation";
 import {currentUser} from "@clerk/nextjs/server";
-import {AppShell, AppShellHeader, AppShellMain, Card, Center} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain, Center} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 
 export default async function Page() {
@@ -24,9 +24,7 @@ export default async function Page() {
             <AppShellHeader component={NavMT}/>
             <AppShellMain>
                 <Center pt={20}>
-                    <Card shadow="lg" radius="md" withBorder w={"70rem"}>
-                        <MarketPostForm marketName={marketName} userId={userId}/>
-                    </Card>
+                    <MarketPostForm marketName={marketName} userId={userId}/>
                 </Center>
             </AppShellMain>
         </AppShell>
