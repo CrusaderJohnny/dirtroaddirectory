@@ -7,12 +7,12 @@ Used Gemini to assist in debugging
 "use client"
 import React from 'react';
 import {APIProvider, Map, Pin, AdvancedMarker} from '@vis.gl/react-google-maps';
-import {MapLocations} from './locations';
+import {useMapLocations} from './locations';
 import {PoiMarkersArray} from "@/app/_types/interfaces";
 import { Button } from '@mantine/core';
 
 
-const locations = MapLocations;
+
 
 // Define the props interface for PoiMarkers
 interface PoiMarkersProps {
@@ -41,6 +41,8 @@ interface MapComponentProps {
 }
 
 function MapComponent({onMarkerClick}:MapComponentProps) {
+
+    const locations = useMapLocations();
 
     // Get API key
     const Maps_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
