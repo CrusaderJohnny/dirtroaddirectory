@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Square from "./square"; // Assuming square.ts or square.tsx
 import "./styles.css";
-import {Center, Container, Group} from "@mantine/core";
+import {Center, Container} from "@mantine/core";
 
 // Define a type for the possible values in a square
 type SquareValue = "X" | "O" | null;

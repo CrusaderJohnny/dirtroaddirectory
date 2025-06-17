@@ -21,9 +21,9 @@ export async function fetchVendorsAsJson(): Promise<VendorsInterface[]> {
         // Parse the JSON response body
         const data: VendorsInterface[] = await response.json();
         return data;
-    } catch (err: any) {
+    } catch (err) {
         console.error("Error fetching vendors as JSON:", err);
         // Re-throw the error so the caller can handle it
-        throw new Error(`Failed to fetch vendor data: ${err.message || 'Network error'}`);
+        throw new Error(`Failed to fetch vendor data: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
 }

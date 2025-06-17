@@ -35,7 +35,7 @@ export default function Page() {
                             Our directory helps you find markets close to you and see what’s available before visiting that means no more guessing or wasted trips.
                         </Text>
                         <Text size="md" c="gray.8">
-                            Whether you're a shopper or a vendor, Dirt Road Directory is designed to make your local market experience more efficient and enjoyable.
+                            Whether you&apos;re a shopper or a vendor, Dirt Road Directory is designed to make your local market experience more efficient and enjoyable.
                         </Text>
                     </Card>
 

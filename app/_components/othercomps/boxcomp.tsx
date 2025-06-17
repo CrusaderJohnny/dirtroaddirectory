@@ -33,6 +33,7 @@ export default function BoxComp() {
                     fit='contain'
                     radius='md'
                     m= '5px'
+                    alt={'Back ground photo'}
                 />
                 <div>
                     <Title order={2}>

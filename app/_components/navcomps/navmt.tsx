@@ -35,9 +35,8 @@ export default function NavMT() {
                     }}
                 >
                     {/* Header right side */}
+                    <Link href="/">
                     <Group
-                        component={Link}
-                        href="/"   // I guess this works...
                         justify="space-evenly"
                     >
                         <Image
@@ -53,6 +52,7 @@ export default function NavMT() {
                             Dirt Road Directory
                         </Title>
                     </Group>
+                    </Link>
 
                     {/* Header let side where nav to sections of the page */}
                     <Group gap='md' >
