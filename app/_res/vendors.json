@@ -14,13 +14,16 @@
   },
   {
     "id": 2,
-    "name": "Going Nuts",
-    "category": "Nuts",
+    "name": "1904 Farm Family Faves",
+    "category": "Preserves",
     "location": "Okotoks, AB",
-    "image": "https://goingnuts.ca/cdn/shop/files/location_02.jpg?v=1614665293&width=480",
-    "contact": "valentinesfarm@email.com",
+    "image": "https://www.albertafarmersmarket.com/wp-content/uploads/1904.1.jpg",
+    "contact": "780-221-3200",
+    "email":"1904.farmfamilyfaves@gmail.com",
+    "website": "https://1904-farm-family-faves.square.site/",
     "markets": ["Calgary Farmers Market", "Okotoks Saturday Market"],
-    "description": "We sell raw, unfiltered wildflower honey harvested from Alberta bees."
+    "products": ["Romance (Cherry, Berry & Merlot) Jam", "Sweet Temptation (Chocolate Raspberry Jam)", "Cherrylicious (Cherry Jam)", "Pina Colada Jam**","Raspberry Rhubarb Jam**"],
+    "description": "Our philosophy is GARDEN TO JAR! 1904 Farm Family Faves started when we wanted to do more with our garden. Nicole grew up on a family farm and learned to appreciate growing her own food. The family farm has been in Nicole's family since 1904, and Nicole & Julio plan on continuing that tradition. We are a small, family driven business that is slowly growing as we broaden our product line and what we're able to grow or source locally. We strongly believe in farm to jar for as much of our product as possible. We grow 90-95% of our own product on the family farm in Sturgeon County. What we can't grow, we source from other local farms or get from trusted sources such as B.C. Fruit stands in the summer months. We don't use chemicals or pesticides on any of our produce and source from other farms with similar mentalities. We don't use nuts in any of our products as we ourselves have allergies in our family and we can't have them in our home."
   },
   {
     "id": 3,
