@@ -105,3 +105,13 @@ export interface ArticleInterface {
     featured:  boolean;
     summery:  string;
 }
+
+export interface ContactMessageInterface {
+  id: number;
+  name: string;
+  email: string;
+  subject?: string; 
+  message: string;
+  created_at: string;
+}
+

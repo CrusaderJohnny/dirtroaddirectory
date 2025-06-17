@@ -19,6 +19,7 @@ import Link from "next/link";
 import {checkMarket} from "@/utils/checkMarket";
 import {checkVendor} from "@/utils/checkVendor";
 import UserRoleActions from "@/app/_components/admincomps/userRoleActions";
+import ContactMessagesDisplay from '../_components/admincomps/ContactMessagesDisplay';
 
 export default async function AdminDashboard(params: {
     searchParams: Promise<{ search?: string }>
@@ -93,6 +94,7 @@ export default async function AdminDashboard(params: {
                         )
                     })}
                 </Center>
+                <ContactMessagesDisplay/>
             </AppShellMain>
             <AppShellFooter>
                 <Center>

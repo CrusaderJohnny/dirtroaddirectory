@@ -15,18 +15,19 @@ import {
 } from '@mantine/core';
 import { useForm, hasLength, isEmail } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
+import { useState } from 'react';
 import NavMT from '@/app/_components/navcomps/navmt';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { db } from '@/utils/firebase';
+const API_BASE_URL = 'http://localhost:8080';
 
 export default function Page() {
   const [opened, { open, close }] = useDisclosure(false);
-
+  const [submitError, setSubmitError] = useState<string | null>(null); 
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
       name: '',
       email: '',
+      subject: '',
       message: '',
     },
     validate: {
@@ -36,10 +37,44 @@ export default function Page() {
     },
   });
 
+  const handleSubmit = async (values: typeof form.values) => {
+    setSubmitError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          subject: values.subject,
+          message: values.message,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to send message.' }));
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      }
+
+      open(); 
+      form.reset(); 
+    } catch (error: any) {
+      console.error('Error sending message to API:', error);
+      setSubmitError(error.message || 'Failed to send message. Please try again.');
+    }
+  };
+
   return (
     <>
       <Modal opened={opened} onClose={close} title="Message Sent!" centered>
         <Text>Thank you for your message! We'll get back to you shortly.</Text>
+      </Modal>
+
+      <Modal opened={!!submitError} onClose={() => setSubmitError(null)} title="Submission Error" centered>
+        <Text c="red">{submitError}</Text>
+        <Button onClick={() => setSubmitError(null)}>Close</Button>
       </Modal>
 
       <AppShell>
@@ -55,23 +90,7 @@ export default function Page() {
                 Have a question or want to join our platform? Reach out and we'll get back to you shortly.
               </Text>
 
-              <form
-                onSubmit={form.onSubmit(async (values) => {
-                  try {
-                    await addDoc(collection(db, 'contactMessages'), {
-                      name: values.name,
-                      email: values.email,
-                      message: values.message,
-                      timestamp: Timestamp.now(),
-                    });
-                    
-                    open();
-                    form.reset();
-                  } catch (error) {
-                    console.error('Error sending message:', error);
-                  }
-                })}
-              >
+              <form onSubmit={form.onSubmit(handleSubmit)}> 
                 <Grid gutter="md">
                   <Grid.Col span={{ base: 12, sm: 6 }}>
                     <TextInput
@@ -90,6 +109,15 @@ export default function Page() {
                       required
                       key={form.key('email')}
                       {...form.getInputProps('email')}
+                    />
+                  </Grid.Col>
+
+                  <Grid.Col span={12}>
+                    <TextInput
+                      label="Subject (Optional)"
+                      placeholder="e.g., Inquiry about Markets"
+                      key={form.key('subject')}
+                      {...form.getInputProps('subject')}
                     />
                   </Grid.Col>
 
