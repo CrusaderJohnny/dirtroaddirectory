@@ -10,6 +10,7 @@ Used Mantine component library
 import React from 'react';
 import { AppShell, Button, Center, Select, Autocomplete, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { IconChevronLeft } from '@tabler/icons-react';
 import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
 import { useState } from "react";
@@ -50,7 +51,11 @@ export default function App() {
     //const farmHeader = require("../assets/Alberta-farming.jpg")
 
 
-
+    // Style for the rotating icon
+    const iconStyle = (opened: boolean) => ({
+        transition: 'transform 150ms ease',
+        transform: opened ? 'rotate(0deg)' : 'rotate(-180deg)',
+    });
 
 
     return (
@@ -68,11 +73,11 @@ export default function App() {
             </AppShell.Navbar>
             <AppShell.Main>
                 <Group align='center' p={'sm'}>
-                    <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'}>
-                        Toggle navbar
+                    <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'} p={8}>
+                        <IconChevronLeft style={iconStyle(desktopOpened)} />
                     </Button>
-                    <Button onClick={toggleMobile} hiddenFrom="sm">
-                        Toggle navbar
+                    <Button onClick={toggleMobile} hiddenFrom="sm" p={8}>
+                        <IconChevronLeft style={iconStyle(desktopOpened)} />
                     </Button>
                     <Autocomplete
                         placeholder="Search"
