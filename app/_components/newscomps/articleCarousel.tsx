@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Carousel } from '@mantine/carousel';
-import { Card, Text, Box, Flex } from '@mantine/core';
+import { Card, Text, Box, Flex, Button } from '@mantine/core';
 import Autoplay from 'embla-carousel-autoplay';
 
 import newsData from '@/app/_components/newscomps/newsData';
@@ -53,13 +53,13 @@ export default function ArticleCarousel() {
                 justify="center"
                 align="center"
                 style={{
-                    minHeight: '250px',
+                    minHeight: '200px',
                     width: '100%',
                 }}
             >
                 <Box maw={'100%'} w={'auto'} h='100%' >
                     <Carousel
-                        withIndicators
+                        withIndicators // Removed indicators for now
                         height="60%"
                         slideSize="100%"
                         slideGap="md"
@@ -76,11 +76,20 @@ export default function ArticleCarousel() {
                 </Box>
             </Flex>
 
-            {/* The final text line */}
-            <Text size="xl" fw={700}>
-                Want Your Story Featured?
-                <a href="/contact-us"> [Contact Us]</a>
-            </Text>
+            {/* The final text */}
+            <Flex
+                w='100%'
+                direction="row"
+                align="center"
+                justify='center'
+                gap="md"
+                wrap="wrap"
+            >
+                <Text size="lg" fw={700}>Want Your Story Featured?</Text>
+                <Button component="a" href="/contact" mt='sm' variant="light" fullWidth>
+                    Contact Us
+                </Button>
+            </Flex>
         </Card>
     );
 }

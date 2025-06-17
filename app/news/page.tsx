@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 // import React from "react";
-import {AppShell, Container, Text, Divider, Button, Box, Grid, BackgroundImage} from '@mantine/core';
+import {AppShell, Container, Text, Divider, Button, Box, Grid} from '@mantine/core';
 
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
