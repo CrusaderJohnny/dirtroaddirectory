@@ -9,9 +9,6 @@ import React from 'react';
 import {APIProvider, Map, Pin, AdvancedMarker} from '@vis.gl/react-google-maps';
 import {useMapLocations} from './locations';
 import {PoiMarkersArray} from "@/app/_types/interfaces";
-import { Button } from '@mantine/core';
-
-
 
 
 // Define the props interface for PoiMarkers
@@ -65,7 +62,7 @@ function MapComponent({onMarkerClick}:MapComponentProps) {
             </div>
         </APIProvider>
     );
-};
+}
 
 
 

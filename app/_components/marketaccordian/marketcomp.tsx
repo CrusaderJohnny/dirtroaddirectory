@@ -12,11 +12,9 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {MarketItem, MarketsInterface} from "@/app/_types/interfaces";
-//import data from "../../_res/markets.json";
+import {MarketsInterface} from "@/app/_types/interfaces";
 import { fetchMarketsAsJson } from "../apicomps/marketfetch";
 
-//const charactersList: MarketItem[] = data;
 // All information taken from respective websites for each individual farmers market. Pictures taken from their websites.
 // Image URL was copied as well as description and content was taken from the websites for each respective market
 
@@ -66,9 +64,9 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
             try {
                 const fetchedData = await fetchMarketsAsJson(); // Call the async function
                 setMarkets(fetchedData); // Set the fetched data to state
-            } catch (err: any) {
+            } catch (err) {
                 console.error("Failed to load markets:", err);
-                setError(err.message || "Failed to load market data."); // Set error message
+                setError(err instanceof Error ? err.message : "Failed to load market data."); // Set error message
             } finally {
                 setLoading(false); // End loading
             }
@@ -83,7 +81,7 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
     }
 
     if (error) {
-        return <Text color="red">Error: {error}</Text>;
+        return <Text c="red">Error: {error}</Text>;
     }
 
     if (markets.length === 0) {

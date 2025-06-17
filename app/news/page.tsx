@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 // import React from "react";
-import {AppShell, Container, Text, Divider, Button, Box, Grid} from '@mantine/core';
+import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, AppShell} from '@mantine/core';
 
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
@@ -72,7 +72,8 @@ export default function Page() {
     if (isAdmin) {
         return (
             // The entire page is a "Section" rendered within "Main" of parent page.tsx
-            <AppShell.Section>
+            <AppShell>
+            <AppShellSection>
 
                 {/*This container is the for the intro to website section*/}
                 <Box pt='md'>
@@ -90,16 +91,16 @@ export default function Page() {
 
                 <Container size='xl' p='sm' >
                     <Grid mt='sm'>
-                        <Grid.Col span={7} mah={'80vh'} >
+                        <GridCol span={7} mah={'80vh'} >
                             {featuredArticle ? (
                                 <FeaturedCard article={featuredArticle} />
                             ) : (
                                 <Text>Error: No featured article exists</Text>
                             )
                             }
-                        </Grid.Col>
+                        </GridCol>
 
-                        <Grid.Col span={5} mah={'80vh'}>
+                        <GridCol span={5} mah={'80vh'}>
                             {articleId2 ? (
                                 // Testing articleSubPage carousel
                                 <ArticleCarousel/>
@@ -107,7 +108,7 @@ export default function Page() {
                                 <Text>Error: No articles exists</Text>
                             )
                             }
-                        </Grid.Col>
+                        </GridCol>
                     </Grid>
 
                     {/*Option is just for admin*/}
@@ -116,12 +117,14 @@ export default function Page() {
                     </Button>
                 </Container>
 
-            </AppShell.Section>
+            </AppShellSection>
+            </AppShell>
         );
     }
     // If user who is not admin is logged in
     return (
-        <AppShell.Section>
+        <AppShell>
+        <AppShellSection>
 
             {/*This container is the for the intro to website section*/}
             <Container size='xl' p='sm'>
@@ -134,16 +137,16 @@ export default function Page() {
 
             <Container size='xl' p='sm'>
                 <Grid mt='sm'>
-                    <Grid.Col span={7}>
+                    <GridCol span={7}>
                         {featuredArticle ? (
                             <FeaturedCard article={featuredArticle}/>
                         ) : (
                             <Text>Error: No featured article exists</Text>
                         )
                         }
-                    </Grid.Col>
+                    </GridCol>
 
-                    <Grid.Col span={5}>
+                    <GridCol span={5}>
                         {articleId2 ? (
                             // Testing articleSubPage carousel
                             <ArticleCarousel/>
@@ -151,7 +154,7 @@ export default function Page() {
                             <Text>Error: No articles exists</Text>
                         )
                         }
-                    </Grid.Col>
+                    </GridCol>
                 </Grid>
 
                 {/*Option is just for admin*/}
@@ -160,6 +163,7 @@ export default function Page() {
                 </Button>
             </Container>
 
-        </AppShell.Section>
+        </AppShellSection>
+        </AppShell>
     );
 }

@@ -21,9 +21,9 @@ export async function fetchMarketsAsJson(): Promise<MarketsInterface[]> {
         // Parse the JSON response body
         const data: MarketsInterface[] = await response.json();
         return data;
-    } catch (err: any) {
+    } catch (err) {
         console.error("Error fetching markets as JSON:", err);
         // Re-throw the error so the caller can handle it
-        throw new Error(`Failed to fetch market data: ${err.message || 'Network error'}`);
+        throw new Error(`Failed to fetch market data: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
 }
