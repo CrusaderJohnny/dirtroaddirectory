@@ -39,9 +39,9 @@ export default function App() {
     };
 
 
-    const handleChangeRegion = (regionID: string | null) => {
-        // set map center to match region
-    }
+    // const handleChangeRegion = (regionID: string | null) => {
+    //     // set map center to match region
+    // }
 
 
     const reigons = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
