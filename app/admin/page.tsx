@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
 import { SearchUsers } from '../_components/admincomps/searchUsers'
 import {clerkClient, EmailAddress} from '@clerk/nextjs/server'
-import { removeRole, setRole } from '../_components/admincomps/_actions'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
@@ -19,11 +18,12 @@ import {
 import Link from "next/link";
 import {checkMarket} from "@/utils/checkMarket";
 import {checkVendor} from "@/utils/checkVendor";
+import UserRoleActions from "@/app/_components/admincomps/userRoleActions";
 
 export default async function AdminDashboard(params: {
     searchParams: Promise<{ search?: string }>
 }) {
-    if (!checkRole('admin')) {
+    if (!await checkRole('admin')) {
         redirect('/')
     }
 
@@ -83,26 +83,11 @@ export default async function AdminDashboard(params: {
                                                 <Text>
                                                     Role:
                                                 </Text>
-                                                {user.privateMetadata.role as string}
+                                                {user.publicMetadata.role as string}
                                             </Group>
                                         </Flex>
                                     </Stack>
-                                <Stack>
-                                    <Button formAction={setRole}>
-                                        <input type="hidden" value={user.id} name="id"/>
-                                        <input type="hidden" value="admin" name="role"/>
-                                        Make Admin
-                                    </Button>
-                                    <Button formAction={setRole}>
-                                        <input type="hidden" value={user.id} name="id"/>
-                                        <input type="hidden" value="moderator" name="role"/>
-                                        Make Moderator
-                                    </Button>
-                                    <Button formAction={removeRole}>
-                                        <input type="hidden" value={user.id} name="id"/>
-                                        Remove Role
-                                    </Button>
-                                </Stack>
+                                    <UserRoleActions userId={user.id}/>
                                 </Group>
                             </Card>
                         )
@@ -114,19 +99,19 @@ export default async function AdminDashboard(params: {
                     {hasMarketAccess && (
                         <Button
                             component={Link}
-                            href="/market-post">
+                            href="/post-market">
                             Market Post
                         </Button>
                     )}
                     {hasVendorAccess && (
-                        <Button component={Link} href="/vendor-post">
+                        <Button component={Link} href="/post-vendor">
                             Vendor Post
                         </Button>
                     )}
                     {isAdmin && (
                         <Button
                             component={Link}
-                            href="admin-post">
+                            href="post-admin">
                             Admin Post
                         </Button>
                     )}

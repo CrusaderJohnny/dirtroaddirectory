@@ -18,7 +18,7 @@ export default function ContactOrNewPost({ isAdmin }: ContactOrNewPostProps) {
                         <Text>Click to create</Text>
                         <Button
                             component={Link}
-                            href="/admin"
+                            href="/"
                             mx={10}>New Post</Button>
                     </Flex>
                 </Container>

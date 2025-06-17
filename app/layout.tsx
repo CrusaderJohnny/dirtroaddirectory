@@ -3,10 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import '@mantine/core/styles.css';
 import '@mantine/core/styles/Button.css';
-import {ColorSchemeScript, MantineProvider, mantineHtmlProps} from "@mantine/core";
+import '@mantine/carousel/styles.css';
+import {ColorSchemeScript, mantineHtmlProps} from "@mantine/core";
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
+import MantineThemeWrapper from "@/app/mantineTheme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +37,7 @@ export default function RootLayout({
           <ColorSchemeScript/><title></title>
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
-          <MantineProvider>{children}</MantineProvider>
+          <MantineThemeWrapper>{children}</MantineThemeWrapper>
         </body>
       </html>
     </ClerkProvider>

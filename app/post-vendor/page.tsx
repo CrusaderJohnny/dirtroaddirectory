@@ -1,4 +1,4 @@
-import {AppShell, AppShellHeader, AppShellMain, Card, Center} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain, Center} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import VendorPostForm from "@/app/_components/postmanagement/vendorPostForm";
 import {currentUser} from "@clerk/nextjs/server";
@@ -21,9 +21,7 @@ export default async function Page() {
             <AppShellHeader component={NavMT}/>
             <AppShellMain>
                 <Center pt={20}>
-                    <Card shadow="lg" radius="md" withBorder w={"70rem"}>
-                        <VendorPostForm vendorName={vendorName} userId={userId}/>
-                    </Card>
+                    <VendorPostForm vendorName={vendorName} userId={userId}/>
                 </Center>
             </AppShellMain>
         </AppShell>

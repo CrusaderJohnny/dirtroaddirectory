@@ -37,7 +37,7 @@ export default function NavMT() {
                     {/* Header right side */}
                     <Group
                         component={Link}
-                        href="/"
+                        href="/"   // I guess this works...
                         justify="space-evenly"
                     >
                         <Image

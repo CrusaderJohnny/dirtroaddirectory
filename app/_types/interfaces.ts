@@ -7,6 +7,8 @@ export interface MarketsInterface {
     description: string;
     content: string;
     link: string;
+    lat: number;
+    lng: number;
 }
 
 export interface MarketOption {
@@ -29,6 +31,10 @@ export interface AdminPostFormProps {
 
 export interface MarketPostFormProps {
     marketName: string;
+    userId: string;
+}
+
+export interface UserRoleActionsProps {
     userId: string;
 }
 
@@ -88,4 +94,14 @@ export interface MarketItem {
     link: string;
     lat: number;
     lng: number;
+}
+
+export interface ArticleInterface {
+    id: number;
+    title: string;
+    date: string;
+    content: string;
+    imgLink: string;
+    featured:  boolean;
+    summery:  string;
 }
