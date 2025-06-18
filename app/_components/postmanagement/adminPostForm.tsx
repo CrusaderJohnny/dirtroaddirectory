@@ -19,8 +19,6 @@ import {
     VendorsInterface
 } from "@/app/_types/interfaces";
 import {useEffect, useState} from "react";
-import markets from '../../_res/markets.json';
-import vendors from '../../_res/vendors.json';
 
 export default function AdminPostForm({user} : AdminPostFormProps) {
     const [selectedPosterType, setSelectedPosterType] = useState<'market' | 'vendor' | null>(null);
@@ -46,56 +44,56 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
         },
     });
 
-    useEffect(() => {
-        const fetchingOptions = async () => {
-            setIsLoadingOptions(true);
-            try {
-                setMarketOptions(markets as MarketsInterface[]);
-                setVendorOptions(vendors as VendorsInterface[]);
-                //fake time out to simulate server load
-                await new Promise(resolve => setTimeout(resolve, 500));
-            } catch (error) {
-                console.error("Error loading local options:",error);
-                setSubmissionMessage({type: 'error', message: `Error loading local options ${error instanceof Error ? error.message : 'Unknown error'}`});
-            } finally {
-                setIsLoadingOptions(false);
-            }
-        };
-        void fetchingOptions();
-    }, []);
-
-    //  useEffect for when we have server set up and can talk with back end
     // useEffect(() => {
-    //     const fetchOptions = async () => {
+    //     const fetchingOptions = async () => {
     //         setIsLoadingOptions(true);
-    //         try{
-    //             const [marketResponse, vendorResponse] = await Promise.all([
-    //                 fetch('/api/admin/markets'),
-    //                 fetch('/api/admin/vendors'),
-    //             ]);
-    //             if(!marketResponse.ok || !vendorResponse.ok){
-    //                 const marketError = await marketResponse.text();
-    //                 const vendorError = await vendorResponse.text();
-    //                 setSubmissionMessage({
-    //                     type: 'error',
-    //                     message: `Failed to load markets/vendors: Market Status: ${marketResponse.status}: ${marketError} | Vendor Status: ${vendorResponse.status}: ${vendorError}`,
-    //                 })
-    //                 setIsLoadingOptions(false);
-    //                 return;
-    //             }
-    //             const markets: MarketOption[] = await marketResponse.json();
-    //             const vendors: VendorOption[] = await vendorResponse.json();
-    //             setMarketOptions(markets);
-    //             setVendorOptions(vendors);
+    //         try {
+    //             setMarketOptions(markets as MarketsInterface[]);
+    //             setVendorOptions(vendors as VendorsInterface[]);
+    //             //fake time out to simulate server load
+    //             await new Promise(resolve => setTimeout(resolve, 500));
     //         } catch (error) {
-    //             console.error(`Error fetching options: ${error}`);
-    //             setSubmissionMessage({ type: 'error', message: `Failed to fetch markets and vendors: ${error instanceof Error ? error.message : 'Unknown error'}. Please check API.` });
+    //             console.error("Error loading local options:",error);
+    //             setSubmissionMessage({type: 'error', message: `Error loading local options ${error instanceof Error ? error.message : 'Unknown error'}`});
     //         } finally {
     //             setIsLoadingOptions(false);
     //         }
     //     };
-    //     void fetchOptions();
+    //     void fetchingOptions();
     // }, []);
+
+    //  useEffect for when we have server set up and can talk with back end
+    useEffect(() => {
+        const fetchOptions = async () => {
+            setIsLoadingOptions(true);
+            try{
+                const [marketResponse, vendorResponse] = await Promise.all([
+                    fetch('http://localhost:8080/markets'),
+                    fetch('http://localhost:8080/vendors'),
+                ]);
+                if(!marketResponse.ok || !vendorResponse.ok){
+                    const marketError = await marketResponse.text();
+                    const vendorError = await vendorResponse.text();
+                    setSubmissionMessage({
+                        type: 'error',
+                        message: `Failed to load markets/vendors: Market Status: ${marketResponse.status}: ${marketError} | Vendor Status: ${vendorResponse.status}: ${vendorError}`,
+                    })
+                    setIsLoadingOptions(false);
+                    return;
+                }
+                const markets: MarketsInterface[] = await marketResponse.json();
+                const vendors: VendorsInterface[] = await vendorResponse.json();
+                setMarketOptions(markets);
+                setVendorOptions(vendors);
+            } catch (error) {
+                console.error(`Error fetching options: ${error}`);
+                setSubmissionMessage({ type: 'error', message: `Failed to fetch markets and vendors: ${error instanceof Error ? error.message : 'Unknown error'}. Please check API.` });
+            } finally {
+                setIsLoadingOptions(false);
+            }
+        };
+        void fetchOptions();
+    }, []);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
     const handleSubmit = async (values: typeof form.values) => {
