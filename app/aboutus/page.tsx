@@ -1,13 +1,25 @@
 "use client";
-import {AppShell, Card, Container, Image, Text, Title, Grid, Divider, Space} from "@mantine/core";
+import {
+    AppShell,
+    Card,
+    Container,
+    Image,
+    Text,
+    Title,
+    Grid,
+    Divider,
+    Space,
+    AppShellHeader,
+    AppShellMain
+} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 
 export default function Page() {
     return(
         <AppShell>
-            <AppShell.Header
+            <AppShellHeader
                 component={NavMT}/>
-            <AppShell.Main style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+            <AppShellMain style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
                 <Container size="xl" px={0}>
                 <Card radius={0} withBorder style={{ position: "relative" }}>
                     <Image
@@ -70,7 +82,7 @@ export default function Page() {
                         </Grid.Col>
                     </Grid>
                 </Container>
-            </AppShell.Main>
+            </AppShellMain>
         </AppShell>
     )
 }
