@@ -1,6 +1,6 @@
 [
     {
-        "id": "cfm",
+        "id": 1,
         "image": "https://calgary-farmers-market-v1747430046.websitepro-cdn.com/wp-content/uploads/2024/01/CFM-logo@2x.png",
         "label": "Calgary Farmers Market",
         "description": "Home to over 100 incredible local vendors.",
@@ -10,7 +10,7 @@
         "lng":-114.2236629
     },
     {
-        "id": "cochrane",
+        "id": 2,
         "image": "https://www.albertafarmersmarket.com/wp-content/uploads/Cochrane1-2-wpcf_225x225.jpg",
         "label": "Cochrane Farmers’ Market",
         "description": "The market in the heart of Big Hill Country",
@@ -20,7 +20,7 @@
         "lng":-114.4551604
     },
     {
-        "id": "dalhousie",
+        "id": 3,
         "image": "https://www.albertafarmersmarket.com/wp-content/uploads/DalhousieFarmersMarketLogo-wpcf_225x225.png",
         "label": "Dalhousie Farmers’ Market",
         "description": "The Dalhousie Farmers’ Market adhere’s to the “Made, Baked, or Grown” in Alberta Rule.",
