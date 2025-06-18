@@ -172,7 +172,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             return 'Not selected';
         }
         if(selectedPosterType === 'market'){
-            const market = marketOptions.find(m => m.id === selectedPosterID);
+            const market = marketOptions.find(m => m.id === parseInt(selectedPosterID));
             return market ? market.label : 'Unknown Market';
         } else if(selectedPosterType === 'vendor'){
             const vendor = vendorOptions.find(v => v.id === parseInt(selectedPosterID));
@@ -252,7 +252,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                     <Select
                         label="Select Market"
                         placeholder="Choose a market"
-                        data={marketOptions.map(m => ({ value: m.id, label: m.label }))}
+                        data={marketOptions.map(m => ({ value: m.id.toString(), label: m.label }))}
                         value={selectedPosterID}
                         onChange={setSelectedPosterID}
                         searchable
