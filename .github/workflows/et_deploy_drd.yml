@@ -31,6 +31,36 @@ jobs:
         env:
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 
+      - name: Prepare deployment package
+        run: |
+          # Ensure a clean slate for the deploy_package directory
+          rm -rf deploy_package
+          mkdir deploy_package
+
+          # Copy only the *essential* Next.js build output and configuration files.
+          # Crucially, this does NOT copy the node_modules folder from the runner.
+          cp -r .next deploy_package/
+          cp -r public deploy_package/
+          cp package.json deploy_package/
+          cp package-lock.json deploy_package/ # Or yarn.lock/pnpm-lock.yaml
+
+          # Optional: Copy next.config.js if you have one and it's needed at runtime
+          [ -f next.config.js ] && cp next.config.js deploy_package/
+
+          # Optional: Copy middleware.ts/js if you use Next.js Middleware
+          [ -f middleware.ts ] && cp middleware.ts deploy_package/
+          [ -f middleware.js ] && cp middleware.js deploy_package/
+          # If your middleware is in a subfolder (e.g., src/middleware.ts), adjust path
+
+          # Optional: Copy any other root-level files required by your deployed app
+          # For example, if you have a custom server.js
+          # [ -f server.js ] && cp server.js deploy_package/
+
+          echo "Contents of deploy_package for zipping:"
+          ls -la deploy_package/
+          # Verify that node_modules is NOT listed here!
+        shell: bash
+
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
 
