@@ -41,6 +41,7 @@ jobs:
           [ -f next.config.js ] && cp next.config.js deploy_package/
           [ -f middleware.ts ] && cp middleware.ts deploy_package/
           [ -f middleware.js ] && cp middleware.js deploy_package/
+        shell: bash
 
       - name: Zip artifact for deployment
         # Zip the contents of the 'deploy_package' directory, not the whole repo
