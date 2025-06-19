@@ -33,6 +33,7 @@ jobs:
           
       - name: Prepare deployment package
         run: |
+          rm -rf deploy_package
           mkdir deploy_package
           cp -r .next deploy_package/
           cp -r public deploy_package/ # Your static assets
