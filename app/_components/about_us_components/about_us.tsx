@@ -1,4 +1,5 @@
-import {AppShell, Card, Container, Divider, Grid, Image, Space, Text, Title} from "@mantine/core";
+"use client";
+import {AppShell, Card, Container, Divider, Grid, GridCol, Image, Space, Text, Title} from "@mantine/core";
 
 export default function AboutUs() {
     return (
@@ -48,32 +49,32 @@ export default function AboutUs() {
                 <Space h="xl"/>
 
                 <Grid gutter="xl">
-                    <Grid.Col span={{base: 12, sm: 4}}>
+                    <GridCol span={{base: 12, sm: 4}}>
                         <Card shadow="sm" withBorder radius="md" p="md" style={{backgroundColor: "#ece2d2"}}>
                             <Title order={4} c="dark" mb="xs">Local Focus</Title>
                             <Text size="sm" c="gray.7">
                                 We highlight Alberta-based vendors and encourage local economic growth.
                             </Text>
                         </Card>
-                    </Grid.Col>
+                    </GridCol>
 
-                    <Grid.Col span={{base: 12, sm: 4}}>
+                    <GridCol span={{base: 12, sm: 4}}>
                         <Card shadow="sm" withBorder radius="md" p="md" style={{backgroundColor: "#ece2d2"}}>
                             <Title order={4} c="dark" mb="xs">Student Project</Title>
                             <Text size="sm" c="gray.7">
                                 Developed by students at SAIT to solve real-world problems through tech.
                             </Text>
                         </Card>
-                    </Grid.Col>
+                    </GridCol>
 
-                    <Grid.Col span={{base: 12, sm: 4}}>
+                    <GridCol span={{base: 12, sm: 4}}>
                         <Card shadow="sm" withBorder radius="md" p="md" style={{backgroundColor: "#ece2d2"}}>
                             <Title order={4} c="dark" mb="xs">Simplified Shopping</Title>
                             <Text size="sm" c="gray.7">
                                 Discover what’s at each market so you can plan better and shop smarter.
                             </Text>
                         </Card>
-                    </Grid.Col>
+                    </GridCol>
                 </Grid>
             </Container>
         </AppShell>
