@@ -107,7 +107,7 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
     ));
     return (
             <Accordion chevronPosition="right" variant="contained"
-            value={activeItem} // Control the active item
+            value={String(activeItem)} // Control the active item
             onChange={setActiveItem} // Update the active item when a user clicks
             // FIX BUG HERE ------ closing the item doesn't set active to null
             >
