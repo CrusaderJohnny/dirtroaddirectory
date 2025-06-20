@@ -59,7 +59,7 @@ export default function HeaderSmall() {
                         </Flex>
                     </Link>
 
-                    <Menu trigger='hover' openDelay='100' closeDelay='400'>
+                    <Menu>
                         <Menu.Target>
                             <Burger color='white'/>
                         </Menu.Target>
