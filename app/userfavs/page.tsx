@@ -9,7 +9,7 @@ export default async function Page() {
     return (
         <AppShell
         >
-            <AppShellHeader component={NavMT} />
+            <AppShellHeader component={NavMT}/>
             <AppShellMain>
                 <Container size="xl" py="xl">
                     <Title order={1} className="text-3xl font-bold mb-6 text-center">{user?.firstName}&apos;s Favourites</Title>

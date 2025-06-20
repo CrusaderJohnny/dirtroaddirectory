@@ -23,9 +23,9 @@ const fetchMarkets = async () => {
 
     const data: MarketsInterface[] = await response.json(); // Parse the JSON response
     setMarkets(data);
-    } catch (err: any) {
+    } catch (err) {
     console.error("Failed to fetch markets:", err);
-    setError(err.message || "An unknown error occurred while fetching markets.");
+    setError(`${err instanceof Error ? err.message : 'Unknown error'} "An unknown error occurred while fetching markets.`);
     } finally {
     setLoading(false);
     }

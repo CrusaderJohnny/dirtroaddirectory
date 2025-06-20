@@ -15,8 +15,8 @@ import { useEffect, useState, useMemo } from "react";
  */
 export const useMapLocations = (): Poi[] => {
   const [marketList, setMarketList] = useState<MarketItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setIsLoading] = useState<boolean>(true);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadMarkets = async () => {
@@ -24,7 +24,7 @@ export const useMapLocations = (): Poi[] => {
         setIsLoading(true);
         const fetchedData = await fetchMarketsAsJson();
         setMarketList(fetchedData);
-      } catch (err: any) {
+      } catch (err) {
         console.error("Failed to load markets:", err);
         setError("Failed to load market data.");
       } finally {

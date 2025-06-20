@@ -21,6 +21,14 @@ export interface MarketsInterface {
   }[];
   lat: number;
   lng: number;
+    id: number;
+    image: string;
+    label: string;
+    description: string;
+    content: string;
+    link: string;
+    lat: number;
+    lng: number;
 }
 
 export interface MarketOption {

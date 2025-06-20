@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "id": "cfm",
         "label": "Calgary Farmers Market",
         "image": "https://calgary-farmers-market-v1747430046.websitepro-cdn.com/wp-content/uploads/2024/01/CFM-logo@2x.png",
@@ -37,6 +38,7 @@
         "lng":-114.4551604
     },
     {
+        "id": 3,
         "id": "dalhousie",
         "label": "Dalhousie Farmers’ Market",
         "image": "https://www.albertafarmersmarket.com/wp-content/uploads/DalhousieFarmersMarketLogo-wpcf_225x225.png",

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
 import { SearchUsers } from '../_components/admincomps/searchUsers'
-import {clerkClient, EmailAddress} from '@clerk/nextjs/server'
+import {clerkClient, currentUser, EmailAddress} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
@@ -13,7 +13,7 @@ import {
     Flex,
     Group,
     Stack,
-    Text
+    Text, Title
 } from "@mantine/core";
 import Link from "next/link";
 import {checkMarket} from "@/utils/checkMarket";
@@ -39,6 +39,19 @@ export default async function AdminDashboard(params: {
 
     const isAdmin = await checkRole('admin');
 
+    const user = await currentUser();
+
+    function titleFix(str: string | null | undefined): string {
+        if(!str) {
+            return '';
+        }
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    const displayName = titleFix(user?.username || user?.firstName);
+
+
+
     return (
         <AppShell>
             <AppShellHeader>
@@ -46,9 +59,9 @@ export default async function AdminDashboard(params: {
             </AppShellHeader>
             <AppShellMain>
                 <Center>
-                    <Text>
-                        This is a protected admin dashboard. Assign user roles with the search function.
-                    </Text>
+                    <Title>
+                        Welcome! To the Admin Dashboard {displayName}!
+                    </Title>
                 </Center>
                 <Center p={20}>
                     <SearchUsers/>
