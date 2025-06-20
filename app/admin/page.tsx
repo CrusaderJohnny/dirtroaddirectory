@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
 import { SearchUsers } from '../_components/admincomps/searchUsers'
-import {clerkClient, currentUser, EmailAddress} from '@clerk/nextjs/server'
+import { clerkClient, currentUser, EmailAddress } from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
@@ -13,11 +13,11 @@ import {
     Flex,
     Group,
     Stack,
-    Text, Title
+    Text, Title, Container, Box
 } from "@mantine/core";
 import Link from "next/link";
-import {checkMarket} from "@/utils/checkMarket";
-import {checkVendor} from "@/utils/checkVendor";
+import { checkMarket } from "@/utils/checkMarket";
+import { checkVendor } from "@/utils/checkVendor";
 import UserRoleActions from "@/app/_components/admincomps/userRoleActions";
 
 export default async function AdminDashboard(params: {
@@ -28,21 +28,15 @@ export default async function AdminDashboard(params: {
     }
 
     const query = (await params.searchParams).search
-
     const client = await clerkClient()
-
     const users = query ? (await client.users.getUserList({ query })).data : []
-
     const hasMarketAccess = await checkMarket();
-
     const hasVendorAccess = await checkVendor();
-
     const isAdmin = await checkRole('admin');
-
     const user = await currentUser();
 
     function titleFix(str: string | null | undefined): string {
-        if(!str) {
+        if (!str) {
             return '';
         }
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -50,93 +44,88 @@ export default async function AdminDashboard(params: {
 
     const displayName = titleFix(user?.username || user?.firstName);
 
-
-
     return (
         <AppShell>
             <AppShellHeader>
-                <NavMT/>
+                <NavMT />
             </AppShellHeader>
-            <AppShellMain>
-                <Center>
-                    <Title>
-                        Welcome! To the Admin Dashboard {displayName}!
+
+            <AppShellMain style={{ backgroundColor: '#f5f7fa', minHeight: '100vh' }}>
+                <Container size="lg" py="xl">
+                    <Title ta="center" order={2} mb="lg">
+                        Welcome to the Admin Dashboard, {displayName}!
                     </Title>
-                </Center>
-                <Center p={20}>
-                    <SearchUsers/>
-                </Center>
-                <Center>
-                    {users.map((user) => {
-                        return(
-                            <Card shadow="lg" bg="lightgray" key={user.id}>
-                                <Group>
-                                    <Stack>
-                                        <Flex>
-                                            <Group>
-                                                <Text>
-                                                    Username:
-                                                </Text>
-                                                {user.firstName} {user.lastName}
-                                            </Group>
-                                        </Flex>
-                                        <Flex>
-                                            <Group>
-                                                <Text>
-                                                    Email:
-                                                </Text>
+
+                    <Box mb="xl">
+                        <SearchUsers />
+                    </Box>
+
+                    <Stack gap="lg">
+                        {users.map((user) => (
+                            <Card
+                                key={user.id}
+                                shadow="sm"
+                                padding="lg"
+                                radius="md"
+                                withBorder
+                                style={{ backgroundColor: "#ffffff" }}
+                            >
+                                <Flex justify="space-between" align="flex-start" wrap="wrap">
+                                    <Stack gap="xs">
+                                        <Group>
+                                            <Text fw={600}>Username:</Text>
+                                            <Text>{user.firstName} {user.lastName}</Text>
+                                        </Group>
+                                        <Group>
+                                            <Text fw={600}>Email:</Text>
+                                            <Text>
                                                 {
-                                                    user.emailAddresses.find((email: EmailAddress) => email.id === user.primaryEmailAddressId)
-                                                        ?.emailAddress
+                                                    user.emailAddresses.find(
+                                                        (email: EmailAddress) =>
+                                                            email.id === user.primaryEmailAddressId
+                                                    )?.emailAddress
                                                 }
-                                            </Group>
-                                        </Flex>
-                                        <Flex>
-                                            <Group>
-                                                <Text>
-                                                    Role:
-                                                </Text>
-                                                {user.publicMetadata.role as string}
-                                            </Group>
-                                        </Flex>
+                                            </Text>
+                                        </Group>
+                                        <Group>
+                                            <Text fw={600}>Role:</Text>
+                                            <Text>{user.publicMetadata.role as string}</Text>
+                                        </Group>
                                     </Stack>
-                                    <UserRoleActions userId={user.id}/>
-                                </Group>
+                                    <UserRoleActions userId={user.id} />
+                                </Flex>
                             </Card>
-                        )
-                    })}
-                </Center>
+                        ))}
+                    </Stack>
+                </Container>
             </AppShellMain>
-            <AppShellFooter>
+
+            <AppShellFooter style={{ backgroundColor: '#fff', padding: '1rem 0' }}>
                 <Center>
-                    {hasMarketAccess && (
-                        <Button
-                            component={Link}
-                            href="/post-market">
-                            Market Post
-                        </Button>
-                    )}
-                    {hasVendorAccess && (
-                        <Button component={Link} href="/post-vendor">
-                            Vendor Post
-                        </Button>
-                    )}
-                    {isAdmin && (
-                        <Group>
-                            <Button
-                                component={Link}
-                                href="post-admin">
-                                Admin Post
+                    <Group>
+                        {hasMarketAccess && (
+                            <Button component={Link} href="/post-market" variant="light">
+                                Market Post
                             </Button>
-                            <Button
-                                component={Link}
-                                href="/contact-form-messages">
-                                Contact Messages
+                        )}
+                        {hasVendorAccess && (
+                            <Button component={Link} href="/post-vendor" variant="light">
+                                Vendor Post
                             </Button>
-                        </Group>
-                    )}
+                        )}
+                        {isAdmin && (
+                            <>
+                                <Button component={Link} href="/post-admin" variant="light">
+                                    Admin Post
+                                </Button>
+                                <Button component={Link} href="/contact-form-messages" variant="light">
+                                    Contact Messages
+                                </Button>
+                            </>
+                        )}
+                    </Group>
                 </Center>
             </AppShellFooter>
         </AppShell>
-    )
+    );
 }
