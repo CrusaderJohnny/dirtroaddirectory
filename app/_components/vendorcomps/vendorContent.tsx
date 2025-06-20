@@ -24,6 +24,10 @@ import {
   IconShoppingCart,
   IconCircleDot,
   IconMapPin,
+  IconPhone,
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconShare2,
 } from "@tabler/icons-react";
 import vendorList from "../../_res/vendors.json";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
@@ -108,8 +112,8 @@ export default function VendorsContent() {
                       <Link href={`/markets?marketId=${market.id}`} passHref>
                         <Card withBorder radius="md" p="md" style={{ backgroundColor: "#f9fafb", cursor: "pointer" }}>
                           <Group mb="xs" gap="xs">
-                            <ThemeIcon variant="light" color="red" size="sm"><IconMapPin size={16} /></ThemeIcon>
-                            <Text fw={600} size="md" color="blue">{market.label}</Text>
+                            <ThemeIcon variant="light" c="red" size="sm"><IconMapPin size={16} /></ThemeIcon>
+                            <Text fw={600} size="md" c="blue">{market.label}</Text>
                           </Group>
                           <Text size="xs" c="dimmed">Click to view more</Text>
                         </Card>
@@ -121,7 +125,42 @@ export default function VendorsContent() {
                 <Text ta="center" size="sm" c="dimmed">No market information available.</Text>
               )}
             </Card>
-          </motion.div>
+
+             {/* Contact + Social */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+              <Grid gutter="xl">
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <Card shadow="sm" radius="md" withBorder p="lg" bg="#e6f4ea">
+                    <Group justify="center" mb="sm">
+                      <ThemeIcon size="xl" radius="xl" c="green"><IconPhone size={28} /></ThemeIcon>
+                    </Group>
+                    <Title order={4} ta="center" c="dark.8" mb="sm">CONTACT</Title>
+                    <Text size="sm"><strong>Phone:</strong> {selectedVendor.contact || 'Not available'}</Text>
+                    <Text size="sm"><strong>Email:</strong> {selectedVendor.email ? (
+                      <a href={`mailto:${selectedVendor.email}`} style={{ color: '#1e88e5' }}>{selectedVendor.email}</a>
+                    ) : 'Not available'}</Text>
+                    <Text size="sm"><strong>Website:</strong> {selectedVendor.website ? (
+                      <a href={selectedVendor.website} target="_blank" rel="noopener noreferrer" style={{ color: '#1e88e5' }}>{selectedVendor.website}</a>
+                    ) : 'Not available'}</Text>
+                  </Card>
+                </Grid.Col>
+
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <Card shadow="sm" radius="md" withBorder p="lg" bg="#d3d3d3">
+                    <Group justify="center" mb="sm">
+                      <ThemeIcon size="xl" radius="xl" color="gray"><IconShare2 size={28} /></ThemeIcon>
+                    </Group>
+                    <Title order={4} ta="center" c="dark.7">SOCIAL MEDIA</Title>
+
+                    <Group justify="space-evenly" mt="md">
+                      <Group gap={6}><IconBrandFacebook color="darkblue" /><Text size="sm">Facebook</Text></Group>
+                      <Group gap={6}><IconBrandInstagram color="purple" /><Text size="sm">Instagram</Text></Group>
+                    </Group>
+                  </Card>
+                </Grid.Col>
+              </Grid>
+            </motion.div>
+        </motion.div>
         </Container>
       </AppShellMain>
     );
