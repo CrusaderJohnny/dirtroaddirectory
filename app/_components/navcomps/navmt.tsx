@@ -2,9 +2,7 @@
 Author: Daniel Asefa
 website header using Mantine
 
-References:
-Gemini - "Provide Generic example for rendering code based on zoom level"
-
+Ref - Gemini help with rendering based on zoom
 */
 
 "use client"
@@ -32,9 +30,7 @@ export default function NavMT() {
     }, []);
 
     return (
-        <AppShell
-            header={{ height: 60 }}
-        >
+        <AppShell header={{ height: 60 }} >
             <AppShell.Header>
                 {isZoomedIn ? <HeaderSmall /> : <HeaderLarge />}
             </AppShell.Header>
