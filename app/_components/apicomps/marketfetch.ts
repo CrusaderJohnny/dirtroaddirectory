@@ -1,6 +1,6 @@
 import {MarketsInterface} from "@/app/_types/interfaces";
 
-// Define your backend API base URL
+//backend API base URL
 const API_BASE_URL = 'http://localhost:8080';
 
 /**
@@ -12,7 +12,7 @@ export async function fetchMarketsAsJson(): Promise<MarketsInterface[]> {
     try {
         const response = await fetch(`${API_BASE_URL}/markets`);
 
-        // Manually check if the HTTP response was successful (status 2xx)
+        // Manually check if the HTTP response was successful
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: 'Unknown error' })); // Attempt to parse error body, fallback if it's not JSON
             throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
