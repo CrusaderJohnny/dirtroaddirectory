@@ -48,10 +48,10 @@ a {
 }
 
 .signin-button {
-  background-color: var(--mantine-color-blue-light-color);
+  background-color: var(--mantine-color-blue-4);
   color: white;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin: 10px;
   border: none;
   border-radius: 3px;
@@ -62,10 +62,10 @@ a {
 }
 
 .signup-button {
-  background-color: var(--mantine-color-blue-light-color);
+  background-color: var(--mantine-color-blue-4);
   color: white;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin: 10px;
   border: none;
   border-radius: 3px;

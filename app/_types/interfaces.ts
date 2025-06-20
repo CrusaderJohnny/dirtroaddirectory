@@ -103,5 +103,5 @@ export interface ArticleInterface {
     content: string;
     imgLink: string;
     featured:  boolean;
-    summery:  string;
+    summary:  string;
 }
