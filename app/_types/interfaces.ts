@@ -1,34 +1,30 @@
 import {UserResource} from "@clerk/types";
 
 export interface MarketsInterface {
-  id: string;
+  id: number;
   image: string;
   label: string;
   description: string;
   content: string;
-  link: string;            
+  link: string;
+  lat: number;
+  lng: number;
   hours?: string;
-  phone?: string;
-  email?: string;
-  website?: string;
-  facebook?: string;
-  instagram?: string;
-  events?: string[];         
+  contact?: {
+    phone?: string;
+    email?: string;
+    website?: string;
+  };
+  socials?: {
+    facebook?: string;
+    instagram?: string;
+  };
+  events?: string[];
   vendors?: {
     id: number;
     name: string;
     category?: string;
   }[];
-  lat: number;
-  lng: number;
-    id: number;
-    image: string;
-    label: string;
-    description: string;
-    content: string;
-    link: string;
-    lat: number;
-    lng: number;
 }
 
 export interface MarketOption {

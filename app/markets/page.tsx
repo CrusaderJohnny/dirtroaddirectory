@@ -12,7 +12,9 @@ import MarketsContent from "@/app/_components/marktecomponents/marketContent";
 export default function Page() {
     return (
         <AppShell>
-            <AppShellHeader component={NavMT} />
+            <AppShellHeader>
+                <NavMT />
+            </AppShellHeader>
             <AppShellMain>
                 {/* Wrap the client component that uses useSearchParams in Suspense */}
                 <Suspense fallback={<div>Loading markets...</div>}>
