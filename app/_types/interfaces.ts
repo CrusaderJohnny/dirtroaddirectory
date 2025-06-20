@@ -19,6 +19,7 @@ export interface MarketsInterface {
     facebook?: string;
     instagram?: string;
   };
+  region: string;
   events?: string[];
   vendors?: {
     id: number;

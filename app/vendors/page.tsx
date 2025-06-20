@@ -14,13 +14,11 @@ import VendorsContent from "@/app/_components/vendorcomps/vendorContent"; // Imp
 export default function VendorsPage() {
   return (
       <AppShell>
-      <AppShellHeader>
-        <NavMT />
-      </AppShellHeader>
+        <AppShellHeader component={NavMT}/>
         {/* Wrap the client component that uses useSearchParams in Suspense */}
         <Suspense fallback={<div>Loading vendor information...</div>}>
           <VendorsContent />
         </Suspense>
-      </AppShell> 
+      </AppShell>
   );
 }

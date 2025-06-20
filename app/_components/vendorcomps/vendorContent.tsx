@@ -158,23 +158,11 @@ export default function VendorsContent() {
         </Group>
       </Paper>
       <Grid gutter="xl">
-        {filteredVendors.map((vendor) => {
-          const normalizedVendor = {
-            ...vendor,
-            markets: Array.isArray(vendor.markets)
-              ? vendor.markets.map((market: any, idx: number) =>
-                  typeof market === "string"
-                    ? { id: idx.toString(), label: market }
-                    : market
-                )
-              : [],
-          };
-          return (
-            <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
-              <VendorCard vendor={normalizedVendor} />
-            </Grid.Col>
-          );
-        })}
+        {filteredVendors.map((vendor) => (
+          <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
+            <VendorCard vendor={vendor} />
+          </Grid.Col>
+        ))}
       </Grid>
     </AppShellMain>
   );

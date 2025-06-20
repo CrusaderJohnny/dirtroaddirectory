@@ -18,6 +18,7 @@
             "facebook": "https://facebook.com/examplemarket",
             "instagram": "https://instagram.com/examplemarket"
         },
+        "region": "Calgary & Surrounding Area",
         "events": [
             "Spring Harvest Festival",
             "Farmers’ Appreciation Day"
@@ -34,7 +35,8 @@
         "content": "The Cochrane Environmental Action Committee (CEAC) sponsors and operates the Cochrane Farmers’ Market. The market is run entirely by CEAC volunteers, and proceeds from the market are used to support CEAC in its efforts to make Cochrane a more environmentally aware and active community.",
         "link": "https://www.google.com/maps/dir//Cochrane+Farmers+Market,+parking+lot+Spray+Lake+Sawmills+Family+Sports+Centre,+Griffin+Road+East,+Cochrane,+AB/@51.1766119,-114.4938705,13z/data=!3m2!4b1!5s0x5371407e95a8f6df:0x5fc8cafd47c8bf67!4m9!4m8!1m0!1m5!1m1!1s0x53713f5fda992313:0x4b100c656f014150!2m2!1d-114.4525855!2d51.1765654!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D",
         "lat":51.1765687,
-        "lng":-114.4551604
+        "lng":-114.4551604,
+        "region": "Cochrane & Surrounding Area"
     },
     {
         "id": 3,
@@ -44,6 +46,7 @@
         "content": "The Dalhousie Farmers’ Market adhere’s to the “Made, Baked, or Grown” in Alberta Rule. 80% of our vendors must have products that are Alberta Made, Baked or Grown. We are an Approved Farmer’s Market and follow rules and regulations set by the Alberta Agricultural Society. By hosting a market, Dalhousie is enabling entrepreneurs to test their products and ideas while keeping costs low, interacting with the community, and learning new business skills. All funds raised by this market will go directly towards community improvement projects.",
         "link": "https://www.google.com/maps/dir//Dalhousie+Community+Association+(Dallyn+Building),+Dallyn+Street+Northwest,+Calgary,+AB/@51.1072521,-114.1926607,13z/data=!3m2!4b1!5s0x5371407e95a8f6df:0x5fc8cafd47c8bf67!4m9!4m8!1m0!1m5!1m1!1s0x53716f8126a568c9:0x293c5ce3b9fad921!2m2!1d-114.1513757!2d51.1072055!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D",
         "lat":51.1127841,
-        "lng":-114.1980368
+        "lng":-114.1980368,
+        "region": "Northwest Calgary"
     }
 ]
