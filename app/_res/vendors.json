@@ -8,19 +8,34 @@
     "contact": "403-123-4567",
     "email": "valentinesfarm@email.com",
     "website": "https://valentinesfarm.com",
-    "markets": ["Calgary Farmers Market", "Okotoks Saturday Market"],
+    "markets": [
+      { "id": "cfm", "label": "Calgary Farmers Market" },
+      { "id": "osm", "label": "Okotoks Saturday Market" }
+    ],
     "products": ["Carrots", "Potatoes", "Beets", "Onions", "Peppers"],
-    "description": "Beck Farms, owned and operated by the Bradshaw family was started in 1987, and has been growing what our customers call the best carrots in the world! We are proud to produce not only great tasting carrots but several other vegetables as well. With the next generation joining us in the management of the farm, we plan to keep producing local, high quality produce for many years to come. Our produce can be found at farmers markets in Central Alberta and Calgary at the Innisfail Growers Booth. Produce can also be purchased at our farm."
+    "description": "Valentines Farm, owned and operated by the Bradshaw family, was started in 1987 and has been growing what our customers call the best carrots in the world! We are proud to produce not only great tasting carrots but several other vegetables as well. With the next generation joining us in the management of the farm, we plan to keep producing local, high-quality produce for many years to come. Our produce can be found at farmers markets in Central Alberta and Calgary at the Innisfail Growers Booth. Produce can also be purchased at our farm."
   },
   {
     "id": 2,
-    "name": "Going Nuts",
-    "category": "Nuts",
+    "name": "1904 Farm Family Faves",
+    "category": "Preserves",
     "location": "Okotoks, AB",
-    "image": "https://goingnuts.ca/cdn/shop/files/location_02.jpg?v=1614665293&width=480",
-    "contact": "valentinesfarm@email.com",
-    "markets": ["Calgary Farmers Market", "Okotoks Saturday Market"],
-    "description": "We sell raw, unfiltered wildflower honey harvested from Alberta bees."
+    "image": "https://www.albertafarmersmarket.com/wp-content/uploads/1904.1.jpg",
+    "contact": "780-221-3200",
+    "email": "1904.farmfamilyfaves@gmail.com",
+    "website": "https://1904-farm-family-faves.square.site/",
+    "markets": [
+      { "id": "cfm", "label": "Calgary Farmers Market" },
+      { "id": "osm", "label": "Okotoks Saturday Market" }
+    ],
+    "products": [
+      "Romance (Cherry, Berry & Merlot) Jam",
+      "Sweet Temptation (Chocolate Raspberry Jam)",
+      "Cherrylicious (Cherry Jam)",
+      "Pina Colada Jam",
+      "Raspberry Rhubarb Jam"
+    ],
+    "description": "Our philosophy is GARDEN TO JAR! 1904 Farm Family Faves started when we wanted to do more with our garden. Nicole grew up on a family farm and learned to appreciate growing her own food. The family farm has been in Nicole's family since 1904, and Nicole & Julio plan on continuing that tradition. We are a small, family driven business that is slowly growing as we broaden our product line and what we're able to grow or source locally. We strongly believe in farm to jar for as much of our product as possible. We grow 90-95% of our own product on the family farm in Sturgeon County. What we can't grow, we source from other local farms or get from trusted sources such as B.C. Fruit stands in the summer months. We don't use chemicals or pesticides on any of our produce and source from other farms with similar mentalities. We don't use nuts in any of our products as we ourselves have allergies in our family and we can't have them in our home."
   },
   {
     "id": 3,
@@ -28,8 +43,14 @@
     "category": "Bakery",
     "location": "Red Deer, AB",
     "image": "https://www.avenuecalgary.com/wp-content/uploads/2022/08/20220811-Calgary-Farmers-Market-Opening-CL-0138.jpg",
-    "contact": "valentinesfarm@email.com",
-    "markets": ["Calgary Farmers Market", "Okotoks Saturday Market"],
-    "description": "We sell raw, unfiltered wildflower honey harvested from Alberta bees."
+    "contact": "403-456-7890",
+    "email": "info@artisanbreads.ca",
+    "website": "https://artisanbreads.ca",
+    "markets": [
+      { "id": "cfm", "label": "Calgary Farmers Market" },
+      { "id": "osm", "label": "Okotoks Saturday Market" }
+    ],
+    "products": ["Wildflower Honey", "Sourdough Loaves", "Multigrain Buns"],
+    "description": "We bake a variety of artisan breads and also sell raw, unfiltered wildflower honey harvested from Alberta bees. We take pride in slow fermentation and locally sourced ingredients."
   }
 ]

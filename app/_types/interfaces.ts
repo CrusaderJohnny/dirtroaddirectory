@@ -1,14 +1,31 @@
 import {UserResource} from "@clerk/types";
 
 export interface MarketsInterface {
+  id: number;
+  image: string;
+  label: string;
+  description: string;
+  content: string;
+  link: string;
+  lat: number;
+  lng: number;
+  hours?: string;
+  contact?: {
+    phone?: string;
+    email?: string;
+    website?: string;
+  };
+  socials?: {
+    facebook?: string;
+    instagram?: string;
+  };
+  region: string;
+  events?: string[];
+  vendors?: {
     id: number;
-    image: string;
-    label: string;
-    description: string;
-    content: string;
-    link: string;
-    lat: number;
-    lng: number;
+    name: string;
+    category?: string;
+  }[];
 }
 
 export interface MarketOption {
@@ -44,14 +61,20 @@ export interface VendorPostFormProps {
 }
 
 export interface VendorsInterface {
-    id: number;
-    name: string;
-    category: string;
-    location: string;
-    image: string;
-    contact: string;
-    markets: string[];
-    description: string;
+  id: number;
+  name: string;
+  category: string;
+  location: string;
+  image: string;
+  contact: string;
+  email?: string;
+  website?: string;
+  markets: {
+    id: string;
+    label: string;
+  }[];
+  products?: string[];
+  description: string;
 }
 
 export interface UserInfoInterface {
@@ -103,5 +126,15 @@ export interface ArticleInterface {
     content: string;
     imgLink: string;
     featured:  boolean;
-    summery:  string;
+    summary:  string;
 }
+
+export interface ContactMessageInterface {
+  id: number;
+  name: string;
+  email: string;
+  subject?: string; 
+  message: string;
+  created_at: string;
+}
+

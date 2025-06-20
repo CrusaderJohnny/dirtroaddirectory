@@ -7,7 +7,13 @@ import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, A
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
 import ArticleCarousel from "@/app/_components/newscomps/articleCarousel";
+
+// Importing data from hardcoded .ts file
 import newsData from '@/app/_components/newscomps/newsData'
+
+// Import data from api
+// import { fetchArticlesAsJson } from '@/app/_components/apicomps/articleFetch';
+
 import {ArticleInterface} from "@/app/_types/interfaces";
 
 
@@ -74,6 +80,9 @@ export default function Page() {
                     <SiteIntroCard/>
                 </Box>
                 <Container size='xl' pt='lg'>
+                    {/*<Button component='a' href='/news/datapulltest' mt='sm' variant="light" fullWidth>*/}
+                    {/*    Let us see*/}
+                    {/*</Button>*/}
                     <Button component="a" href="/aboutus" mt='sm' variant="light" fullWidth>
                         Learn More About Us
                     </Button>
