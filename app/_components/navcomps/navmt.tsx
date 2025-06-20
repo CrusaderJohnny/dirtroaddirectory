@@ -3,10 +3,10 @@ Author: Daniel Asefa
 website header using Mantine
 
 References:
-Gemini
-    "Provide Generic example for rendering code based on zoom level"
+Gemini - "Provide Generic example for rendering code based on zoom level"
 
 */
+
 "use client"
 
 import { AppShell } from '@mantine/core';
@@ -19,9 +19,7 @@ export default function NavMT() {
 
     useEffect(() => {
         const checkZoom = () => {
-            // A devicePixelRatio greater than 1 often indicates zoom or a high-DPI screen.
-            // You might need to adjust the threshold (e.g., 1.1, 1.25) based on your testing.
-            setIsZoomedIn(window.devicePixelRatio > 1.4);
+            setIsZoomedIn(window.devicePixelRatio > 1.25);
         };
 
         checkZoom();

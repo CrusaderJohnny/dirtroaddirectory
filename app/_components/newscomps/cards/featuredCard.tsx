@@ -13,7 +13,7 @@ export default function FeaturedCard( { article }: { article: ArticleInterface }
                 {/*Type 1*/}
                 <Image src={article.imgLink} alt={article.title} h='60%' radius="md" />
 
-                <Text p='sm'>{article.summery}</Text>
+                <Text p='sm'>{article.summary}</Text>
             </Card>
         </Link>
     );
