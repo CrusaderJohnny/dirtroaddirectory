@@ -85,7 +85,7 @@ export default function MarketContent() {
                     Location
                   </Title>
                 </Group>
-                <Text size="sm">{selectedMarket.link}</Text>
+                <Text size="sm">{selectedMarket.region}</Text>
               </Card>
 
               {/* Hours */}
