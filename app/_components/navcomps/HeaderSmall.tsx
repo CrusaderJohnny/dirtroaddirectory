@@ -1,6 +1,6 @@
-import {BackgroundImage, Button, Group, Box, Image, Title, Menu, Burger, Text, Flex} from "@mantine/core";
+import {BackgroundImage, Button, Image, Title, Menu, Burger, Flex} from "@mantine/core";
 import Link from "next/link";
-import {SignedIn, SignedOut, SignInButton, SignOutButton, SignUpButton, UserButton} from "@clerk/nextjs";
+import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
 
 import {
     IconApple,

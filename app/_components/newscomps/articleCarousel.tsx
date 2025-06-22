@@ -86,7 +86,7 @@ export default function ArticleCarousel() {
                 wrap="wrap"
             >
                 <Text size="lg" fw={700}>Want Your Story Featured?</Text>
-                <Button component="a" href="/contact" mt='sm' variant="light" fullWidth>
+                <Button component="a" href="/contact" mt='sm' fullWidth>
                     Contact Us
                 </Button>
             </Flex>

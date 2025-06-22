@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   AppShell,
@@ -56,16 +56,16 @@ export default function Page() {
 
       open();
       form.reset();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error sending message to API:', error);
-      setSubmitError(error.message || 'Failed to send message. Please try again.');
+      setSubmitError(error instanceof Error ? error.message : 'Failed to send message. Please try again.');
     }
   };
 
   return (
     <>
       <Modal opened={opened} onClose={close} title="Message Sent!" centered>
-        <Text>Thank you for your message! We'll get back to you shortly.</Text>
+        <Text>Thank you for your message! We&apos;ll get back to you shortly.</Text>
       </Modal>
 
       <Modal opened={!!submitError} onClose={() => setSubmitError(null)} title="Submission Error" centered>
@@ -83,7 +83,7 @@ export default function Page() {
                 Contact Us
               </Title>
               <Text ta="center" mb="md" c="gray.7">
-                Have a question or want to join our platform? Reach out and we'll get back to you shortly.
+                Have a question or want to join our platform? Reach out and we&apos;ll get back to you shortly.
               </Text>
 
               <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -145,7 +145,7 @@ export default function Page() {
                     Are You a Farmers Market?
                   </Title>
                   <Text size="sm" c="gray.7">
-                    We'd love to feature your market in our directory. Use the form above to tell us more.
+                    We&apos;d love to feature your market in our directory. Use the form above to tell us more.
                   </Text>
                 </Card>
               </Grid.Col>
@@ -156,7 +156,7 @@ export default function Page() {
                     Are You a Vendor?
                   </Title>
                   <Text size="sm" c="gray.7">
-                    Want to showcase your products on our platform? Fill out the form and we'll reach out with next steps.
+                    Want to showcase your products on our platform? Fill out the form and we&apos;ll reach out with next steps.
                   </Text>
                 </Card>
               </Grid.Col>
