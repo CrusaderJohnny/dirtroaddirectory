@@ -28,11 +28,6 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-          
-        env:
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -62,9 +57,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_33E8345E5D744A80A47DE27CAA6D1E12 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F28005DC6F2A4FDE96A359F3A49B3A93 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_090486CB6A054F349A02772AD93D4C4B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_524B9DE517B543F298BA94B267B8344A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_25BA34BF7A474419A29D70AE53C5030E }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_107E0B4132E14ED193096A7CCB2E812E }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
