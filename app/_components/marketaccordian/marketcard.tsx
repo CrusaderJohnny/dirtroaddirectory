@@ -17,7 +17,7 @@ export default function MarketCard({ market } : { market : MarketsInterface}) {
             >
                 <Image src={market.image} alt={market.label} height={160} radius="md" />
                 <Text fw={600} size="lg" mt="sm">{market.label}</Text>
-                <Text size="sm" c="dimmed">Category: {market.description}</Text>
+                <Text size="sm" c="dimmed">{market.description}</Text>
             </Card>
         </Link>
     )

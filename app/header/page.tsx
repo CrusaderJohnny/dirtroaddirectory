@@ -110,7 +110,6 @@ export default function MantineNavPage() {
                         </Box>
                     </Box>
                 </AppShell.Main>
-
             </AppShell>
         </>
     );

@@ -3,7 +3,7 @@ Written by Mace Howald 06-03-2025
 Referenced: https://developers.google.com/codelabs/maps-platform/maps-platform-101-react-js#1
 Maps the markets from markets.json to the POIs array for the google maps api
 */
-import { MarketItem, Poi } from "@/app/_types/interfaces";
+import { MarketsInterface, Poi} from "@/app/_types/interfaces";
 // import data from "../../_res/markets.json"; // Not used in this revised version if fetching
 import { fetchMarketsAsJson } from "../apicomps/marketfetch";
 import { useEffect, useState, useMemo } from "react";
@@ -14,7 +14,7 @@ import { useEffect, useState, useMemo } from "react";
  * @returns An array of Poi objects.
  */
 export const useMapLocations = (): Poi[] => {
-  const [marketList, setMarketList] = useState<MarketItem[]>([]);
+  const [marketList, setMarketList] = useState<MarketsInterface[]>([]);
   const [, setIsLoading] = useState<boolean>(true);
   const [, setError] = useState<string | null>(null);
 

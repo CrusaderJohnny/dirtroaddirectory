@@ -1,7 +1,7 @@
 'use client'; // This directive makes this a client component
 
-import React, { useEffect, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import React, { useEffect, useState, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Button, Stack, Group, Text, Card } from '@mantine/core';
 //import { notifications } from '@mantine/notifications'; will need to install
 import { setRole, removeRole } from './_actions';
@@ -64,9 +64,9 @@ function SubmitButton({ label }: { label: string }) {
 
 export default function UserRoleActions({ userId}: UserRoleActionsProps) {
     // useFormState for setRole
-    const [setRoleState, setRoleFormAction] = useFormState<ActionState, FormData>(setRole, initialState);
+    const [setRoleState, setRoleFormAction] = useActionState<ActionState, FormData>(setRole, initialState);
     // useFormState for removeRole
-    const [removeRoleState, removeRoleFormAction] = useFormState<ActionState, FormData>(removeRole, initialState);
+    const [removeRoleState, removeRoleFormAction] = useActionState<ActionState, FormData>(removeRole, initialState);
 
     const [popupMessage, setPopupMessage] = useState('');
     const [popupType, setPopupType] = useState<'success' | 'error'>('success');

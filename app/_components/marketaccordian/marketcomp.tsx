@@ -40,12 +40,12 @@ function AccordionLabel({ label, image, description } : MarketsInterface) {
 
 // Define props for MarketAccordion()
 interface MarketAccordionProps {
-    defaultOpenItemId?: string | null; // ? allows the prompt to be optional
+    defaultOpenItemId?: number | null; // ? allows the prompt to be optional
 }
 
 //displays the accordion information. essentially a read more pop out
 export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProps) {
-    const [activeItem, setActiveItem] = useState<string | null>(defaultOpenItemId ?? null); // if defaultOpenItemId is null or undefined set to null
+    const [activeItem, setActiveItem] = useState<number | null>(defaultOpenItemId ?? null); // if defaultOpenItemId is null or undefined set to null
     const [markets, setMarkets] = useState<MarketsInterface[]>([]); // State to store fetched markets
     const [loading, setLoading] = useState<boolean>(true); // State for loading indicator
     const [error, setError] = useState<string | null>(null); // State for error messages
@@ -107,8 +107,8 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
     ));
     return (
             <Accordion chevronPosition="right" variant="contained"
-            value={activeItem} // Control the active item
-            onChange={setActiveItem} // Update the active item when a user clicks
+            value={String(activeItem)} // Control the active item
+            onChange={setActiveItem.toString} // Update the active item when a user clicks
             // FIX BUG HERE ------ closing the item doesn't set active to null
             >
                 {items}
