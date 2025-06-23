@@ -36,8 +36,9 @@ jobs:
 
       - name: Copy Standalone output to a deployable artifact folder
         run: |
-          mkdir -p deployable_output
-          cp -r ./.next/standalone/* deployable_output/
+          mkdir -p deployable_output/.next/standalone
+          cp -r ./.next/standalone/* deployable_output/.next/standalone
+          mkdir -p deployable_output/public/
           cp -r ./public/* deployable_output/public/
 
       - name: Zip artifact for deployment
