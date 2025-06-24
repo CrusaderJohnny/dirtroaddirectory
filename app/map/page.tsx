@@ -45,7 +45,7 @@ export default function App() {
     // }
 
 
-    const reigons = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
+    const regions = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
     // This is just for testing the search, have this reference the json later
     const markets = ['Calgary Farmers Market', 'Cochrane Farmers Market', 'Dalhousie Farmers Market'];
     //const farmHeader = require("../assets/Alberta-farming.jpg")
@@ -85,7 +85,7 @@ export default function App() {
                     />
                     <Select
                         placeholder="Region"
-                        data={reigons}
+                        data={regions}
                     />
                 </Group>
                 
