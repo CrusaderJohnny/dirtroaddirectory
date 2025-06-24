@@ -62,7 +62,7 @@ export default function App() {
         <AppShell
             padding="md"
             navbar={{
-                width: 300,
+                width: {base:'80%',sm:300},
                 breakpoint: 'sm',
                 collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
             }}
