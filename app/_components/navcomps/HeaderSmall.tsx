@@ -1,4 +1,4 @@
-import {BackgroundImage, Button, Image, Title, Menu, Burger, Flex} from "@mantine/core";
+import {Button, Image, Title, Menu, Burger, Flex} from "@mantine/core";
 import Link from "next/link";
 import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
 
