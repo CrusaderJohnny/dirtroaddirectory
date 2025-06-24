@@ -8,7 +8,7 @@ Used Mantine component library
 
 "use client"
 import React from 'react';
-import { AppShell, Button, Center, Select, Autocomplete, Group } from '@mantine/core';
+import { AppShell, Button, Center, Select, Autocomplete, Group, LoadingOverlay } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronLeft } from '@tabler/icons-react';
 import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
@@ -34,6 +34,8 @@ export default function App() {
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
+    const [visibleLoad, setLoad] = useState(false);
+
     const [openMarketId, setOpenMarketId] = useState<number | null>(null);
 
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -45,6 +47,7 @@ export default function App() {
         if (mapCenter) { // only run if mapCenter has a value
             const timer = setTimeout(() => {
                 setMapCenter(undefined); // set to undefined to allow free panning
+                setLoad(false); // turn off loading anim
             }, 100); // delay
 
             return () => clearTimeout(timer); // cleanup the timer if component unmounts or mapCenter changes again
@@ -77,6 +80,7 @@ export default function App() {
             if (selectedRegion) {
                 // update the mapCenter state with region coords
                 setMapCenter(selectedRegion.center);
+                setLoad(true); // turn on loading anim
             } else {
                 // else clear the center
                 setMapCenter(undefined);
@@ -138,7 +142,10 @@ export default function App() {
                 
 
                 <Center>
-                    <MapComponent onMarkerClick={handleOpenMarket} center={mapCenter}/>
+                    <div style={{width: '100%', height: '500px', flexGrow: 1, borderRadius: '8px', overflow: 'hidden', position: 'relative'}}>
+                        <LoadingOverlay visible={visibleLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                        <MapComponent onMarkerClick={handleOpenMarket} center={mapCenter}/>
+                    </div>
                 </Center>
             </AppShell.Main>
         </AppShell>
