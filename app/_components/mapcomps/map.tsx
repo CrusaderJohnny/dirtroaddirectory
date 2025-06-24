@@ -14,7 +14,7 @@ import {PoiMarkersArray} from "@/app/_types/interfaces";
 // Define the props interface for PoiMarkers
 interface PoiMarkersProps {
     pois: PoiMarkersArray;
-    onMarkerClick: (marketId: string | null) => void;
+    onMarkerClick: (marketId: number | null) => void;
 }
 
 const PoiMarkers = ({ pois, onMarkerClick }: PoiMarkersProps) => {
@@ -34,7 +34,7 @@ const PoiMarkers = ({ pois, onMarkerClick }: PoiMarkersProps) => {
 
 // Define the props interface for MapComponent
 interface MapComponentProps {
-    onMarkerClick: (marketId: string | null) => void;
+    onMarkerClick: (marketId: number | null) => void;
 }
 
 function MapComponent({onMarkerClick}:MapComponentProps) {

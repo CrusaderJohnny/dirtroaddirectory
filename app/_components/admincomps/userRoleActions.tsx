@@ -1,7 +1,7 @@
 'use client'; // This directive makes this a client component
 
 import React, { useEffect, useState, useActionState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 import { Button, Stack, Group, Text, Card } from '@mantine/core';
 //import { notifications } from '@mantine/notifications'; will need to install
 import { setRole, removeRole } from './_actions';

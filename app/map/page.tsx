@@ -24,9 +24,9 @@ export default function App() {
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
-    const [openMarketId, setOpenMarketId] = useState<string | null>(null);
+    const [openMarketId, setOpenMarketId] = useState<number | null>(null);
 
-    const handleOpenMarket = (marketId: string | null) => {
+    const handleOpenMarket = (marketId: number | null) => {
         console.log("Marker clicked with id:"+marketId)
 
         if (marketId == openMarketId) {

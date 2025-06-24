@@ -11,8 +11,8 @@ export async function fetchContactMessages(): Promise<ContactMessageInterface[]>
         }
         const data: ContactMessageInterface[] = await response.json();
         return data;
-    } catch (err: any) {
+    } catch (err) {
         console.error("Error fetching contact messages:", err);
-        throw new Error(`Failed to fetch contact messages: ${err.message || 'Network error'}`);
+        throw new Error(`Failed to fetch contact messages: ${err instanceof Error ? err.message : 'Network error'}`);
     }
 }

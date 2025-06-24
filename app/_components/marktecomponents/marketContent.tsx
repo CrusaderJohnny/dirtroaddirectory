@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useSearchParams } from 'next/navigation';
 import {
@@ -221,7 +221,7 @@ export default function MarketContent() {
           All Markets
         </Title>
         <Text size="sm" c="dimmed" mb="md">
-          Browse verified farmers' markets by name or region
+          Browse verified farmers&apos; markets by name or region
         </Text>
         <Group mb="lg" grow>
           <TextInput
