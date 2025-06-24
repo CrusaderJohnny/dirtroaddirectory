@@ -6,6 +6,7 @@ Used Gemini to assist in debugging
 
 "use client"
 import React from 'react';
+import { useState,useEffect } from 'react';
 import {APIProvider, Map, Pin, AdvancedMarker} from '@vis.gl/react-google-maps';
 import {useMapLocations} from './locations';
 import {PoiMarkersArray} from "@/app/_types/interfaces";
@@ -42,6 +43,9 @@ function MapComponent({onMarkerClick, center}:MapComponentProps) {
 
     const locations = useMapLocations();
 
+    // State to control the map's zoom level
+    const [zoom, setZoom] = useState(10); // Initialize with default zoom
+
     // Get API key
     const Maps_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -54,15 +58,23 @@ function MapComponent({onMarkerClick, center}:MapComponentProps) {
     // default map center (Calgary)
     const initialMapCenterLocation: { lat: number; lng: number } = { lat: 51.05373355597089, lng: -114.07158095471553 };
 
+    useEffect(() => {
+    if (center) {
+        setZoom(10); // Reset zoom to 10 when 'center' prop changes (i.e., map jumps)
+    }
+}, [center]);
+
 
     return (
         <APIProvider apiKey={Maps_API_KEY} onLoad={() => console.log('Maps API has loaded.')}>
             <div style={{width: '100%', height: '500px', flexGrow: 1}}>
                 <Map
-                    defaultZoom={10}
+                    zoom={zoom}
                     mapId='DEMO_MAP_ID'
                     defaultCenter={initialMapCenterLocation}
-                    center={center}>
+                    center={center}
+                    onZoomChanged={(ev) => setZoom(ev.detail.zoom)} // update zoom state when user manually zooms
+                    >
                     <PoiMarkers pois={locations} onMarkerClick={onMarkerClick}/>
                 </Map>
             </div>
