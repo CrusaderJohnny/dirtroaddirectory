@@ -13,11 +13,21 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconChevronLeft } from '@tabler/icons-react';
 import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavMT from '../_components/navcomps/navmt';
+import regions from '../_res/regions.json';
 
+// Interface for region json
+interface RegionData {
+    id: string;
+    name: string;
+    center: {
+        lat: number;
+        lng: number;
+    };
+}
 
-
+const regionsJsonData: RegionData[] = regions as RegionData[];
 
 export default function App() {
 
@@ -25,6 +35,24 @@ export default function App() {
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
     const [openMarketId, setOpenMarketId] = useState<number | null>(null);
+
+    const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+    const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | undefined>(undefined);
+
+
+    // effect runs whenever mapCenter changes from undefined to a coordinate.
+    useEffect(() => {
+        if (mapCenter) { // only run if mapCenter has a value
+            const timer = setTimeout(() => {
+                setMapCenter(undefined); // set to undefined to allow free panning
+            }, 100); // delay
+
+            return () => clearTimeout(timer); // cleanup the timer if component unmounts or mapCenter changes again
+        }
+    }, [mapCenter]); // rerun this effect whenever mapCenter changes
+
+
+
 
     const handleOpenMarket = (marketId: number | null) => {
         console.log("Marker clicked with id:"+marketId)
@@ -39,10 +67,26 @@ export default function App() {
         
     };
 
+    // handler for when a region is selected from the dropdown
+    const handleChangeRegion = (value: string | null) => {
+        setSelectedRegion(value); // Update the selected region ID state
 
-    // const handleChangeRegion = (regionID: string | null) => {
-    //     // set map center to match region
-    // }
+        if (value) {
+            // find selected region from json
+            const selectedRegion = regionsJsonData.find(region => region.id === value);
+            if (selectedRegion) {
+                // update the mapCenter state with region coords
+                setMapCenter(selectedRegion.center);
+            } else {
+                // else clear the center
+                setMapCenter(undefined);
+            }
+        } else {
+            // if selection is cleared, clear the mapCenter
+            setMapCenter(undefined);
+        }
+    };
+
 
 
     const regions = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
@@ -62,7 +106,7 @@ export default function App() {
         <AppShell
             padding="md"
             navbar={{
-                width: {base:'80%',sm:300},
+                width: {base:'80%', sm:300},
                 breakpoint: 'sm',
                 collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
             }}
@@ -85,13 +129,16 @@ export default function App() {
                     />
                     <Select
                         placeholder="Region"
-                        data={regions}
+                        data={regionsJsonData.map(region => ({ value: region.id, label: region.name }))}
+                        value={selectedRegion} // Control selected value of the dropdown
+                        onChange={handleChangeRegion} // Call handler when value changes
+                        clearable
                     />
                 </Group>
                 
 
                 <Center>
-                    <MapComponent onMarkerClick={handleOpenMarket}/>
+                    <MapComponent onMarkerClick={handleOpenMarket} center={mapCenter}/>
                 </Center>
             </AppShell.Main>
         </AppShell>

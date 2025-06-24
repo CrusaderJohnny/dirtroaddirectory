@@ -35,9 +35,10 @@ const PoiMarkers = ({ pois, onMarkerClick }: PoiMarkersProps) => {
 // Define the props interface for MapComponent
 interface MapComponentProps {
     onMarkerClick: (marketId: number | null) => void;
+    center?: { lat: number; lng: number };
 }
 
-function MapComponent({onMarkerClick}:MapComponentProps) {
+function MapComponent({onMarkerClick, center}:MapComponentProps) {
 
     const locations = useMapLocations();
 
@@ -50,13 +51,18 @@ function MapComponent({onMarkerClick}:MapComponentProps) {
         return <div>Error: Google Maps API Key missing.</div>;
     }
 
+    // default map center (Calgary)
+    const initialMapCenterLocation: { lat: number; lng: number } = { lat: 51.05373355597089, lng: -114.07158095471553 };
+
+
     return (
         <APIProvider apiKey={Maps_API_KEY} onLoad={() => console.log('Maps API has loaded.')}>
             <div style={{width: '100%', height: '500px', flexGrow: 1}}>
                 <Map
                     defaultZoom={10}
                     mapId='DEMO_MAP_ID'
-                    defaultCenter={ { lat: 51.05373355597089, lng: -114.07158095471553 } }>
+                    defaultCenter={initialMapCenterLocation}
+                    center={center}>
                     <PoiMarkers pois={locations} onMarkerClick={onMarkerClick}/>
                 </Map>
             </div>
