@@ -16,19 +16,6 @@ export default function HeaderSmall() {
     return (
 
         <>
-            <BackgroundImage
-                src="https://d27p2a3djqwgnt.cloudfront.net/wp-content/uploads/2024/05/15165226/dirt-road.jpeg"
-                style={{
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '0 3vh',
-                    backgroundPosition: "500% 80%"
-                }}
-            >
-
-
                 <Flex
                     justify='center'
                     align='center'
@@ -184,8 +171,6 @@ export default function HeaderSmall() {
                         <UserButton/>
                     </SignedIn>
                 </Flex>
-
-            </BackgroundImage>
         </>
     );
 }
