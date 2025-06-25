@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.27.0",
     "@clerk/nextjs": "^6.20.2",
     "@mantine/carousel": "^8.1.0",
     "@mantine/core": "^8.1.0",
@@ -17,17 +18,20 @@
     "@mantine/hooks": "^8.0.2",
     "@mantine/notifications": "^8.0.2",
     "@tabler/icons-react": "^3.34.0",
+    "@types/formidable": "^3.4.5",
     "@vis.gl/react-google-maps": "^1.5.2",
     "dayjs": "^1.11.13",
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "firebase": "^11.8.1",
+    "formidable": "^3.5.4",
     "framer-motion": "^12.18.1",
     "next": "15.3.2",
     "pg": "^8.16.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -1,0 +1,58 @@
+[
+    {
+        "id": "calgary",
+        "name": "Calgary Region",
+        "center": {
+        "lat": 51.05,
+        "lng": -114.07
+        }
+    },
+    {
+        "id": "edmonton",
+        "name": "Edmonton Region",
+        "center": {
+        "lat": 53.54,
+        "lng": -113.49
+        }
+    },
+    {
+        "id": "central",
+        "name": "Central Alberta",
+        "center": {
+        "lat": 52.30,
+        "lng": -113.80
+        }
+    },
+    {
+        "id": "northeast",
+        "name": "Northeast Alberta",
+        "center": {
+        "lat": 54.70,
+        "lng": -111.00
+        }
+    },
+    {
+        "id": "northwest",
+        "name": "Northwest Alberta",
+        "center": {
+        "lat": 56.50,
+        "lng": -117.00
+        }
+    },
+    {
+        "id": "south",
+        "name": "Southern Alberta",
+        "center": {
+        "lat": 49.90,
+        "lng": -112.80
+        }
+    },
+    {
+        "id": "rocky_mountains",
+        "name": "Alberta Rocky Mountains",
+        "center": {
+        "lat": 51.42,
+        "lng": -116.00
+        }
+    }
+]

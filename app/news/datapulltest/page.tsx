@@ -18,9 +18,9 @@ export default function TestArticlesPage() {
                 setError(null); // Clear any previous errors
                 const data = await fetchArticlesAsJson();
                 setArticles(data);
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Error fetching articles for test page:', err);
-                setError(err.message || 'An unknown error occurred while fetching articles.');
+                setError(err instanceof Error ? err.message : 'An unknown error occurred while fetching articles.');
             } finally {
                 setLoading(false);
             }
@@ -66,7 +66,7 @@ export default function TestArticlesPage() {
                         <li key={article.id}>
                             <Text size="lg" fw={500}>{article.title}</Text>
                             <Text size="sm" c="dimmed">{article.date}</Text>
-                            <Text size="sm">{article.summery}</Text>
+                            <Text size="sm">{article.summary}</Text>
                             <hr />
                         </li>
                     ))}

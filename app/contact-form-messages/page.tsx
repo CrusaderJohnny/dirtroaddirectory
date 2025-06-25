@@ -10,9 +10,8 @@ import {
   TextInput,
   Paper,
   Container,
-  Group,
   Loader,
-  Space,
+
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { ContactMessageInterface } from "../_types/interfaces";
@@ -34,8 +33,8 @@ export default function ContactMessagesPage() {
         }
         const data: ContactMessageInterface[] = await response.json();
         setMessages(data);
-      } catch (e: any) {
-        setError(`Failed to fetch contact messages: ${e.message}`);
+      } catch (e) {
+        setError(`Failed to fetch contact messages: ${e instanceof Error? e.message : 'Failed to fetch contact messages.'}`);
         console.error("Fetch error:", e);
       } finally {
         setLoading(false);

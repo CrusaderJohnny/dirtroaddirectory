@@ -24,18 +24,8 @@ export interface MarketsInterface {
   vendors?: {
     id: number;
     name: string;
-    category?: string;
+    category: string;
   }[];
-}
-
-export interface MarketOption {
-    id: string;
-    name: string;
-}
-
-export interface VendorOption {
-    id: string;
-    name: string;
 }
 
 export interface MarketGridProps {
@@ -97,7 +87,7 @@ export type MapCoords = {
 }
 
 export interface Poi {
-    key: string;
+    key: number;
     location: MapCoords;
 }
 

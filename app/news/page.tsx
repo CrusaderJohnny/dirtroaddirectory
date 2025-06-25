@@ -83,7 +83,7 @@ export default function Page() {
                     {/*<Button component='a' href='/news/datapulltest' mt='sm' variant="light" fullWidth>*/}
                     {/*    Let us see*/}
                     {/*</Button>*/}
-                    <Button component="a" href="/aboutus" mt='sm' variant="light" fullWidth>
+                    <Button component="a" href="/aboutus" mt='sm' fullWidth>
                         Learn More About Us
                     </Button>
                     <Divider my='md'/>

@@ -21,9 +21,9 @@ export async function fetchArticlesAsJson(): Promise<ArticleInterface[]> {
         // Parse the JSON response body
         const data: ArticleInterface[] = await response.json();
         return data;
-    } catch (err: any) {
+    } catch (err) {
         console.error("Error fetching articles as JSON:", err);
         // Re-throw the error so the caller can handle it
-        throw new Error(`Failed to fetch article data: ${err.message || 'Network error'}`);
+        throw new Error(`Failed to fetch article data: ${err instanceof Error ? err.message : 'Network error'}`);
     }
 }
