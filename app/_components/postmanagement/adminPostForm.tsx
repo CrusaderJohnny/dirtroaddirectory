@@ -31,6 +31,9 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
 
+    const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
+    const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+
     const theme = useMantineTheme();
 
     const form = useForm({
@@ -43,6 +46,11 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             content: isNotEmpty('Content is required'),
         },
     });
+
+    const handleImageFileChange = (file: File | null) => {
+        form.setFieldValue('image', file);
+        setImageUploadError(null);
+    };
 
     // useEffect(() => {
     //     const fetchingOptions = async () => {
@@ -96,17 +104,43 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
     }, []);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
+    // Cleanup for URL.createObjectURL when component unmounts or image changes
+    // This is important to prevent memory leaks from client-side previews
+    useEffect(() => {
+        if (form.values.image) {
+            const previewUrl = URL.createObjectURL(form.values.image);
+            return () => {
+                URL.revokeObjectURL(previewUrl);
+            };
+        }
+    }, [form.values.image]);
+
     const handleSubmit = async (values: typeof form.values) => {
         setSubmissionMessage(null);
+        setImageUploadError(null);
         if(!selectedPosterType || !selectedPosterID){
             setSubmissionMessage({type: 'error', message: 'Please select a post type and a specific market/vendor.'});
             return;
         }
         setIsSubmitting(true);
+        setIsUploadingImage(false);
+        let imageUrl: string | null = null;
         try {
-            let imageUrl: string | null = null;
-
             if(values.image){
+                setIsUploadingImage(true);
+                const formData = new FormData();
+                formData.append('image', values.image);
+                const uploadResponse = await fetch('http://localhost:8080/articles', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if(!uploadResponse.ok) {
+                    const errorData = await uploadResponse.json();
+                    setImageUploadError(errorData);
+                }
+                const uploadResult = await uploadResponse.json();
+                imageUrl = uploadResult.url;
                 // Example of a conceptual upload:
                 // const formData = new FormData();
                 // formData.append('image', values.image);
@@ -116,14 +150,14 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 // imageUrl = uploadResult.url;
                 //placeholder file reader function to demonstrate
                 //converts the image to data url and previews locally
-                const reader = new FileReader();
-                reader.readAsDataURL(values.image);
-                await new Promise<void>((resolve) => {
-                    reader.onloadend = () => {
-                        imageUrl = reader.result as string;
-                        resolve();
-                    };
-                });
+                // const reader = new FileReader();
+                // reader.readAsDataURL(values.image);
+                // await new Promise<void>((resolve) => {
+                //     reader.onloadend = () => {
+                //         imageUrl = reader.result as string;
+                //         resolve();
+                //     };
+                // });
             }
 
             const postData = {
@@ -164,6 +198,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
         } finally {
             setIsSubmitting(false);
+            setIsUploadingImage(false);
         }
     };
 
@@ -191,8 +226,8 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             style={{borderRadius: theme.radius.md, boxShadow: theme.shadows.md, border: `1px solid ${theme.colors.primaryGreen[2]}`}}
         >
             <LoadingOverlay
-                visible={isSubmitting || isLoadingOptions}
-                loaderProps={{children : isLoadingOptions ? <Loader/> : <Text>Submitting post...</Text>}}
+                visible={isSubmitting || isLoadingOptions || isUploadingImage}
+                loaderProps={{children : isLoadingOptions ? <Loader/> : isUploadingImage ? <Text>Uploading image...</Text> : <Text>Submitting post...</Text>}}
                 zIndex={1000}
                 overlayProps={{radius: 'sm', blur: 2}}
             />
@@ -205,6 +240,15 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                     mb='md'
                 >
                     {submissionMessage.message}
+                </Notification>
+            )}
+            {imageUploadError && (
+                <Notification
+                    title={'Image Upload Error'}
+                    color={'red'}
+                    onClose={() => setImageUploadError(null)}
+                    mb={'md'}>
+                    {imageUploadError}
                 </Notification>
             )}
 
@@ -300,8 +344,9 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 <FileInput
                     label={"Include image (Optional)"}
                     placeholder={"Upload an image file"}
-                    accept={'image/png, image/jpeg, image/gif, image/webp'}
-                    {...form.getInputProps('image')}
+                    accept={'image/*'}
+                    value={form.values.image}
+                    onChange={handleImageFileChange}
                     mb={'md'}
                 />
 
