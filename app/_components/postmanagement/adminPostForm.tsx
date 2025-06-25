@@ -161,6 +161,8 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 postedOn: new Date().toISOString(),
                 adminUserId: user.id,
                 adminUserName: user.username || user.firstName || user.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
+                isFeatured: false,
+                summary: values.content.substring(0,100) + "...",
             };
 
             console.log('Admin post data: ', postData);
