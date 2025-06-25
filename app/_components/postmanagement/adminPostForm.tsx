@@ -134,30 +134,22 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                     method: 'POST',
                     body: formData,
                 });
+                let uploadResponseData;
+                try {
+                    uploadResponseData = await uploadResponse.json();
+                } catch (jsonError) {
+                    uploadResponseData = {message: `non-json response or empty body: ${jsonError}`};
+                    console.warn("failed to parse image upload response as json: ", jsonError);
+                }
 
                 if(!uploadResponse.ok) {
-                    const errorData = await uploadResponse.json();
-                    setImageUploadError(errorData);
+                    const errorMessage = uploadResponseData.error || uploadResponseData.message || JSON.stringify(uploadResponseData);
+                    setImageUploadError(`Image upload failed: ${errorMessage}`);
+                    setIsSubmitting(false);
+                    setIsUploadingImage(false);
+                    return;
                 }
-                const uploadResult = await uploadResponse.json();
-                imageUrl = uploadResult.url;
-                // Example of a conceptual upload:
-                // const formData = new FormData();
-                // formData.append('image', values.image);
-                // const uploadResponse = await fetch('/api/upload-image', { method: 'POST', body: formData });
-                // if (!uploadResponse.ok) throw new Error('Image upload failed');
-                // const uploadResult = await uploadResponse.json();
-                // imageUrl = uploadResult.url;
-                //placeholder file reader function to demonstrate
-                //converts the image to data url and previews locally
-                // const reader = new FileReader();
-                // reader.readAsDataURL(values.image);
-                // await new Promise<void>((resolve) => {
-                //     reader.onloadend = () => {
-                //         imageUrl = reader.result as string;
-                //         resolve();
-                //     };
-                // });
+                imageUrl = uploadResponseData.url;
             }
 
             const postData = {
@@ -173,22 +165,27 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
 
             console.log('Admin post data: ', postData);
 
-            const response = await fetch(`/api/admin/admin-post`, {
+            const response = await fetch(`https://localhost:8080/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
             });
-
-            if(!response.ok){
-                const errorData = await response.json();
-                setSubmissionMessage({
-                    type: 'error',
-                    message: `Failed to create post: ${errorData}`,
-                });
-                setIsSubmitting(false);
-                return;
+            let postResponseData;
+            try{
+                postResponseData = await response.json();
+            } catch (jsonError) {
+                postResponseData = {message: `Failed to parse post data: ${jsonError}`};
+                console.warn("failed to parse post data as json: ", jsonError);
             }
 
+            if(!response.ok){
+                const errorMessage = postResponseData.error || postResponseData.message || JSON.stringify(postResponseData);
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Failed to create post: ${errorMessage}`,
+                });
+                return;
+            }
             setSubmissionMessage({type: 'success', message: 'Post successfully created!'});
             form.reset();
             setSelectedPosterID(null);
