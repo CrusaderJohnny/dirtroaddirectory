@@ -41,6 +41,8 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             title: '',
             content: '',
             image: null as File | null,
+            isFeatured: false,
+            summary: '',
         }, validate: {
             title: isNotEmpty('Title is required'),
             content: isNotEmpty('Content is required'),
@@ -51,24 +53,6 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
         form.setFieldValue('image', file);
         setImageUploadError(null);
     };
-
-    // useEffect(() => {
-    //     const fetchingOptions = async () => {
-    //         setIsLoadingOptions(true);
-    //         try {
-    //             setMarketOptions(markets as MarketsInterface[]);
-    //             setVendorOptions(vendors as VendorsInterface[]);
-    //             //fake time out to simulate server load
-    //             await new Promise(resolve => setTimeout(resolve, 500));
-    //         } catch (error) {
-    //             console.error("Error loading local options:",error);
-    //             setSubmissionMessage({type: 'error', message: `Error loading local options ${error instanceof Error ? error.message : 'Unknown error'}`});
-    //         } finally {
-    //             setIsLoadingOptions(false);
-    //         }
-    //     };
-    //     void fetchingOptions();
-    // }, []);
 
     //  useEffect for when we have server set up and can talk with back end
     useEffect(() => {
@@ -130,7 +114,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 setIsUploadingImage(true);
                 const formData = new FormData();
                 formData.append('image', values.image);
-                const uploadResponse = await fetch('http://localhost:8080/articles', {
+                const uploadResponse = await fetch('/azure-components/upload-image', {
                     method: 'POST',
                     body: formData,
                 });
