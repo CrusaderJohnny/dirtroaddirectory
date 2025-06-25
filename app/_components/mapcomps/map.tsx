@@ -49,20 +49,24 @@ function MapComponent({onMarkerClick, center}:MapComponentProps) {
     // Get API key
     const Maps_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
+
+    // default map center (Calgary)
+    const initialMapCenterLocation: { lat: number; lng: number } = { lat: 51.05373355597089, lng: -114.07158095471553 };
+
+    useEffect(() => {
+        if (center) {
+            setZoom(10); // Reset zoom to 10 when 'center' prop changes (i.e., map jumps)
+        }
+    }, [center]);
+
     // Check for API key
     if (!Maps_API_KEY) {
         console.error("Google Maps API Key is not defined. Please set (NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) in the .env.local file. - Mace");
         return <div>Error: Google Maps API Key missing.</div>;
     }
 
-    // default map center (Calgary)
-    const initialMapCenterLocation: { lat: number; lng: number } = { lat: 51.05373355597089, lng: -114.07158095471553 };
 
-    useEffect(() => {
-    if (center) {
-        setZoom(10); // Reset zoom to 10 when 'center' prop changes (i.e., map jumps)
-    }
-}, [center]);
+
 
 
     return (
