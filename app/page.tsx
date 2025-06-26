@@ -1,5 +1,4 @@
-"use client";
-import {AppShell} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 // import WhatTheNews from "@/app/_components/newscomp/wtn";
 import NewsPage from "@/app/news/page";
@@ -10,19 +9,12 @@ export default function Home() {
     // const [opened] = useDisclosure();
     return (
         <AppShell
-            // Removed NavBar in this AppShell - Dan
-            // navbar={{
-            //     width: 300,
-            //     breakpoint: 'sm',
-            //     collapsed: { mobile: !opened },
-            // }}
         >
-            <AppShell.Header
+            <AppShellHeader
             component={NavMT}/>
-            {/*<AppShell.Navbar component={SidebarDisplay} />*/}
-            <AppShell.Main>
+            <AppShellMain>
                 <NewsPage/>
-            </AppShell.Main>
+            </AppShellMain>
         </AppShell>
     );
 }

@@ -1,15 +1,27 @@
-"use client";
-import {AppShell, Card, Container, Image, Text, Title, Grid, Divider, Space} from "@mantine/core";
+
+import {
+    AppShell,
+    Card,
+    Container,
+    Image,
+    Text,
+    Title,
+    Grid,
+    Divider,
+    Space,
+    AppShellHeader,
+    AppShellMain, GridCol
+} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 
 export default function Page() {
     return(
         <AppShell>
-            <AppShell.Header
+            <AppShellHeader
                 component={NavMT}/>
-            <AppShell.Main style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+            <AppShellMain>
                 <Container size="xl" px={0}>
-                <Card radius={0} withBorder style={{ position: "relative" }}>
+                <Card radius={0} style={{ position: "relative" }} bg={'transparent'}>
                     <Image
                         radius="md"
                         h={300}
@@ -42,35 +54,35 @@ export default function Page() {
                     <Space h="xl" />
                     
                     <Grid gutter="xl">
-                        <Grid.Col span={{ base: 12, sm: 4 }}>
+                        <GridCol span={{ base: 12, sm: 4 }}>
                             <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#ece2d2" }}>
                                 <Title order={4} c="dark" mb="xs">Local Focus</Title>
                                 <Text size="sm" c="gray.7">
                                     We highlight Alberta-based vendors and encourage local economic growth.
                                 </Text>
                             </Card>
-                        </Grid.Col>
+                        </GridCol>
                         
-                        <Grid.Col span={{ base: 12, sm: 4 }}>
+                        <GridCol span={{ base: 12, sm: 4 }}>
                             <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#ece2d2" }}>
                                 <Title order={4} c="dark" mb="xs">Student Project</Title>
                                 <Text size="sm" c="gray.7">
                                     Developed by students at SAIT to solve real-world problems through tech.
                                 </Text>
                             </Card>
-                        </Grid.Col>
+                        </GridCol>
                         
-                        <Grid.Col span={{ base: 12, sm: 4 }}>
+                        <GridCol span={{ base: 12, sm: 4 }}>
                             <Card shadow="sm" withBorder radius="md" p="md" style={{ backgroundColor: "#ece2d2" }}>
                                 <Title order={4} c="dark" mb="xs">Simplified Shopping</Title>
                                 <Text size="sm" c="gray.7">
                                     Discover what’s at each market so you can plan better and shop smarter.
                                 </Text>
                             </Card>
-                        </Grid.Col>
+                        </GridCol>
                     </Grid>
                 </Container>
-            </AppShell.Main>
+            </AppShellMain>
         </AppShell>
     )
 }

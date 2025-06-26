@@ -1,8 +1,9 @@
 "use client";
 import {useForm} from "@mantine/form";
-import {Box, Button, Card, FileInput, Image, Text, Textarea, TextInput, useMantineTheme} from "@mantine/core";
+import {Button, Card, Text, Textarea, TextInput, useMantineTheme} from "@mantine/core";
 import {DateInput} from "@mantine/dates";
 import {MarketPostFormProps} from "@/app/_types/interfaces";
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
 export default function MarketPostForm({ marketName, userId } : MarketPostFormProps) {
     const farmersMarketName = marketName || "";
@@ -12,7 +13,7 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
         initialValues: {
             title: '',
             content: '',
-            image: null as File | null,
+            image: null as string | null,
         },
         validate: {
             title: (value) => (value.trim().length > 0 ? null : 'Title is required'),
@@ -21,26 +22,35 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
     });
 
     const handleSubmit = async (values: typeof form.values) => {
-        const postData = {
-            ...values,
-            posterType: 'market',
-            posterName: farmersMarketName,
-            postedOn: new Date().toISOString(),
-            userId: userId,
-        };
-        console.log('Market Post Data: ', postData);
-        // Example for when server side logic is complete:
-        // const response = await fetch('/api/create-post-market', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(postData),
-        // });
-        // if (response.ok) {
-        //     console.log("Post created successfully!");
-        //     form.reset(); // Reset form after successful submission
-        // } else {
-        //     console.error("Failed to create post.");
-        // }
+        const formData = new FormData();
+        formData.append('title', values.title);
+        formData.append('content', values.content);
+        formData.append('userId', String(userId));
+
+        if(values.image) {
+            formData.append('image', values.image);
+        }
+        console.log('Sending FormData to server...');
+
+        try {
+            const response = await fetch('https://localhost:8080/articles', {
+                method: 'POST',
+                body: formData,
+            });
+            if(response.ok) {
+                const responseData = await response.json();
+                console.log("Post created successfully! ", responseData);
+                form.reset();
+                alert("Post created successfully!");
+            } else {
+                const errorData = await response.json();
+                console.error("Failed to create post: ", errorData.error || response.statusText);
+                alert(`Failed to create post: ${errorData.error || response.statusText}`);
+            }
+        } catch (error) {
+            console.error("Network error or failed to send request: ", error);
+            alert("An error occurred while trying to create the post. Please try again");
+        }
     };
 
     return (
@@ -93,28 +103,10 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
                     required
                 />
 
-                <FileInput
-                    label="Include an Image"
-                    placeholder="Upload an image"
-                    accept="image/png,image/jpeg,image/gif"
-                    {...form.getInputProps('image')}
-                    mb="md"
-                    clearable
+                <ImageUploader
+                    onImageUploadAction={(url) => form.setFieldValue('image', url)}
+                    signatureEndpoint={"/api/sign-cloudinary-params"}
                 />
-
-                {form.values.image && (
-                    <Box mb="md">
-                        <Text size="sm" mb="xs">Preview</Text>
-                        <Image
-                            src={URL.createObjectURL(form.values.image)}
-                            alt="Image Preview"
-                            radius="md"
-                            maw={300}
-                            fit="contain"
-                            style={{border: '1px solid #ccc', padding: '0.5rem'}}
-                            />
-                    </Box>
-                )}
 
                 <Button type="submit" fullWidth mt="lg">Create Market Post</Button>
 
