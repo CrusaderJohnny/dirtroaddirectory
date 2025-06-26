@@ -1,10 +1,7 @@
 "use client";
 import {isNotEmpty, useForm} from "@mantine/form";
 import {
-    Box,
     Button, Card,
-    FileInput,
-    Image,
     Loader,
     LoadingOverlay,
     Notification, Radio, Select,
@@ -15,12 +12,14 @@ import {
 import {DateInput} from "@mantine/dates";
 import {
     AdminPostFormProps,
-    MarketsInterface,
+    MarketsInterface, UserInfoInterface,
     VendorsInterface
 } from "@/app/_types/interfaces";
 import {useEffect, useState} from "react";
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
-export default function AdminPostForm({user} : AdminPostFormProps) {
+
+export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [selectedPosterType, setSelectedPosterType] = useState<'market' | 'vendor' | null>(null);
     const [selectedPosterID, setSelectedPosterID] = useState<string | null>(null);
 
@@ -30,6 +29,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
+    const [posterId, setPosterId] = useState<number | null>(null);
 
     const theme = useMantineTheme();
 
@@ -37,52 +37,67 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
         initialValues: {
             title: '',
             content: '',
-            image: null as File | null,
+            image: null as string | null,
         }, validate: {
             title: isNotEmpty('Title is required'),
             content: isNotEmpty('Content is required'),
         },
     });
-
-    // useEffect(() => {
-    //     const fetchingOptions = async () => {
-    //         setIsLoadingOptions(true);
-    //         try {
-    //             setMarketOptions(markets as MarketsInterface[]);
-    //             setVendorOptions(vendors as VendorsInterface[]);
-    //             //fake time out to simulate server load
-    //             await new Promise(resolve => setTimeout(resolve, 500));
-    //         } catch (error) {
-    //             console.error("Error loading local options:",error);
-    //             setSubmissionMessage({type: 'error', message: `Error loading local options ${error instanceof Error ? error.message : 'Unknown error'}`});
-    //         } finally {
-    //             setIsLoadingOptions(false);
-    //         }
-    //     };
-    //     void fetchingOptions();
-    // }, []);
-
     //  useEffect for when we have server set up and can talk with back end
     useEffect(() => {
         const fetchOptions = async () => {
             setIsLoadingOptions(true);
             try{
-                const [marketResponse, vendorResponse] = await Promise.all([
+                const [marketResponse, vendorResponse, userResponse] = await Promise.all([
                     fetch('http://localhost:8080/markets'),
                     fetch('http://localhost:8080/vendors'),
+                    fetch('http://localhost:8080/users')
                 ]);
                 if(!marketResponse.ok || !vendorResponse.ok){
                     const marketError = await marketResponse.text();
                     const vendorError = await vendorResponse.text();
+                    const userError = await userResponse.text();
                     setSubmissionMessage({
                         type: 'error',
-                        message: `Failed to load markets/vendors: Market Status: ${marketResponse.status}: ${marketError} | Vendor Status: ${vendorResponse.status}: ${vendorError}`,
+                        message: `Failed to load data:
+                         Market Status: ${marketResponse.status}: ${marketError} |
+                          Vendor Status: ${vendorResponse.status}: ${vendorError} |
+                          User Status: ${userResponse.status}: ${userError}`,
                     })
                     setIsLoadingOptions(false);
                     return;
                 }
                 const markets: MarketsInterface[] = await marketResponse.json();
                 const vendors: VendorsInterface[] = await vendorResponse.json();
+                const allUsers: UserInfoInterface[] = await userResponse.json();
+                let foundUserId: number | null = null;
+                if(currentUser && currentUser.primaryEmailAddressId) {
+                    const matchingUser: UserInfoInterface | undefined = allUsers.find( user =>
+                    user.email?.toLowerCase() === currentUser.primaryEmailAddressId?.toLowerCase()
+                    );
+                    if(matchingUser) {
+                        foundUserId = matchingUser.id;
+                        console.log(`Found current user's Id: ${foundUserId}`);
+                    } else {
+                        console.warn(`Current users email "${currentUser.primaryEmailAddressId}" not found! `);
+                        setSubmissionMessage({
+                            type: 'error',
+                            message: `User Email "${currentUser.primaryEmailAddressId}" not found!`,
+                        });
+                        setIsLoadingOptions(false);
+                        return;
+                    }
+                } else {
+                    console.error('Current user object or email is missing');
+                    setSubmissionMessage({
+                        type: 'error',
+                        message: `User object or email is missing`,
+                    });
+                    setIsLoadingOptions(false);
+                    return;
+                }
+
+                setPosterId(foundUserId);
                 setMarketOptions(markets);
                 setVendorOptions(vendors);
             } catch (error) {
@@ -93,7 +108,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             }
         };
         void fetchOptions();
-    }, []);
+    }, [currentUser]);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
     const handleSubmit = async (values: typeof form.values) => {
@@ -104,42 +119,21 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
         }
         setIsSubmitting(true);
         try {
-            let imageUrl: string | null = null;
-
-            if(values.image){
-                // Example of a conceptual upload:
-                // const formData = new FormData();
-                // formData.append('image', values.image);
-                // const uploadResponse = await fetch('/api/upload-image', { method: 'POST', body: formData });
-                // if (!uploadResponse.ok) throw new Error('Image upload failed');
-                // const uploadResult = await uploadResponse.json();
-                // imageUrl = uploadResult.url;
-                //placeholder file reader function to demonstrate
-                //converts the image to data url and previews locally
-                const reader = new FileReader();
-                reader.readAsDataURL(values.image);
-                await new Promise<void>((resolve) => {
-                    reader.onloadend = () => {
-                        imageUrl = reader.result as string;
-                        resolve();
-                    };
-                });
-            }
-
             const postData = {
+                user_id: posterId,
                 title: values.title,
                 content: values.content,
-                imageUrl: imageUrl, //null if no image or the URL after proper upload
+                imageUrl: values.image, //null if no image or the URL after proper upload
                 posterType: selectedPosterType,
                 posterId: selectedPosterID,
                 postedOn: new Date().toISOString(),
-                adminUserId: user.id,
-                adminUserName: user.username || user.firstName || user.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
+                adminUserId: currentUser.id,
+                adminUserName: currentUser.username || currentUser.firstName || currentUser.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
             };
 
             console.log('Admin post data: ', postData);
 
-            const response = await fetch(`/api/admin/admin-post`, {
+            const response = await fetch(`https://localhost:8080/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
@@ -214,7 +208,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 </Text>
                 <TextInput
                     label='Posted by (Admin)'
-                    value={user.username || user.firstName || user.primaryEmailAddressId || 'Admin'}
+                    value={currentUser.username || currentUser.firstName || currentUser.primaryEmailAddressId || 'Admin'}
                     readOnly
                     mb='md'
                     styles={{ input: {cursor: 'default'}}}
@@ -297,28 +291,13 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                     required
                 />
 
-                <FileInput
-                    label={"Include image (Optional)"}
-                    placeholder={"Upload an image file"}
-                    accept={'image/png, image/jpeg, image/gif, image/webp'}
-                    {...form.getInputProps('image')}
-                    mb={'md'}
+                {/* Passes UrL into the function, then sets the form field of image to the returned url*/}
+                <ImageUploader
+                    onImageUploadAction={(url) => form.setFieldValue('image', url)}
+                    signatureEndpoint={"/api/sign-cloudinary-params"}
                 />
 
-                {form.values.image && (
-                    <Box mb={'md'}>
-                        <Text size={'sm'} mb={'xs'}>
-                            Image Preview
-                        </Text>
-                        <Image
-                            src={URL.createObjectURL(form.values.image)}
-                            alt={'Image Preview'}
-                            radius={'md'}
-                            maw={200}
-                        />
-                    </Box>
-                )}
-                <Button type={'submit'} disabled={isSubmitting || !selectedPosterID}>
+                <Button type={'submit'} disabled={isSubmitting || !selectedPosterID} fullWidth>
                     Create Post
                 </Button>
             </form>

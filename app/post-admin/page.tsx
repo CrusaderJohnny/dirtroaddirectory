@@ -23,7 +23,7 @@ export default async function Page() {
             <AppShellHeader component={NavMT}/>
             <AppShellMain>
                 <Center pt={20}>
-                    <AdminPostForm user={serializedUser}/>
+                    <AdminPostForm currentUser={serializedUser}/>
                 </Center>
             </AppShellMain>
         </AppShell>
