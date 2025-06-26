@@ -4,7 +4,7 @@ import {
     Title,
     Menu,
     Burger,
-    Flex
+    Flex,
 } from "@mantine/core";
 
 import {useDisclosure} from "@mantine/hooks";
@@ -37,6 +37,12 @@ export default function HeaderSmall() {
                 onClose={close}
                 withCloseButton={false}
                 centered
+                padding={0}
+                style={{
+                    body: {
+                      backgroundColor: 'transparent',
+                    },
+                }}
                 size='sm'
                 overlayProps={{
                     backgroundOpacity: 0.55,
@@ -52,14 +58,11 @@ export default function HeaderSmall() {
                 direction='row'
                 gap='lg'
             >
-
                 <Link href="/">
-
                     <Flex
                         align='center'
                         direction='row'
                     >
-
                         <Image
                             src='https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8='
                             h={40}
@@ -80,10 +83,8 @@ export default function HeaderSmall() {
                     <Menu.Target>
                         <Burger color='white'/>
                     </Menu.Target>
-
                     {/*Drop down menu options*/}
                     <Menu.Dropdown>
-
                         <SignedOut>
                             <Menu.Item
                                 component='button'
@@ -144,8 +145,6 @@ export default function HeaderSmall() {
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
-
-
                 <UserButton/>
             </Flex>
         </>

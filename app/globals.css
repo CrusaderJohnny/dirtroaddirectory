@@ -55,6 +55,7 @@ a {
   margin: 10px;
   border: 1px solid var(--foreground);
   border-radius: 5px;
+  text-align:  center;
 }
 
 .signin-button:hover {
@@ -70,6 +71,7 @@ a {
   margin: 10px;
   border: 1px solid var(--foreground);
   border-radius: 5px;
+  text-align:  center;
 }
 
 .signup-button:hover {
