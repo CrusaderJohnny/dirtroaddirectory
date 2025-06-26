@@ -31,6 +31,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
     const [posterId, setPosterId] = useState<number | null>(null);
+    const [resetImageUploader, setImageUploader] = useState<boolean>(false);
 
     const {user, isLoaded} = useUser();
 
@@ -146,7 +147,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 const errorData = await response.json();
                 setSubmissionMessage({
                     type: 'error',
-                    message: `Failed to create post: ${errorData}`,
+                    message: `Failed to create post: ${errorData.message}`,
                 });
                 setIsSubmitting(false);
                 return;
@@ -156,6 +157,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
             form.reset();
             setSelectedPosterID(null);
             setSelectedPosterType(null);
+            setImageUploader(prev => !prev);
         } catch (error) {
             console.error('Error creating post: ', error);
             setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
@@ -298,6 +300,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 <ImageUploader
                     onImageUploadAction={(url) => form.setFieldValue('image', url)}
                     signatureEndpoint={"/api/sign-cloudinary-params"}
+                    resetTrigger={resetImageUploader}
                 />
 
                 <Button type={'submit'} disabled={isSubmitting || !selectedPosterID} fullWidth>
