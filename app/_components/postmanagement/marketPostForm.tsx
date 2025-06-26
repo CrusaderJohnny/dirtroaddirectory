@@ -1,12 +1,24 @@
 "use client";
 import {useForm} from "@mantine/form";
-import {Button, Card, Text, Textarea, TextInput, useMantineTheme} from "@mantine/core";
+import {
+    Button,
+    Card,
+    LoadingOverlay,
+    Notification,
+    Text,
+    Textarea,
+    TextInput,
+    useMantineTheme
+} from "@mantine/core";
 import {DateInput} from "@mantine/dates";
 import {MarketPostFormProps} from "@/app/_types/interfaces";
 import ImageUploader from "@/app/_components/image-uploader/image-uploader";
+import {useState} from "react";
 
 export default function MarketPostForm({ marketName, userId } : MarketPostFormProps) {
     const farmersMarketName = marketName || "";
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
     const theme = useMantineTheme();
 
     const form = useForm({
@@ -22,34 +34,43 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
     });
 
     const handleSubmit = async (values: typeof form.values) => {
-        const formData = new FormData();
-        formData.append('title', values.title);
-        formData.append('content', values.content);
-        formData.append('userId', String(userId));
-
-        if(values.image) {
-            formData.append('image', values.image);
-        }
-        console.log('Sending FormData to server...');
-
+        setSubmissionMessage(null);
+        setIsSubmitting(true);
         try {
-            const response = await fetch('https://localhost:8080/articles', {
+            const postData = {
+                user_id: userId,
+                title: values.title,
+                content: values.content,
+                summary: values.content.substring(0, 50),
+                is_featured: false,
+                image: values.image,
+            };
+
+            console.log('Market post data: ', postData);
+
+            const response = await fetch(`https://localhost:8080/articles`, {
                 method: 'POST',
-                body: formData,
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(postData),
             });
-            if(response.ok) {
-                const responseData = await response.json();
-                console.log("Post created successfully! ", responseData);
-                form.reset();
-                alert("Post created successfully!");
-            } else {
+
+            if(!response.ok){
                 const errorData = await response.json();
-                console.error("Failed to create post: ", errorData.error || response.statusText);
-                alert(`Failed to create post: ${errorData.error || response.statusText}`);
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Failed to create post: ${errorData}`,
+                });
+                setIsSubmitting(false);
+                return;
             }
+
+            setSubmissionMessage({type: 'success', message: 'Post successfully created!'});
+            form.reset();
         } catch (error) {
-            console.error("Network error or failed to send request: ", error);
-            alert("An error occurred while trying to create the post. Please try again");
+            console.error('Error creating post: ', error);
+            setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -62,6 +83,24 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
             bg={theme.colors.primaryGreen[0]}
             style={{borderRadius: theme.radius.md, boxShadow: theme.shadows.md, border: `1px solid ${theme.colors.primaryGreen[2]}`}}
         >
+            <LoadingOverlay
+                visible={isSubmitting}
+                loaderProps={{children: <Text>Submitting post...</Text>}}
+                zIndex={1000}
+                overlayProps={{radius: 'sm', blur: 2}}
+            />
+
+            {submissionMessage && (
+                <Notification
+                    title={submissionMessage.type === 'success' ? 'Success' : 'Error'}
+                    color={submissionMessage.type === 'success' ? 'teal' : 'red'}
+                    onClose={() => setSubmissionMessage(null)}
+                    mb='md'
+                >
+                    {submissionMessage.message}
+                </Notification>
+            )}
+
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Text size="lg" w={700} mb="md">
                     Create a New Market Post
