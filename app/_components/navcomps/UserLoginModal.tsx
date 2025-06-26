@@ -8,6 +8,7 @@ import {
     Group,
 } from "@mantine/core";
 import {SignInButton, SignUpButton} from "@clerk/nextjs";
+import { IconCircleArrowRight } from '@tabler/icons-react';
 
 export default function UserLoginModal() {
     return (
@@ -31,7 +32,7 @@ export default function UserLoginModal() {
                 Sign in to manage your favorite farmers markets!
             </Text>
             <Text pt='1rem'>
-                Don&#39;t have am account? Create a new account today!
+                Don&#39;t have an account? Create a new account today!
             </Text>
             <Divider
                 size="sm"
@@ -60,11 +61,13 @@ export default function UserLoginModal() {
                 <SignInButton>
                     {/*Clerk does not like nesting Mantine 'Button' so use HTML 'button'*/}
                     <button className='signin-button'>
+                        <IconCircleArrowRight/>
                         Sign In
                     </button>
                 </SignInButton>
                 <SignUpButton>
                     <button className='signup-button'>
+                        <IconCircleArrowRight />
                         Sign Up
                     </button>
                 </SignUpButton>
