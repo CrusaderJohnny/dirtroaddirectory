@@ -1,18 +1,31 @@
 "use client";
 import {useForm} from "@mantine/form";
-import {Box, Button, Card, FileInput, Image, Text, Textarea, TextInput, useMantineTheme} from "@mantine/core";
+import {
+    Button,
+    Card,
+    LoadingOverlay,
+    Notification,
+    Text,
+    Textarea,
+    TextInput,
+    useMantineTheme
+} from "@mantine/core";
 import {DateInput} from "@mantine/dates";
 import {MarketPostFormProps} from "@/app/_types/interfaces";
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
+import {useState} from "react";
 
 export default function MarketPostForm({ marketName, userId } : MarketPostFormProps) {
     const farmersMarketName = marketName || "";
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
     const theme = useMantineTheme();
 
     const form = useForm({
         initialValues: {
             title: '',
             content: '',
-            image: null as File | null,
+            image: null as string | null,
         },
         validate: {
             title: (value) => (value.trim().length > 0 ? null : 'Title is required'),
@@ -21,26 +34,44 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
     });
 
     const handleSubmit = async (values: typeof form.values) => {
-        const postData = {
-            ...values,
-            posterType: 'market',
-            posterName: farmersMarketName,
-            postedOn: new Date().toISOString(),
-            userId: userId,
-        };
-        console.log('Market Post Data: ', postData);
-        // Example for when server side logic is complete:
-        // const response = await fetch('/api/create-post-market', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(postData),
-        // });
-        // if (response.ok) {
-        //     console.log("Post created successfully!");
-        //     form.reset(); // Reset form after successful submission
-        // } else {
-        //     console.error("Failed to create post.");
-        // }
+        setSubmissionMessage(null);
+        setIsSubmitting(true);
+        try {
+            const postData = {
+                user_id: userId,
+                title: values.title,
+                content: values.content,
+                summary: values.content.substring(0, 50),
+                is_featured: false,
+                image: values.image,
+            };
+
+            console.log('Market post data: ', postData);
+
+            const response = await fetch(`https://localhost:8080/articles`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(postData),
+            });
+
+            if(!response.ok){
+                const errorData = await response.json();
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Failed to create post: ${errorData}`,
+                });
+                setIsSubmitting(false);
+                return;
+            }
+
+            setSubmissionMessage({type: 'success', message: 'Post successfully created!'});
+            form.reset();
+        } catch (error) {
+            console.error('Error creating post: ', error);
+            setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -52,6 +83,24 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
             bg={theme.colors.primaryGreen[0]}
             style={{borderRadius: theme.radius.md, boxShadow: theme.shadows.md, border: `1px solid ${theme.colors.primaryGreen[2]}`}}
         >
+            <LoadingOverlay
+                visible={isSubmitting}
+                loaderProps={{children: <Text>Submitting post...</Text>}}
+                zIndex={1000}
+                overlayProps={{radius: 'sm', blur: 2}}
+            />
+
+            {submissionMessage && (
+                <Notification
+                    title={submissionMessage.type === 'success' ? 'Success' : 'Error'}
+                    color={submissionMessage.type === 'success' ? 'teal' : 'red'}
+                    onClose={() => setSubmissionMessage(null)}
+                    mb='md'
+                >
+                    {submissionMessage.message}
+                </Notification>
+            )}
+
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Text size="lg" w={700} mb="md">
                     Create a New Market Post
@@ -93,28 +142,10 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
                     required
                 />
 
-                <FileInput
-                    label="Include an Image"
-                    placeholder="Upload an image"
-                    accept="image/png,image/jpeg,image/gif"
-                    {...form.getInputProps('image')}
-                    mb="md"
-                    clearable
+                <ImageUploader
+                    onImageUploadAction={(url) => form.setFieldValue('image', url)}
+                    signatureEndpoint={"/api/sign-cloudinary-params"}
                 />
-
-                {form.values.image && (
-                    <Box mb="md">
-                        <Text size="sm" mb="xs">Preview</Text>
-                        <Image
-                            src={URL.createObjectURL(form.values.image)}
-                            alt="Image Preview"
-                            radius="md"
-                            maw={300}
-                            fit="contain"
-                            style={{border: '1px solid #ccc', padding: '0.5rem'}}
-                            />
-                    </Box>
-                )}
 
                 <Button type="submit" fullWidth mt="lg">Create Market Post</Button>
 

@@ -35,7 +35,7 @@ export interface MarketGridProps {
 }
 
 export interface AdminPostFormProps {
-    user: UserResource; //UserResource is a clerk type interface to hold all user type info
+    currentUser: UserResource; //UserResource is a clerk type interface to hold all user type info
 }
 
 export interface MarketPostFormProps {
@@ -70,17 +70,10 @@ export interface VendorsInterface {
 }
 
 export interface UserInfoInterface {
-    user: {
-        primaryEmail: string;
-        firstName: string;
-        fullName: string;
-        primaryPhone: string;
-        verifiedEmail: boolean;
-        verifiedPhone: boolean;
-        hasPicture: boolean;
-        profilePicture: string;
-        createdAt: Date;
-    }
+    id: number;
+    username?: string;
+    email?: string;
+    created_at?: Date;
 }
 
 export type MapCoords = {
@@ -130,3 +123,10 @@ export interface ContactMessageInterface {
   created_at: string;
 }
 
+export interface ImageUploaderProps {
+    onImageUploadAction: (url: string | null) => void;
+    initialImage?: string | null;
+    signatureEndpoint: string;
+    label?: string;
+    uploadButtonText?: string;
+}
