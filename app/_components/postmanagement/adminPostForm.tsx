@@ -136,7 +136,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
 
             console.log('Admin post data: ', postData);
 
-            const response = await fetch(`https://localhost:8080/articles`, {
+            const response = await fetch(`http://localhost:8080/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
