@@ -123,12 +123,9 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 user_id: posterId,
                 title: values.title,
                 content: values.content,
-                imageUrl: values.image, //null if no image or the URL after proper upload
-                posterType: selectedPosterType,
-                posterId: selectedPosterID,
-                postedOn: new Date().toISOString(),
-                adminUserId: currentUser.id,
-                adminUserName: currentUser.username || currentUser.firstName || currentUser.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
+                imageUrl: values.image,
+                is_featured: false,
+                summary: values.content.substring(0,50),
             };
 
             console.log('Admin post data: ', postData);
