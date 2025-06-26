@@ -31,7 +31,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
     const [posterId, setPosterId] = useState<number | null>(null);
-    const [resetImageUploader, setImageUploader] = useState<boolean>(false);
+    const [imageUploaderKey, setImageUploaderKey] = useState<number>(0);
 
     const {user, isLoaded} = useUser();
 
@@ -55,6 +55,9 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
         const fetchOptions = async () => {
             setIsLoadingOptions(true);
             try{
+                if(!isLoaded || !primaryEmailAddress) {
+                    return;
+                }
                 const [marketResponse, vendorResponse, userResponse] = await Promise.all([
                     fetch('http://localhost:8080/markets'),
                     fetch('http://localhost:8080/vendors'),
@@ -114,7 +117,9 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 setIsLoadingOptions(false);
             }
         };
-        void fetchOptions();
+        if(isLoaded && primaryEmailAddress){
+            void fetchOptions();
+        }
     }, [currentUser, primaryEmailAddress, isLoaded]);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
@@ -131,7 +136,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 title: values.title,
                 content: values.content,
                 imageUrl: values.image,
-                is_featured: false,
+                is_featured: 0,
                 summary: values.content.substring(0,50),
             };
 
@@ -157,7 +162,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
             form.reset();
             setSelectedPosterID(null);
             setSelectedPosterType(null);
-            setImageUploader(prev => !prev);
+            setImageUploaderKey(prevKey => prevKey + 1);
         } catch (error) {
             console.error('Error creating post: ', error);
             setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
@@ -300,7 +305,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 <ImageUploader
                     onImageUploadAction={(url) => form.setFieldValue('image', url)}
                     signatureEndpoint={"/api/sign-cloudinary-params"}
-                    resetTrigger={resetImageUploader}
+                    key={imageUploaderKey}
                 />
 
                 <Button type={'submit'} disabled={isSubmitting || !selectedPosterID} fullWidth>
