@@ -135,7 +135,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 user_id: posterId,
                 title: values.title,
                 content: values.content,
-                imageUrl: values.image,
+                image: values.image,
                 is_featured: 0,
                 summary: values.content.substring(0,50),
             };
