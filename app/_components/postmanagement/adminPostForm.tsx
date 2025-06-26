@@ -1,4 +1,4 @@
-"use client";
+
 import {isNotEmpty, useForm} from "@mantine/form";
 import {
     Button, Card,
