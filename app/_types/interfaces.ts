@@ -128,3 +128,10 @@ export interface ContactMessageInterface {
   created_at: string;
 }
 
+export interface ImageUploaderProps {
+    onImageUploadAction: (url: string | null) => void;
+    initialImage?: string | null;
+    signatureEndpoint: string;
+    label?: string;
+    uploadButtonText?: string;
+}

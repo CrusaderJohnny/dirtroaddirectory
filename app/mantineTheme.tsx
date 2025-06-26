@@ -1,6 +1,9 @@
 'use client';
 
 import {MantineProvider, createTheme, MantineTheme} from '@mantine/core';
+import React from "react";
+
+const GLOBAL_BACKGROUND_IMAGE_URL = '/background.png';
 
 const myTheme = createTheme({
     // Colors
@@ -106,6 +109,17 @@ const myTheme = createTheme({
                 },
             }),
         },
+        AppShell: {
+            styles: () => ({
+                main: {
+                    backgroundImage: `url('${GLOBAL_BACKGROUND_IMAGE_URL}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundBlendMode: 'overlay',
+                },
+            }),
+        },
     },
     shadows: {
         sm: '0 1px 3px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.1)',
@@ -122,7 +136,10 @@ const myTheme = createTheme({
 
 function MantineThemeWrapper({ children }: { children: React.ReactNode }) {
     return (
-        <MantineProvider theme={myTheme} defaultColorScheme="light">
+        <MantineProvider
+            theme={myTheme}
+            defaultColorScheme="light"
+        >
             {children}
         </MantineProvider>
     );

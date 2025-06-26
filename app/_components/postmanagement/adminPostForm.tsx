@@ -1,10 +1,7 @@
 "use client";
 import {isNotEmpty, useForm} from "@mantine/form";
 import {
-    Box,
     Button, Card,
-    FileInput,
-    Image,
     Loader,
     LoadingOverlay,
     Notification, Radio, Select,
@@ -19,6 +16,7 @@ import {
     VendorsInterface
 } from "@/app/_types/interfaces";
 import {useEffect, useState} from "react";
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
 export default function AdminPostForm({user} : AdminPostFormProps) {
     const [selectedPosterType, setSelectedPosterType] = useState<'market' | 'vendor' | null>(null);
@@ -31,29 +29,18 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
 
-    const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
-    const [imageUploadError, setImageUploadError] = useState<string | null>(null);
-
     const theme = useMantineTheme();
 
     const form = useForm({
         initialValues: {
             title: '',
             content: '',
-            image: null as File | null,
-            isFeatured: false,
-            summary: '',
+            image: null as string | null,
         }, validate: {
             title: isNotEmpty('Title is required'),
             content: isNotEmpty('Content is required'),
         },
     });
-
-    const handleImageFileChange = (file: File | null) => {
-        form.setFieldValue('image', file);
-        setImageUploadError(null);
-    };
-
     //  useEffect for when we have server set up and can talk with back end
     useEffect(() => {
         const fetchOptions = async () => {
@@ -88,65 +75,23 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
     }, []);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
-    // Cleanup for URL.createObjectURL when component unmounts or image changes
-    // This is important to prevent memory leaks from client-side previews
-    useEffect(() => {
-        if (form.values.image) {
-            const previewUrl = URL.createObjectURL(form.values.image);
-            return () => {
-                URL.revokeObjectURL(previewUrl);
-            };
-        }
-    }, [form.values.image]);
-
     const handleSubmit = async (values: typeof form.values) => {
         setSubmissionMessage(null);
-        setImageUploadError(null);
         if(!selectedPosterType || !selectedPosterID){
             setSubmissionMessage({type: 'error', message: 'Please select a post type and a specific market/vendor.'});
             return;
         }
         setIsSubmitting(true);
-        setIsUploadingImage(false);
-        let imageUrl: string | null = null;
         try {
-            if(values.image){
-                setIsUploadingImage(true);
-                const formData = new FormData();
-                formData.append('image', values.image);
-                const uploadResponse = await fetch('/azure-components/upload-image', {
-                    method: 'POST',
-                    body: formData,
-                });
-                let uploadResponseData;
-                try {
-                    uploadResponseData = await uploadResponse.json();
-                } catch (jsonError) {
-                    uploadResponseData = {message: `non-json response or empty body: ${jsonError}`};
-                    console.warn("failed to parse image upload response as json: ", jsonError);
-                }
-
-                if(!uploadResponse.ok) {
-                    const errorMessage = uploadResponseData.error || uploadResponseData.message || JSON.stringify(uploadResponseData);
-                    setImageUploadError(`Image upload failed: ${errorMessage}`);
-                    setIsSubmitting(false);
-                    setIsUploadingImage(false);
-                    return;
-                }
-                imageUrl = uploadResponseData.url;
-            }
-
             const postData = {
                 title: values.title,
                 content: values.content,
-                imageUrl: imageUrl, //null if no image or the URL after proper upload
+                imageUrl: values.image, //null if no image or the URL after proper upload
                 posterType: selectedPosterType,
                 posterId: selectedPosterID,
                 postedOn: new Date().toISOString(),
                 adminUserId: user.id,
                 adminUserName: user.username || user.firstName || user.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
-                isFeatured: false,
-                summary: values.content.substring(0,100) + "...",
             };
 
             console.log('Admin post data: ', postData);
@@ -156,22 +101,17 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
             });
-            let postResponseData;
-            try{
-                postResponseData = await response.json();
-            } catch (jsonError) {
-                postResponseData = {message: `Failed to parse post data: ${jsonError}`};
-                console.warn("failed to parse post data as json: ", jsonError);
-            }
 
             if(!response.ok){
-                const errorMessage = postResponseData.error || postResponseData.message || JSON.stringify(postResponseData);
+                const errorData = await response.json();
                 setSubmissionMessage({
                     type: 'error',
-                    message: `Failed to create post: ${errorMessage}`,
+                    message: `Failed to create post: ${errorData}`,
                 });
+                setIsSubmitting(false);
                 return;
             }
+
             setSubmissionMessage({type: 'success', message: 'Post successfully created!'});
             form.reset();
             setSelectedPosterID(null);
@@ -181,7 +121,6 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
         } finally {
             setIsSubmitting(false);
-            setIsUploadingImage(false);
         }
     };
 
@@ -209,8 +148,8 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             style={{borderRadius: theme.radius.md, boxShadow: theme.shadows.md, border: `1px solid ${theme.colors.primaryGreen[2]}`}}
         >
             <LoadingOverlay
-                visible={isSubmitting || isLoadingOptions || isUploadingImage}
-                loaderProps={{children : isLoadingOptions ? <Loader/> : isUploadingImage ? <Text>Uploading image...</Text> : <Text>Submitting post...</Text>}}
+                visible={isSubmitting || isLoadingOptions}
+                loaderProps={{children : isLoadingOptions ? <Loader/> : <Text>Submitting post...</Text>}}
                 zIndex={1000}
                 overlayProps={{radius: 'sm', blur: 2}}
             />
@@ -223,15 +162,6 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                     mb='md'
                 >
                     {submissionMessage.message}
-                </Notification>
-            )}
-            {imageUploadError && (
-                <Notification
-                    title={'Image Upload Error'}
-                    color={'red'}
-                    onClose={() => setImageUploadError(null)}
-                    mb={'md'}>
-                    {imageUploadError}
                 </Notification>
             )}
 
@@ -324,29 +254,13 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                     required
                 />
 
-                <FileInput
-                    label={"Include image (Optional)"}
-                    placeholder={"Upload an image file"}
-                    accept={'image/*'}
-                    value={form.values.image}
-                    onChange={handleImageFileChange}
-                    mb={'md'}
+                {/* Passes UrL into the function, then sets the form field of image to the returned url*/}
+                <ImageUploader
+                    onImageUploadAction={(url) => form.setFieldValue('image', url)}
+                    signatureEndpoint={"/api/sign-cloudinary-params"}
                 />
 
-                {form.values.image && (
-                    <Box mb={'md'}>
-                        <Text size={'sm'} mb={'xs'}>
-                            Image Preview
-                        </Text>
-                        <Image
-                            src={URL.createObjectURL(form.values.image)}
-                            alt={'Image Preview'}
-                            radius={'md'}
-                            maw={200}
-                        />
-                    </Box>
-                )}
-                <Button type={'submit'} disabled={isSubmitting || !selectedPosterID}>
+                <Button type={'submit'} disabled={isSubmitting || !selectedPosterID} fullWidth>
                     Create Post
                 </Button>
             </form>
