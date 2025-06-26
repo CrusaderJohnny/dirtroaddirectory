@@ -51,7 +51,7 @@ export default function Page() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: 'Failed to send message.' }));
-        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        setSubmitError(errorData);
       }
 
       open();
@@ -76,7 +76,7 @@ export default function Page() {
       <AppShell>
         <AppShell.Header component={NavMT} />
 
-        <AppShell.Main style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+        <AppShell.Main>
           <Container size="md" py="xl">
             <Card shadow="sm" radius="md" withBorder p="lg" style={{ backgroundColor: '#ffffff' }}>
               <Title order={2} ta="center" mb="sm" c="dark.8">
