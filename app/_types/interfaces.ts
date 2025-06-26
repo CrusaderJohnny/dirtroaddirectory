@@ -5,11 +5,13 @@ export interface MarketsInterface {
   image: string;
   label: string;
   description: string;
-  content: string;
   link: string;
   lat: number;
   lng: number;
-  hours?: string;
+  hours?: {
+    dateRange: string;
+    days: { day: string; time: string }[];
+  };
   contact?: {
     phone?: string;
     email?: string;

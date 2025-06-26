@@ -3,12 +3,19 @@
         "id": 1,
         "label": "Calgary Farmers Market",
         "image": "https://calgary-farmers-market-v1747430046.websitepro-cdn.com/wp-content/uploads/2024/01/CFM-logo@2x.png",
-        "description": "Home to over 100 incredible local vendors.",
-        "content": "In the spirit of reconciliation, we acknowledge we live, work, and play on the traditional territories of the Blackfoot Confederacy (Siksika, Kainai, Piikani), the Tsuut’ina, the Îyâxe Nakoda Nations, the Métis Nation (Region 3), and all people who make their homes in the Treaty 7 region of Southern Alberta.",
+        "description": "Discover over 141 incredible local vendors, each crafting, baking, and growing their products right here in Alberta. Get to know them and experience the best our local community has to offer.",
         "link": "https://www.google.com/maps/dir//Calgary+Farmers'+Market+West,+25+Greenbriar+Dr+NW,+Calgary,+AB+T3B+6M3/@51.093017,-114.2498271,12.82z/data=!4m18!1m8!3m7!1s0x53716fc09a90ffcd:0x3d321029b6cc51b8!2sCalgary+Farmers'+Market+West!8m2!3d51.0881162!4d-114.2227269!15sChZjYWxnYXJ5IGZhcm1lcnMgbWFya2V0WhgiFmNhbGdhcnkgZmFybWVycyBtYXJrZXSSAQ5mYXJtZXJzX21hcmtldJoBJENoZERTVWhOTUc5blMwVkpRMEZuVFVOQloxQnhWWHBuUlJBQqoBYgoNL2cvMTF5ODM1Mm4zdhABKhIiDmZhcm1lcnMgbWFya2V0KAAyHxABIhuK-AhaCkJAMahUEoZIzqGE3bQv4owqyZPOgz0yGhACIhZjYWxnYXJ5IGZhcm1lcnMgbWFya2V04AEA-gEECAAQSQ!16s%2Fg%2F11q1tc__9w!4m8!1m0!1m5!1m1!1s0x53716fc09a90ffcd:0x3d321029b6cc51b8!2m2!1d-114.2227269!2d51.0881162!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D",
         "lat":51.0656112,
         "lng":-114.2236629,
-        "hours": "Saturday 9am – 5pm",
+        "hours": {
+            "dateRange": "Jan 2, 2025 – Dec 28, 2025",
+            "days": [
+                { "day": "Thursdays", "time": "9:00 AM – 5:00 PM" },
+                { "day": "Fridays", "time": "9:00 AM – 5:00 PM" },
+                { "day": "Saturdays", "time": "9:00 AM – 5:00 PM" },
+                { "day": "Sundays", "time": "9:00 AM – 5:00 PM" }
+            ]
+        },
         "contact": {
             "phone": "403-555-1234",
             "email": "info@example.com",
@@ -20,8 +27,7 @@
         },
         "region": "Calgary & Surrounding Area",
         "events": [
-            "Spring Harvest Festival",
-            "Farmers’ Appreciation Day"
+            "Thanksgiving - Oct 5, 2025 11:30 AM - 3:00 PM"
         ],
         "vendors": [
         { "id": 1, "name": "Valentines Farm", "category": "Produce" },{ "id": 2, "name": "1904 Farm Family Faves", "category": "Preserves" },{ "id": 3, "name": "Local Honey", "category": "honey" },{ "id": 4, "name": "Veggie Delight", "category": "produce" }
@@ -30,7 +36,7 @@
 {
         "id": 2,
         "label": "Cochrane Farmers’ Market",
-        "image": "https://www.albertafarmersmarket.com/wp-content/uploads/Cochrane1-2-wpcf_225x225.jpg",
+        "image": "https://cochranefarmersmarket.ca/wp-content/uploads/2021/03/cropped-CFM-logo-final-300x300.png",
         "description": "The market in the heart of Big Hill Country",
         "content": "The Cochrane Environmental Action Committee (CEAC) sponsors and operates the Cochrane Farmers’ Market. The market is run entirely by CEAC volunteers, and proceeds from the market are used to support CEAC in its efforts to make Cochrane a more environmentally aware and active community.",
         "link": "https://www.google.com/maps/dir//Cochrane+Farmers+Market,+parking+lot+Spray+Lake+Sawmills+Family+Sports+Centre,+Griffin+Road+East,+Cochrane,+AB/@51.1766119,-114.4938705,13z/data=!3m2!4b1!5s0x5371407e95a8f6df:0x5fc8cafd47c8bf67!4m9!4m8!1m0!1m5!1m1!1s0x53713f5fda992313:0x4b100c656f014150!2m2!1d-114.4525855!2d51.1765654!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D",
