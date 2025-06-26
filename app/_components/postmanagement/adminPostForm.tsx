@@ -254,6 +254,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                     required
                 />
 
+                {/* Passes UrL into the function, then sets the form field of image to the returned url*/}
                 <ImageUploader
                     onImageUploadAction={(url) => form.setFieldValue('image', url)}
                     signatureEndpoint={"/api/sign-cloudinary-params"}
