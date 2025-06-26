@@ -8,12 +8,11 @@ import {
 } from "@mantine/core";
 
 import {useDisclosure} from "@mantine/hooks";
+import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
 import Link from "next/link";
 import {
     SignedIn,
     SignedOut,
-    SignInButton,
-    SignUpButton,
     UserButton
 } from "@clerk/nextjs";
 
@@ -33,18 +32,18 @@ export default function HeaderSmall() {
     return (
         <>
             {/*Set default for modal*/}
-            <Modal opened={opened} onClose={close} title="User Account">
-                <SignInButton>
-                    {/*Clerk does not like nesting Mantine 'Button' so use HTML 'button'*/}
-                    <button className='signin-button'>
-                        Sign In
-                    </button>
-                </SignInButton>
-                <SignUpButton >
-                    <button className='signup-button'>
-                        Sign Up
-                    </button>
-                </SignUpButton>
+            <Modal
+                opened={opened}
+                onClose={close}
+                withCloseButton={false}
+                centered
+                size='sm'
+                overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3,
+                }}
+            >
+                <UserLoginModal />
             </Modal>
 
             <Flex
@@ -92,7 +91,7 @@ export default function HeaderSmall() {
                                 leftSection={<IconUser size={14}/>}
                                 color='blue'
                             >
-                                User Account
+                                    User Account
                             </Menu.Item>
                         </SignedOut>
                         <SignedIn>
