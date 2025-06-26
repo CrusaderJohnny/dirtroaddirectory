@@ -71,18 +71,18 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 const vendors: VendorsInterface[] = await vendorResponse.json();
                 const allUsers: UserInfoInterface[] = await userResponse.json();
                 let foundUserId: number | null = null;
-                if(currentUser && currentUser.primaryEmailAddressId) {
+                if(currentUser && currentUser.primaryEmailAddress?.toString()) {
                     const matchingUser: UserInfoInterface | undefined = allUsers.find( user =>
-                    user.email?.toLowerCase() === currentUser.primaryEmailAddressId?.toLowerCase()
+                    user.email?.toLowerCase() === currentUser.primaryEmailAddress?.toString().toLowerCase()
                     );
                     if(matchingUser) {
                         foundUserId = matchingUser.id;
                         console.log(`Found current user's Id: ${foundUserId}`);
                     } else {
-                        console.warn(`Current users email "${currentUser.primaryEmailAddressId}" not found! `);
+                        console.warn(`Current users email "${currentUser.primaryEmailAddress?.toString()}" not found! `);
                         setSubmissionMessage({
                             type: 'error',
-                            message: `User Email "${currentUser.primaryEmailAddressId}" not found!`,
+                            message: `User Email "${currentUser.primaryEmailAddress?.toString()}" not found!`,
                         });
                         setIsLoadingOptions(false);
                         return;
