@@ -48,29 +48,31 @@ a {
 }
 
 .signin-button {
-  background-color: var(--mantine-color-blue-4);
+  background-color: var(--mantine-color-green-8);
   color: white;
   padding-left: 10px;
   padding-right: 10px;
   margin: 10px;
-  border: none;
+  border: 1px solid var(--foreground);
   border-radius: 3px;
 }
 
 .signin-button:hover {
   cursor: pointer;
+  background-color: var(--mantine-color-green-6);
 }
 
 .signup-button {
-  background-color: var(--mantine-color-blue-4);
+  background-color: var(--mantine-color-green-8);
   color: white;
   padding-left: 10px;
   padding-right: 10px;
   margin: 10px;
-  border: none;
+  border: 1px solid var(--foreground);
   border-radius: 3px;
 }
 
 .signup-button:hover {
   cursor: pointer;
+  background-color: var(--mantine-color-green-6);
 }
