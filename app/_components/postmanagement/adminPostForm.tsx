@@ -12,13 +12,14 @@ import {
 import {DateInput} from "@mantine/dates";
 import {
     AdminPostFormProps,
-    MarketsInterface,
+    MarketsInterface, UserInfoInterface,
     VendorsInterface
 } from "@/app/_types/interfaces";
 import {useEffect, useState} from "react";
 import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
-export default function AdminPostForm({user} : AdminPostFormProps) {
+
+export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [selectedPosterType, setSelectedPosterType] = useState<'market' | 'vendor' | null>(null);
     const [selectedPosterID, setSelectedPosterID] = useState<string | null>(null);
 
@@ -28,6 +29,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
+    const [posterId, setPosterId] = useState<number | null>(null);
 
     const theme = useMantineTheme();
 
@@ -46,22 +48,56 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
         const fetchOptions = async () => {
             setIsLoadingOptions(true);
             try{
-                const [marketResponse, vendorResponse] = await Promise.all([
+                const [marketResponse, vendorResponse, userResponse] = await Promise.all([
                     fetch('http://localhost:8080/markets'),
                     fetch('http://localhost:8080/vendors'),
+                    fetch('http://localhost:8080/users')
                 ]);
                 if(!marketResponse.ok || !vendorResponse.ok){
                     const marketError = await marketResponse.text();
                     const vendorError = await vendorResponse.text();
+                    const userError = await userResponse.text();
                     setSubmissionMessage({
                         type: 'error',
-                        message: `Failed to load markets/vendors: Market Status: ${marketResponse.status}: ${marketError} | Vendor Status: ${vendorResponse.status}: ${vendorError}`,
+                        message: `Failed to load data:
+                         Market Status: ${marketResponse.status}: ${marketError} |
+                          Vendor Status: ${vendorResponse.status}: ${vendorError} |
+                          User Status: ${userResponse.status}: ${userError}`,
                     })
                     setIsLoadingOptions(false);
                     return;
                 }
                 const markets: MarketsInterface[] = await marketResponse.json();
                 const vendors: VendorsInterface[] = await vendorResponse.json();
+                const allUsers: UserInfoInterface[] = await userResponse.json();
+                let foundUserId: number | null = null;
+                if(currentUser && currentUser.primaryEmailAddressId) {
+                    const matchingUser: UserInfoInterface | undefined = allUsers.find( user =>
+                    user.email?.toLowerCase() === currentUser.primaryEmailAddressId?.toLowerCase()
+                    );
+                    if(matchingUser) {
+                        foundUserId = matchingUser.id;
+                        console.log(`Found current user's Id: ${foundUserId}`);
+                    } else {
+                        console.warn(`Current users email "${currentUser.primaryEmailAddressId}" not found! `);
+                        setSubmissionMessage({
+                            type: 'error',
+                            message: `User Email "${currentUser.primaryEmailAddressId}" not found!`,
+                        });
+                        setIsLoadingOptions(false);
+                        return;
+                    }
+                } else {
+                    console.error('Current user object or email is missing');
+                    setSubmissionMessage({
+                        type: 'error',
+                        message: `User object or email is missing`,
+                    });
+                    setIsLoadingOptions(false);
+                    return;
+                }
+
+                setPosterId(foundUserId);
                 setMarketOptions(markets);
                 setVendorOptions(vendors);
             } catch (error) {
@@ -72,7 +108,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
             }
         };
         void fetchOptions();
-    }, []);
+    }, [currentUser]);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
     const handleSubmit = async (values: typeof form.values) => {
@@ -84,14 +120,15 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
         setIsSubmitting(true);
         try {
             const postData = {
+                user_id: posterId,
                 title: values.title,
                 content: values.content,
                 imageUrl: values.image, //null if no image or the URL after proper upload
                 posterType: selectedPosterType,
                 posterId: selectedPosterID,
                 postedOn: new Date().toISOString(),
-                adminUserId: user.id,
-                adminUserName: user.username || user.firstName || user.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
+                adminUserId: currentUser.id,
+                adminUserName: currentUser.username || currentUser.firstName || currentUser.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
             };
 
             console.log('Admin post data: ', postData);
@@ -171,7 +208,7 @@ export default function AdminPostForm({user} : AdminPostFormProps) {
                 </Text>
                 <TextInput
                     label='Posted by (Admin)'
-                    value={user.username || user.firstName || user.primaryEmailAddressId || 'Admin'}
+                    value={currentUser.username || currentUser.firstName || currentUser.primaryEmailAddressId || 'Admin'}
                     readOnly
                     mb='md'
                     styles={{ input: {cursor: 'default'}}}
