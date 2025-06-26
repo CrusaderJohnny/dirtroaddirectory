@@ -10,14 +10,15 @@ export default function ImageUploader({
     initialImage,
     signatureEndpoint,
     label = "Include an Image",
-    uploadButtonText = "Upload Image"
+    uploadButtonText = "Upload Image",
+    resetTrigger
 }: ImageUploaderProps) {
     const theme = useMantineTheme();
     const [imageUrl, setImageUrl] = useState<string | null>(initialImage || null);
 
     useEffect(() => {
         setImageUrl(initialImage || null);
-    }, [initialImage]);
+    }, [initialImage, resetTrigger]);
 
     const handleUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
         if (typeof result.info === 'object' && result.info !== null && 'secure_url' in result.info) {
