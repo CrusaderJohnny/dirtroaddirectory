@@ -17,6 +17,7 @@ import {
 } from "@/app/_types/interfaces";
 import {useEffect, useState} from "react";
 import ImageUploader from "@/app/_components/image-uploader/image-uploader";
+import {useUser} from "@clerk/nextjs";
 
 
 export default function AdminPostForm({currentUser} : AdminPostFormProps) {
@@ -31,7 +32,9 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
     const [posterId, setPosterId] = useState<number | null>(null);
 
-    const primaryEmail = currentUser.primaryEmailAddress;
+    const {user, isLoaded} = useUser();
+
+    const primaryEmail = user?.primaryEmailAddress;
     const primaryEmailAddress = primaryEmail ? primaryEmail.emailAddress : null;
 
     const theme = useMantineTheme();
@@ -74,7 +77,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 const vendors: VendorsInterface[] = await vendorResponse.json();
                 const allUsers: UserInfoInterface[] = await userResponse.json();
                 let foundUserId: number | null = null;
-                if(currentUser && primaryEmailAddress) {
+                if(isLoaded && primaryEmailAddress) {
                     const matchingUser: UserInfoInterface | undefined = allUsers.find( user =>
                     user.email?.toLowerCase() === primaryEmailAddress.toLowerCase()
                     );
@@ -111,7 +114,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
             }
         };
         void fetchOptions();
-    }, [currentUser, primaryEmailAddress]);
+    }, [currentUser, primaryEmailAddress, isLoaded]);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
     const handleSubmit = async (values: typeof form.values) => {
