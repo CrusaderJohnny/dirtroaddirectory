@@ -127,5 +127,5 @@ export interface ImageUploaderProps {
     signatureEndpoint: string;
     label?: string;
     uploadButtonText?: string;
-    resetTrigger?: boolean;
+    key?: number;
 }
