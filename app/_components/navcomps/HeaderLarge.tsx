@@ -4,7 +4,8 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@cl
 
 export default function HeaderLarge() {
     return (
-        <Group justify="space-between" w="100%">
+        // Test one tried adding "style={{ flexWrap: 'nowrap' }}" to main-group to stop it from wrapping
+        <Group justify="space-between" w="100%" style={{ flexWrap: 'nowrap' }}>
             <Link href="/">
                 <Group>
                     <Image
@@ -42,10 +43,10 @@ export default function HeaderLarge() {
             <Group>
                 <SignedOut>
                     <SignInButton>
-                        <button className="signin-button">Sign in here</button>
+                        <button className="signin-button">Sign In</button>
                     </SignInButton>
                     <SignUpButton>
-                        <button className="signup-button">Sign up here</button>
+                        <button className="signup-button">Sign Up</button>
                     </SignUpButton>
                 </SignedOut>
                 <SignedIn>

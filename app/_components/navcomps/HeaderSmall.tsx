@@ -1,6 +1,20 @@
-import {Button, Image, Title, Menu, Burger, Flex} from "@mantine/core";
+import {
+    Modal,
+    Image,
+    Title,
+    Menu,
+    Burger,
+    Flex,
+} from "@mantine/core";
+
+import {useDisclosure} from "@mantine/hooks";
+import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
 import Link from "next/link";
-import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
+import {
+    SignedIn,
+    SignedOut,
+    UserButton
+} from "@clerk/nextjs";
 
 import {
     IconApple,
@@ -8,169 +22,131 @@ import {
     IconMapRoute,
     IconHelpHexagon,
     IconMailbox,
+    IconUser,
+    IconHeartStar,
 } from '@tabler/icons-react';
 
 
 export default function HeaderSmall() {
-
+    const [opened, {open, close}] = useDisclosure(false);
     return (
-
         <>
-                <Flex
-                    justify='center'
-                    align='center'
-                    direction='row'
-                    gap='lg'
-                >
+            {/*Set default for modal*/}
+            <Modal
+                opened={opened}
+                onClose={close}
+                withCloseButton={false}
+                centered
+                padding={0}
+                style={{
+                    body: {
+                      backgroundColor: 'transparent',
+                    },
+                }}
+                size='sm'
+                overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3,
+                }}
+            >
+                <UserLoginModal />
+            </Modal>
 
-                    <Link href="/">
+            <Flex
+                justify='center'
+                align='center'
+                direction='row'
+                gap='lg'
+            >
+                <Link href="/">
+                    <Flex
+                        align='center'
+                        direction='row'
+                    >
+                        <Image
+                            src='https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8='
+                            h={40}
+                            w='auto'
+                            fit='contain'
+                            radius='md'
+                            alt="Farmers Market Logo"
+                            mr='sm'
+                        />
+                        <Title
+                            order={1} c='white'>
+                            DRD
+                        </Title>
+                    </Flex>
+                </Link>
 
-                        <Flex
-                            align='center'
-                            direction='row'
-                        >
-
-                            <Image
-                                src='https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8='
-                                h={40}
-                                w='auto'
-                                fit='contain'
-                                radius='md'
-                                alt="Farmers Market Logo"
-                                mr='sm'
-                            />
-                            <Title
-                                order={1} c='white'>
-                                DRD
-                            </Title>
-                        </Flex>
-                    </Link>
-
-                    <Menu>
-                        <Menu.Target>
-                            <Burger color='white'/>
-                        </Menu.Target>
-
-                        {/*Drop down menu options*/}
-                        <Menu.Dropdown>
-
-                            {/*<Menu.Label>Main Pages</Menu.Label>*/}
-                            {/*<Menu.Item*/}
-                            {/*    leftSection={<IconSettings size={14}/>}*/}
-                            {/*    component='a'*/}
-                            {/*    href='/'*/}
-                            {/*>*/}
-                            {/*    Home*/}
-                            {/*</Menu.Item>*/}
+                <Menu>
+                    <Menu.Target>
+                        <Burger color='white'/>
+                    </Menu.Target>
+                    {/*Drop down menu options*/}
+                    <Menu.Dropdown>
+                        <SignedOut>
                             <Menu.Item
-                                leftSection={<IconApple size={14}/>}
-                                component='a'
-                                href='/markets'
+                                component='button'
+                                onClick={open}
+                                leftSection={<IconUser size={14}/>}
+                                color='blue'
                             >
-                                Markets
+                                    User Account
                             </Menu.Item>
+                        </SignedOut>
+                        <SignedIn>
                             <Menu.Item
-                                leftSection={<IconBuildingStore size={14}/>}
+                                leftSection={<IconHeartStar size={14}/>}
+                                color='blue'
                                 component='a'
-                                href='/vendors'
+                                href='/userfavs'
                             >
-                                Vendors
+                                Favorites
                             </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconMapRoute size={14}/>}
-                                component='a'
-                                href='/map'
-                            >
-                                Market Map
-                            </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconHelpHexagon size={14}/>}
-                                component='a'
-                                href='/aboutus'
-                            >
-                                About Us
-                            </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconMailbox size={14}/>}
-                                component='a'
-                                href='/contact'
-                            >
-                                Contact
-                            </Menu.Item>
-                            {/*<Menu.Divider/>*/}
+                        </SignedIn>
 
-                            {/*This is cursed for some reason but looks nice*/}
-                            {/*<Menu.Label>User Account</Menu.Label>*/}
-
-                            {/*<SignedOut>*/}
-                            {/*    <SignInButton>*/}
-                            {/*        <Menu.Item*/}
-                            {/*            leftSection={<IconArrowsLeftRight size={14}/>}*/}
-                            {/*            color='blue'*/}
-                            {/*        >*/}
-                            {/*            Sign In*/}
-                            {/*        </Menu.Item>*/}
-                            {/*    </SignInButton>*/}
-                            {/*</SignedOut>*/}
-                            {/*<SignedIn>*/}
-                            {/*    <SignOutButton>*/}
-                            {/*        <Menu.Item*/}
-                            {/*            leftSection={<IconArrowsLeftRight size={14}/>}*/}
-                            {/*            color='blue'*/}
-                            {/*        >*/}
-                            {/*            Sign Out*/}
-                            {/*        </Menu.Item>*/}
-                            {/*    </SignOutButton>*/}
-                            {/*</SignedIn>*/}
-                            {/*<SignedOut>*/}
-                            {/*    <SignUpButton>*/}
-                            {/*        <Menu.Item*/}
-                            {/*            leftSection={<IconArrowsLeftRight size={14}/>}*/}
-                            {/*            color='blue'*/}
-                            {/*        >*/}
-                            {/*            Sign Up*/}
-                            {/*        </Menu.Item>*/}
-                            {/*    </SignUpButton>*/}
-                            {/*</SignedOut>*/}
-                            {/*<SignedIn>*/}
-                            {/*    <Menu.item*/}
-                            {/*        leftSection={<IconArrowsLeftRight size={14}/>}*/}
-                            {/*        color='blue'*/}
-                            {/*        component='a'*/}
-                            {/*        href='/userfavs'*/}
-                            {/*    >*/}
-                            {/*        Favorites*/}
-                            {/*    </Menu.item>*/}
-                            {/*</SignedIn>*/}
-
-                        </Menu.Dropdown>
-                    </Menu>
-
-                    <SignedOut>
-                        <SignInButton>
-                            <button className="signin-button">
-                                Sign In
-                            </button>
-                        </SignInButton>
-                        <SignUpButton>
-                            <button className="signup-button">
-                                Sign Up
-                            </button>
-                        </SignUpButton>
-                    </SignedOut>
-                    <SignedIn>
-                        <Button
+                        <Menu.Divider/>
+                        <Menu.Label>Pages</Menu.Label>
+                        <Menu.Item
+                            leftSection={<IconApple size={14}/>}
                             component='a'
-                            href="/userfavs"
-                            variant={'subtle'}
-                            c='white'
-                            size='lg'
+                            href='/markets'
                         >
-                            Favs
-                        </Button>
-                        <UserButton/>
-                    </SignedIn>
-                </Flex>
+                            Markets
+                        </Menu.Item>
+                        <Menu.Item
+                            leftSection={<IconBuildingStore size={14}/>}
+                            component='a'
+                            href='/vendors'
+                        >
+                            Vendors
+                        </Menu.Item>
+                        <Menu.Item
+                            leftSection={<IconMapRoute size={14}/>}
+                            component='a'
+                            href='/map'
+                        >
+                            Market Map
+                        </Menu.Item>
+                        <Menu.Item
+                            leftSection={<IconHelpHexagon size={14}/>}
+                            component='a'
+                            href='/aboutus'
+                        >
+                            About Us
+                        </Menu.Item>
+                        <Menu.Item
+                            leftSection={<IconMailbox size={14}/>}
+                            component='a'
+                            href='/contact'
+                        >
+                            Contact
+                        </Menu.Item>
+                    </Menu.Dropdown>
+                </Menu>
+                <UserButton/>
+            </Flex>
         </>
     );
 }
