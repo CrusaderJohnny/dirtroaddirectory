@@ -71,7 +71,7 @@ function MapComponent({onMarkerClick, center}:MapComponentProps) {
 
     return (
         <APIProvider apiKey={Maps_API_KEY} onLoad={() => console.log('Maps API has loaded.')}>
-            <div style={{width: '100%', height: '700px', flexGrow: 1}}>
+            <div style={{width: '100%', height: '600px', flexGrow: 1}}>
                 <Map
                     zoom={zoom}
                     mapId='DEMO_MAP_ID'

@@ -188,7 +188,7 @@ export default function App() {
                     <div>
                         
                     </div>
-                    <div style={{width: '80%', height: '700px', flexGrow: 1, borderRadius: '8px', overflow: 'hidden', position: 'relative'}}>
+                    <div style={{width: '80%', height: '600px', flexGrow: 1, borderRadius: '8px', overflow: 'hidden', position: 'relative'}}>
                         <LoadingOverlay visible={visibleLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} /> 
                         <MapComponent onMarkerClick={handleOpenMarket} center={mapCenter}/>
                     </div>
