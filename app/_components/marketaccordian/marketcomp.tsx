@@ -96,7 +96,6 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
                 <AccordionLabel {...item} />
             </AccordionControl>
             <AccordionPanel>
-                <Text size="sm">{item.content}</Text>
                 <Flex justify="flex-end">
                     <Button component={Link} target="_blank" href={item.link}>
                         Directions

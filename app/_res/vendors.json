@@ -9,8 +9,8 @@
     "email": "valentinesfarm@email.com",
     "website": "https://valentinesfarm.com",
     "markets": [
-      { "id": "cfm", "label": "Calgary Farmers Market" },
-      { "id": "osm", "label": "Okotoks Saturday Market" }
+      { "id": "1", "label": "Calgary Farmers Market" },
+      { "id": "2", "label": "Okotoks Saturday Market" }
     ],
     "products": ["Carrots", "Potatoes", "Beets", "Onions", "Peppers"],
     "description": "Valentines Farm, owned and operated by the Bradshaw family, was started in 1987 and has been growing what our customers call the best carrots in the world! We are proud to produce not only great tasting carrots but several other vegetables as well. With the next generation joining us in the management of the farm, we plan to keep producing local, high-quality produce for many years to come. Our produce can be found at farmers markets in Central Alberta and Calgary at the Innisfail Growers Booth. Produce can also be purchased at our farm."
@@ -25,8 +25,8 @@
     "email": "1904.farmfamilyfaves@gmail.com",
     "website": "https://1904-farm-family-faves.square.site/",
     "markets": [
-      { "id": "cfm", "label": "Calgary Farmers Market" },
-      { "id": "osm", "label": "Okotoks Saturday Market" }
+      { "id": "1", "label": "Calgary Farmers Market" },
+      { "id": "2", "label": "Okotoks Saturday Market" }
     ],
     "products": [
       "Romance (Cherry, Berry & Merlot) Jam",
@@ -47,8 +47,8 @@
     "email": "info@artisanbreads.ca",
     "website": "https://artisanbreads.ca",
     "markets": [
-      { "id": "cfm", "label": "Calgary Farmers Market" },
-      { "id": "osm", "label": "Okotoks Saturday Market" }
+      { "id": "1", "label": "Calgary Farmers Market" },
+      { "id": "2", "label": "Okotoks Saturday Market" }
     ],
     "products": ["Wildflower Honey", "Sourdough Loaves", "Multigrain Buns"],
     "description": "We bake a variety of artisan breads and also sell raw, unfiltered wildflower honey harvested from Alberta bees. We take pride in slow fermentation and locally sourced ingredients."

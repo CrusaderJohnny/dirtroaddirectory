@@ -11,9 +11,13 @@ import {
   Paper,
   Container,
   Loader,
-
+  Button,
+  Group,
+  Modal,
+  ActionIcon,
 } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { IconSearch, IconEye } from "@tabler/icons-react"; 
+import { useDisclosure } from '@mantine/hooks';
 import { ContactMessageInterface } from "../_types/interfaces";
 
 export default function ContactMessagesPage() {
@@ -21,34 +25,42 @@ export default function ContactMessagesPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [opened, { open, close }] = useDisclosure(false);
+  const [selectedMessage, setSelectedMessage] = useState<ContactMessageInterface | null>(null);
+
+  const fetchContactMessages = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch("http://localhost:8080/contact");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: ContactMessageInterface[] = await response.json();
+      data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      setMessages(data);
+    } catch (e) {
+      setError(`Failed to fetch contact messages: ${e instanceof Error ? e.message : 'Failed to fetch contact messages.'}`);
+      console.error("Fetch error:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchContactMessages = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await fetch("http://localhost:8080/contact");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data: ContactMessageInterface[] = await response.json();
-        setMessages(data);
-      } catch (e) {
-        setError(`Failed to fetch contact messages: ${e instanceof Error? e.message : 'Failed to fetch contact messages.'}`);
-        console.error("Fetch error:", e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchContactMessages();
   }, []);
 
   const filteredMessages = messages.filter((msg) =>
-    `${msg.name} ${msg.email} ${msg.subject}`
+    `${msg.name} ${msg.email} ${msg.subject} ${msg.message}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
+
+  const handleViewDetails = (message: ContactMessageInterface) => {
+    setSelectedMessage(message);
+    open();
+  };
 
   if (loading) {
     return (
@@ -74,7 +86,7 @@ export default function ContactMessagesPage() {
         </Title>
 
         <TextInput
-          placeholder="Search by name, email, or subject"
+          placeholder="Search by name, email, subject, or message"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.currentTarget.value)}
           leftSection={<IconSearch size={16} />}
@@ -85,7 +97,7 @@ export default function ContactMessagesPage() {
 
         {filteredMessages.length === 0 ? (
           <Center>
-            <Text>No contact messages found.</Text>
+            <Text>No contact messages found matching your search.</Text>
           </Center>
         ) : (
           <ScrollArea h={500} scrollbarSize={6}>
@@ -97,6 +109,7 @@ export default function ContactMessagesPage() {
                   <Table.Th>Subject</Table.Th>
                   <Table.Th>Message</Table.Th>
                   <Table.Th>Date</Table.Th>
+                  <Table.Th>Actions</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -105,9 +118,23 @@ export default function ContactMessagesPage() {
                     <Table.Td>{message.name}</Table.Td>
                     <Table.Td>{message.email}</Table.Td>
                     <Table.Td>{message.subject}</Table.Td>
-                    <Table.Td>{message.message}</Table.Td>
+                    <Table.Td>
+                      {message.message.substring(0, 50)}...
+                    </Table.Td>
                     <Table.Td>
                       {new Date(message.created_at).toLocaleString()}
+                    </Table.Td>
+                    <Table.Td>
+                      <Group gap="xs" justify="center" wrap="nowrap">
+                        <ActionIcon
+                          variant="light"
+                          color="blue"
+                          onClick={() => handleViewDetails(message)}
+                          title="View Details"
+                        >
+                          <IconEye size={18} />
+                        </ActionIcon>
+                      </Group>
                     </Table.Td>
                   </Table.Tr>
                 ))}
@@ -116,6 +143,18 @@ export default function ContactMessagesPage() {
           </ScrollArea>
         )}
       </Paper>
+
+      {/* Message Details Modal */}
+      <Modal opened={opened} onClose={close} title="Message Details" centered size="lg">
+        {selectedMessage && (
+          <ScrollArea h={400}>
+            <Text fw={700} mb="xs">From: {selectedMessage.name} &lt;{selectedMessage.email}&gt;</Text>
+            <Text fw={700} mb="xs">Subject: {selectedMessage.subject}</Text>
+            <Text c="dimmed" mb="md" size="sm">Received: {new Date(selectedMessage.created_at).toLocaleString()}</Text>
+            <Text style={{ whiteSpace: 'pre-wrap' }}>{selectedMessage.message}</Text>
+          </ScrollArea>
+        )}
+      </Modal>
     </Container>
   );
 }
