@@ -16,6 +16,8 @@ import MapComponent from "@/app/_components/mapcomps/map";
 import { useState, useEffect } from "react";
 import NavMT from '../_components/navcomps/navmt';
 import regions from '../_res/regions.json';
+import { fetchMarketsAsJson } from '../_components/apicomps/marketfetch'; // Import your fetch function
+import { MarketsInterface } from '../_types/interfaces'; // Import your MarketsInterface
 
 // Interface for region json
 interface RegionData {
@@ -40,6 +42,27 @@ export default function App() {
 
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
     const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number } | undefined>(undefined);
+
+    const [allMarkets, setAllMarkets] = useState<MarketsInterface[]>([]); // State to store all fetched markets
+    const [autocompleteData, setAutocompleteData] = useState<string[]>([]); // Data for Autocomplete
+    const [searchInputValue, setSearchInputValue] = useState<string>(''); // State for search input value
+
+
+    // Effect to fetch all markets on component mount
+    useEffect(() => {
+        const getMarkets = async () => {
+            try {
+                const data = await fetchMarketsAsJson();
+                setAllMarkets(data);
+                // Initialize autocomplete data with all market names
+                setAutocompleteData(data.map(market => market.label));
+            } catch (error) {
+                console.error("Failed to fetch markets:", error);
+                // Handle error (e.g., show an error message to the user)
+            }
+        };
+        getMarkets();
+    }, []);
 
 
     // effect runs whenever mapCenter changes from undefined to a coordinate.
@@ -91,11 +114,29 @@ export default function App() {
         }
     };
 
+    const handleSearchSelect = (value: string) => {
+        // Find the market object based on the selected name
+        const selectedMarket = allMarkets.find(market => market.label === value);
+        if (selectedMarket) {
+            // Set the openMarketId to the ID of the selected market
+            // Make sure the ID type matches what MarketAccordion expects (likely string)
+            setOpenMarketId(selectedMarket.id);
+            setSearchInputValue(value); // Keep the selected value in the search bar
+            // Optionally, scroll the navbar into view if it's collapsed on mobile
+            if (!desktopOpened) {
+                toggleDesktop();
+            }
+            if (!mobileOpened) {
+                toggleMobile();
+            }
+        }
+    };
+
 
 
     //const regions = ['Calgary', 'Edmonton', 'Central', 'North East', 'North West', 'South'];
     // This is just for testing the search, have this reference the json later
-    const markets = ['Calgary Farmers Market', 'Cochrane Farmers Market', 'Dalhousie Farmers Market'];
+    //const markets = ['Calgary Farmers Market', 'Cochrane Farmers Market', 'Dalhousie Farmers Market'];
     //const farmHeader = require("../assets/Alberta-farming.jpg")
 
 
@@ -129,7 +170,10 @@ export default function App() {
                     </Button>
                     <Autocomplete
                         placeholder="Search"
-                        data={markets}
+                        data={autocompleteData} // Use the filtered data
+                        value={searchInputValue} // Bind value to state
+                        onChange={setSearchInputValue} // Update state on change
+                        onOptionSubmit={handleSearchSelect} // Handle selection
                     />
                     <Select
                         placeholder="Region"
