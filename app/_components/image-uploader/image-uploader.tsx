@@ -10,7 +10,7 @@ export default function ImageUploader({
     initialImage,
     signatureEndpoint,
     label = "Include an Image",
-    uploadButtonText = "Upload Image"
+    uploadButtonText = "Upload Image",
 }: ImageUploaderProps) {
     const theme = useMantineTheme();
     const [imageUrl, setImageUrl] = useState<string | null>(initialImage || null);
