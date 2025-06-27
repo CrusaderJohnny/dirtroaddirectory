@@ -1,3 +1,5 @@
+// Daniel Asefa
+
 'use client';
 
 import { AppShell, BackgroundImage } from '@mantine/core';
@@ -6,36 +8,37 @@ import HeaderSmall from '@/app/_components/navcomps/HeaderSmall';
 import { useState, useEffect, useRef } from 'react';
 
 export default function NavMT() {
+    // The default header is set to the large header
     const [zoomedHeader, setZoomedHeader] = useState(false);
+    // Ensures the correct header is only loaded after HeaderLarge is measured
+    const [hasMeasured, setHasMeasured] = useState(false);
     const headerMeasureRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const ref = headerMeasureRef.current;
         if (!ref) return;
 
-        const updateZoomed = () => {
+        const updateHeaderSize = () => {
             const headerWidth = ref.offsetWidth;
             const screenWidth = window.innerWidth;
             const percentUsed = (headerWidth / screenWidth) * 100;
 
-            if (!zoomedHeader && percentUsed > 95) {
-                setZoomedHeader(true);
-            } else if (zoomedHeader && percentUsed < 90) {
-                setZoomedHeader(false);
-            }
+            const shouldUseCompact = screenWidth < 1375 || percentUsed > 95;
+            setZoomedHeader(shouldUseCompact);
+            setHasMeasured(true);
         };
 
-        const observer = new ResizeObserver(updateZoomed);
+        const observer = new ResizeObserver(updateHeaderSize);
         observer.observe(ref);
 
-        window.addEventListener('resize', updateZoomed);
-        updateZoomed();
+        window.addEventListener('resize', updateHeaderSize);
+        updateHeaderSize();
 
         return () => {
             observer.disconnect();
-            window.removeEventListener('resize', updateZoomed);
+            window.removeEventListener('resize', updateHeaderSize);
         };
-    }, [zoomedHeader]);
+    }, []);
 
     return (
         <AppShell header={{ height: 60 }}>
@@ -51,7 +54,7 @@ export default function NavMT() {
                         position: 'relative',
                     }}
                 >
-                    {/* Measuring element - always present, invisible */}
+                    {/* Always measure, never show this to users */}
                     <div
                         ref={headerMeasureRef}
                         style={{
@@ -65,10 +68,13 @@ export default function NavMT() {
                         <HeaderLarge />
                     </div>
 
-                    {/* Shown Header */}
-                    {zoomedHeader ? <HeaderSmall /> : <HeaderLarge />}
+                    {/* Show nothing until the measurement is complete */}
+                    {hasMeasured && (
+                        zoomedHeader ? <HeaderSmall /> : <HeaderLarge />
+                    )}
                 </BackgroundImage>
             </AppShell.Header>
         </AppShell>
     );
 }
+
