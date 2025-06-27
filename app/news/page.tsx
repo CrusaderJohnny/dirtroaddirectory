@@ -20,7 +20,7 @@ import {ArticleInterface} from "@/app/_types/interfaces";
 export default function Page() {
 
     // For testing, admin is set to true / false
-    const isAdmin = true;
+    const isAdmin = false;
 
     // Map data to articles that can be called
     const [articles, setArticles] = useState<ArticleInterface[]>(() => {
@@ -127,26 +127,31 @@ export default function Page() {
         <AppShellSection>
 
             {/*This container is the for the intro to website section*/}
-            <Container size='xl' p='sm'>
+            <Box pt='md'>
                 <SiteIntroCard/>
-                <Button component="a" href="/aboutus" mt='sm' variant="light" fullWidth>
+            </Box>
+            <Container size='xl' pt='lg'>
+                {/*<Button component='a' href='/news/datapulltest' mt='sm' variant="light" fullWidth>*/}
+                {/*    Let us see*/}
+                {/*</Button>*/}
+                <Button component="a" href="/aboutus" mt='sm' fullWidth>
                     Learn More About Us
                 </Button>
                 <Divider my='md'/>
             </Container>
 
-            <Container size='xl' p='sm'>
+            <Container size='xl' p='sm' >
                 <Grid mt='sm'>
-                    <GridCol span={7}>
+                    <GridCol span={7} mah={'80vh'} >
                         {featuredArticle ? (
-                            <FeaturedCard article={featuredArticle}/>
+                            <FeaturedCard article={featuredArticle} />
                         ) : (
                             <Text>Error: No featured article exists</Text>
                         )
                         }
                     </GridCol>
 
-                    <GridCol span={5}>
+                    <GridCol span={5} mah={'80vh'}>
                         {articleId2 ? (
                             // Testing articleSubPage carousel
                             <ArticleCarousel/>
@@ -158,9 +163,9 @@ export default function Page() {
                 </Grid>
 
                 {/*Option is just for admin*/}
-                <Button onClick={handleChangeFeaturedClick} mt="md">
-                    Change Featured Article
-                </Button>
+                {/*<Button onClick={handleChangeFeaturedClick} mt="md">*/}
+                {/*    Change Featured Article*/}
+                {/*</Button>*/}
             </Container>
 
         </AppShellSection>
