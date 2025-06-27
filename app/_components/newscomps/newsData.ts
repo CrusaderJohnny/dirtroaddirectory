@@ -1,8 +1,4 @@
-const baseContent = `Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,
-sit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor
-at libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.
-Vestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas
-consequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus`;
+const baseContent = `Seasonal produce brings unbeatable flavor and freshness. This week, strawberries are bursting with sweetness, perfect for snacking or baking. Crisp snap peas and tender asparagus make ideal salad additions, while radishes add a spicy crunch. Leafy greens like spinach and arugula thrive in cooler weather, ideal for light, nutritious meals. Rhubarb, tart and vibrant, pairs beautifully with desserts. Eating in season supports local farms and ensures peak taste—so head to your nearest market and savor nature’s freshest offerings.`;
 
 const testContent = baseContent.repeat(4);
 
