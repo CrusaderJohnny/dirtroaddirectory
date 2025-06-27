@@ -140,10 +140,12 @@ export default function App() {
                     />
                 </Group>
                 
-
-                <Center>
-                    <div style={{width: '80%', height: '700px', flexGrow: 1, borderRadius: '8px', overflow: 'hidden', position: 'relative',margin: 'auto'}}>
-                        <LoadingOverlay visible={visibleLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+                <Center w={"80%"} mx={"auto"}>
+                    <div>
+                        
+                    </div>
+                    <div style={{width: '80%', height: '700px', flexGrow: 1, borderRadius: '8px', overflow: 'hidden', position: 'relative'}}>
+                        <LoadingOverlay visible={visibleLoad} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} /> 
                         <MapComponent onMarkerClick={handleOpenMarket} center={mapCenter}/>
                     </div>
                 </Center>

@@ -88,7 +88,11 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
         return <Text>No markets found.</Text>;
     }
 
-
+    const handleAccordionChange = (value: string | null) => {
+        // convert the string value back to a number, or null if it's null
+        const numericValue = value !== null ? parseInt(value, 10) : null;
+        setActiveItem(numericValue);
+    };
 
     const items = markets.map((item) => (
         <AccordionItem value={String(item.id)} key={item.label}>
@@ -108,7 +112,7 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
     return (
             <Accordion chevronPosition="right" variant="contained"
             value={String(activeItem)} // Control the active item
-            onChange={setActiveItem.toString} // Update the active item when a user clicks
+            onChange={handleAccordionChange} // Update the active item when a user clicks
             // FIX BUG HERE ------ closing the item doesn't set active to null
             >
                 {items}
