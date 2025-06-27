@@ -17,6 +17,7 @@ import {
 } from "@/app/_types/interfaces";
 import {useEffect, useState} from "react";
 import ImageUploader from "@/app/_components/image-uploader/image-uploader";
+import {useUser} from "@clerk/nextjs";
 
 
 export default function AdminPostForm({currentUser} : AdminPostFormProps) {
@@ -30,6 +31,12 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
     const [posterId, setPosterId] = useState<number | null>(null);
+    const [imageUploaderKey, setImageUploaderKey] = useState<number>(0);
+
+    const {user, isLoaded} = useUser();
+
+    const primaryEmail = user?.primaryEmailAddress;
+    const primaryEmailAddress = primaryEmail ? primaryEmail.emailAddress : null;
 
     const theme = useMantineTheme();
 
@@ -48,6 +55,9 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
         const fetchOptions = async () => {
             setIsLoadingOptions(true);
             try{
+                if(!isLoaded || !primaryEmailAddress) {
+                    return;
+                }
                 const [marketResponse, vendorResponse, userResponse] = await Promise.all([
                     fetch('http://localhost:8080/markets'),
                     fetch('http://localhost:8080/vendors'),
@@ -71,18 +81,18 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 const vendors: VendorsInterface[] = await vendorResponse.json();
                 const allUsers: UserInfoInterface[] = await userResponse.json();
                 let foundUserId: number | null = null;
-                if(currentUser && currentUser.primaryEmailAddressId) {
+                if(isLoaded && primaryEmailAddress) {
                     const matchingUser: UserInfoInterface | undefined = allUsers.find( user =>
-                    user.email?.toLowerCase() === currentUser.primaryEmailAddressId?.toLowerCase()
+                    user.email?.toLowerCase() === primaryEmailAddress.toLowerCase()
                     );
                     if(matchingUser) {
                         foundUserId = matchingUser.id;
                         console.log(`Found current user's Id: ${foundUserId}`);
                     } else {
-                        console.warn(`Current users email "${currentUser.primaryEmailAddressId}" not found! `);
+                        console.warn(`Current users email "${primaryEmailAddress}" not found! `);
                         setSubmissionMessage({
                             type: 'error',
-                            message: `User Email "${currentUser.primaryEmailAddressId}" not found!`,
+                            message: `User Email "${primaryEmailAddress}" not found!`,
                         });
                         setIsLoadingOptions(false);
                         return;
@@ -107,8 +117,10 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 setIsLoadingOptions(false);
             }
         };
-        void fetchOptions();
-    }, [currentUser]);
+        if(isLoaded && primaryEmailAddress){
+            void fetchOptions();
+        }
+    }, [currentUser, primaryEmailAddress, isLoaded]);
     //just cuz u forget all the time, this empty dependency array means this use effect runs once on mount
 
     const handleSubmit = async (values: typeof form.values) => {
@@ -123,17 +135,14 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 user_id: posterId,
                 title: values.title,
                 content: values.content,
-                imageUrl: values.image, //null if no image or the URL after proper upload
-                posterType: selectedPosterType,
-                posterId: selectedPosterID,
-                postedOn: new Date().toISOString(),
-                adminUserId: currentUser.id,
-                adminUserName: currentUser.username || currentUser.firstName || currentUser.primaryEmailAddressId, //pulls username first, then first name then primary email address if others are null
+                image: values.image,
+                is_featured: 0,
+                summary: values.content.substring(0,50),
             };
 
             console.log('Admin post data: ', postData);
 
-            const response = await fetch(`https://localhost:8080/articles`, {
+            const response = await fetch(`http://localhost:8080/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
@@ -143,7 +152,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 const errorData = await response.json();
                 setSubmissionMessage({
                     type: 'error',
-                    message: `Failed to create post: ${errorData}`,
+                    message: `Failed to create post: ${errorData.message}`,
                 });
                 setIsSubmitting(false);
                 return;
@@ -153,6 +162,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
             form.reset();
             setSelectedPosterID(null);
             setSelectedPosterType(null);
+            setImageUploaderKey(prevKey => prevKey + 1);
         } catch (error) {
             console.error('Error creating post: ', error);
             setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
@@ -295,6 +305,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                 <ImageUploader
                     onImageUploadAction={(url) => form.setFieldValue('image', url)}
                     signatureEndpoint={"/api/sign-cloudinary-params"}
+                    key={imageUploaderKey}
                 />
 
                 <Button type={'submit'} disabled={isSubmitting || !selectedPosterID} fullWidth>
