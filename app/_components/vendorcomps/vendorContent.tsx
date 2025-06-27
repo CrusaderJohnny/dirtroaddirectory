@@ -16,6 +16,7 @@ import {
   Select,
   Paper,
   AppShellMain,
+  Button,
 } from "@mantine/core";
 import { motion } from "framer-motion";
 import {
@@ -161,6 +162,10 @@ export default function VendorsContent() {
               </Grid>
             </motion.div>
         </motion.div>
+
+        <Group justify="center" mt="xl">
+          <Button component="a" href="/vendors" variant="outline" color="orange">← Back to all Vendors</Button>
+        </Group>
         </Container>
       </AppShellMain>
     );
