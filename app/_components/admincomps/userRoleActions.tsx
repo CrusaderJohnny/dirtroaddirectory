@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Button, Stack, Group, Text, Card } from '@mantine/core';
-import { setRole, removeRole } from './_actions';
+import {Button, Stack, Group, Text, Card} from '@mantine/core';
+import {setRole, removeRole, setIsMarket, removeIsMarket, setIsVendor, removeIsVendor} from './_actions';
 import {UserRoleActionsProps} from "@/app/_types/interfaces";
 
 // Define the type for the action's return state
@@ -67,33 +67,30 @@ export default function UserRoleActions({ userId }: UserRoleActionsProps) {
     // useFormState for removeRole
     const [removeRoleState, removeRoleFormAction] = useActionState<ActionState, FormData>(removeRole, initialState);
     const [setIsMarketState, setIsMarketFormAction] = useActionState<ActionState, FormData>(setIsMarket, initialState);
+    const [removeIsMarketState, removeIsMarketFormAction] = useActionState<ActionState, FormData>(removeIsMarket, initialState);
+    const [setIsVendorState, setIsVendorFormAction] = useActionState<ActionState, FormData>(setIsVendor, initialState);
+    const [removeIsVendorState, removeIsVendorFormAction] = useActionState<ActionState, FormData>(removeIsVendor, initialState);
 
     const [popupMessage, setPopupMessage] = useState('');
     const [popupType, setPopupType] = useState<'success' | 'error'>('success');
 
-    // Effect to show pop-up when setRoleState changes
-    useEffect(() => {
-        if (setRoleState.message) {
-            setPopupMessage(setRoleState.message);
-            setPopupType(setRoleState.success ? 'success' : 'error');
+    const showPopupEffect = (state: ActionState) => {
+        if(state.message){
+            setPopupMessage(state.message);
+            setPopupType(state.success ? 'success' : 'error');
             const timer = setTimeout(() => {
-                setPopupMessage(''); // Hide after 3 seconds
+                setPopupMessage('');
             }, 5000);
-            return () => clearTimeout(timer); // Cleanup timer
+            return () => clearTimeout(timer);
         }
-    }, [setRoleState]);
+    };
 
-    // Effect to show pop-up when removeRoleState changes
-    useEffect(() => {
-        if (removeRoleState.message) {
-            setPopupMessage(removeRoleState.message);
-            setPopupType(removeRoleState.success ? 'success' : 'error');
-            const timer = setTimeout(() => {
-                setPopupMessage(''); // Hide after 3 seconds
-            }, 5000);
-            return () => clearTimeout(timer); // Cleanup timer
-        }
-    }, [removeRoleState]);
+    useEffect(() => showPopupEffect(setRoleState), [setRoleState]);
+    useEffect(() => showPopupEffect(removeRoleState), [removeRoleState]);
+    useEffect(() => showPopupEffect(setIsMarketState), [setIsMarketState]);
+    useEffect(() => showPopupEffect(removeIsMarketState), [removeIsMarketState]);
+    useEffect(() => showPopupEffect(setIsVendorState), [setIsVendorState]);
+    useEffect(() => showPopupEffect(removeIsVendorState), [removeIsVendorState]);
 
     const handleClosePopup = () => {
         setPopupMessage('');
@@ -126,6 +123,25 @@ export default function UserRoleActions({ userId }: UserRoleActionsProps) {
                 <input type="hidden" value={userId} name="id" />
                 <input type="hidden" value="true" name="isMarket" />
                 <SubmitButton label={"Make Market"} />
+            </form>
+
+            {/* Remove Is Market */}
+            <form action={removeIsMarketFormAction}>
+                <input type="hidden" value={userId} name="id" />
+                <SubmitButton label={'Remove Market'} />
+            </form>
+
+            {/* Set Is Vendor */}
+            <form action={setIsVendorFormAction}>
+                <input type="hidden" value={userId} name="id" />
+                <input type="hidden" value="true" name="isVendor" />
+                <SubmitButton label="Make Vendor" />
+            </form>
+
+            {/* Remove Is Vendor */}
+            <form action={removeIsVendorFormAction}>
+                <input type="hidden" value={userId} name="id" />
+                <SubmitButton label={'Remove Vendor'}/>
             </form>
 
             {/* Pop-up message display */}
