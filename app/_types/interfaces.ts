@@ -1,4 +1,6 @@
 import {UserResource} from "@clerk/types";
+import {User} from "@clerk/backend";
+import {Roles} from "@/app/_types/globals";
 
 export interface MarketsInterface {
   id: number;
@@ -130,4 +132,17 @@ export interface ImageUploaderProps {
     label?: string;
     uploadButtonText?: string;
     key?: number;
+}
+
+
+export interface AdminSearchProps {
+    users: User[];
+}
+
+export interface UserPublicMetaData {
+    role?: Roles;
+    isMarket?: boolean;
+    isVendor?: boolean;
+    marketName?: string;
+    vendorName?: string;
 }

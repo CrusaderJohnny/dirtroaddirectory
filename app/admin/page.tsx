@@ -1,24 +1,21 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
 import { SearchUsers } from '../_components/admincomps/searchUsers'
-import { clerkClient, currentUser, EmailAddress } from '@clerk/nextjs/server'
+import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
     AppShellHeader,
     AppShellMain,
     Button,
-    Card,
     Center,
-    Flex,
     Group,
-    Stack,
-    Text, Title, Container, Box
+    Title, Container, Box
 } from "@mantine/core";
 import Link from "next/link";
 import { checkMarket } from "@/utils/checkMarket";
 import { checkVendor } from "@/utils/checkVendor";
-import UserRoleActions from "@/app/_components/admincomps/userRoleActions";
+import DisplayUsers from "@/app/_components/admincomps/displayUsers";
 
 export default async function AdminDashboard(params: {
     searchParams: Promise<{ search?: string }>
@@ -56,47 +53,12 @@ export default async function AdminDashboard(params: {
                         Welcome to the Admin Dashboard, {displayName}!
                     </Title>
 
-                    <Box mb="xl">
-                        <SearchUsers />
-                    </Box>
-
-                    <Stack gap="lg">
-                        {users.map((user) => (
-                            <Card
-                                key={user.id}
-                                shadow="sm"
-                                padding="lg"
-                                radius="md"
-                                withBorder
-                                style={{ backgroundColor: "#ffffff" }}
-                            >
-                                <Flex justify="space-between" align="flex-start" wrap="wrap">
-                                    <Stack gap="xs">
-                                        <Group>
-                                            <Text fw={600}>Username:</Text>
-                                            <Text>{user.firstName} {user.lastName}</Text>
-                                        </Group>
-                                        <Group>
-                                            <Text fw={600}>Email:</Text>
-                                            <Text>
-                                                {
-                                                    user.emailAddresses.find(
-                                                        (email: EmailAddress) =>
-                                                            email.id === user.primaryEmailAddressId
-                                                    )?.emailAddress
-                                                }
-                                            </Text>
-                                        </Group>
-                                        <Group>
-                                            <Text fw={600}>Role:</Text>
-                                            <Text>{user.publicMetadata.role as string}</Text>
-                                        </Group>
-                                    </Stack>
-                                    <UserRoleActions userId={user.id} />
-                                </Flex>
-                            </Card>
-                        ))}
-                    </Stack>
+                    <Center mb={'md'}>
+                            <SearchUsers />
+                    </Center>
+                    {users && (
+                        <DisplayUsers users={users}/>
+                    )}
                 </Container>
             </AppShellMain>
 

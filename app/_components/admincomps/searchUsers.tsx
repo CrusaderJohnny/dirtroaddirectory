@@ -25,7 +25,6 @@ export const SearchUsers = () => {
     }
 
     return (
-        <Container bg="lightgray">
             <Group>
                 <Text>
                     Search for users
@@ -37,6 +36,5 @@ export const SearchUsers = () => {
                 />
                 <Button onClick={handleSearch}>Submit</Button>
             </Group>
-        </Container>
     )
 }

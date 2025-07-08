@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Button, Stack, Group, Text, Card } from '@mantine/core';
-//import { notifications } from '@mantine/notifications'; will need to install
 import { setRole, removeRole } from './_actions';
 import {UserRoleActionsProps} from "@/app/_types/interfaces";
 
@@ -62,11 +61,12 @@ function SubmitButton({ label }: { label: string }) {
     );
 }
 
-export default function UserRoleActions({ userId}: UserRoleActionsProps) {
+export default function UserRoleActions({ userId }: UserRoleActionsProps) {
     // useFormState for setRole
     const [setRoleState, setRoleFormAction] = useActionState<ActionState, FormData>(setRole, initialState);
     // useFormState for removeRole
     const [removeRoleState, removeRoleFormAction] = useActionState<ActionState, FormData>(removeRole, initialState);
+    const [setIsMarketState, setIsMarketFormAction] = useActionState<ActionState, FormData>(setIsMarket, initialState);
 
     const [popupMessage, setPopupMessage] = useState('');
     const [popupType, setPopupType] = useState<'success' | 'error'>('success');
@@ -78,7 +78,7 @@ export default function UserRoleActions({ userId}: UserRoleActionsProps) {
             setPopupType(setRoleState.success ? 'success' : 'error');
             const timer = setTimeout(() => {
                 setPopupMessage(''); // Hide after 3 seconds
-            }, 3000);
+            }, 5000);
             return () => clearTimeout(timer); // Cleanup timer
         }
     }, [setRoleState]);
@@ -90,7 +90,7 @@ export default function UserRoleActions({ userId}: UserRoleActionsProps) {
             setPopupType(removeRoleState.success ? 'success' : 'error');
             const timer = setTimeout(() => {
                 setPopupMessage(''); // Hide after 3 seconds
-            }, 3000);
+            }, 5000);
             return () => clearTimeout(timer); // Cleanup timer
         }
     }, [removeRoleState]);
@@ -119,6 +119,13 @@ export default function UserRoleActions({ userId}: UserRoleActionsProps) {
             <form action={removeRoleFormAction}>
                 <input type="hidden" value={userId} name="id" />
                 <SubmitButton label="Remove Role" />
+            </form>
+
+            {/* Form to Set Market, hopefully */}
+            <form action={setIsMarketFormAction}>
+                <input type="hidden" value={userId} name="id" />
+                <input type="hidden" value="true" name="isMarket" />
+                <SubmitButton label={"Make Market"} />
             </form>
 
             {/* Pop-up message display */}
