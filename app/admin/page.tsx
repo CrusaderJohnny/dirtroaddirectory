@@ -10,7 +10,7 @@ import {
     Button,
     Center,
     Group,
-    Title, Container, Box
+    Title, Container, Card, Text
 } from "@mantine/core";
 import Link from "next/link";
 import { checkMarket } from "@/utils/checkMarket";
@@ -47,18 +47,34 @@ export default async function AdminDashboard(params: {
                 <NavMT />
             </AppShellHeader>
 
-            <AppShellMain style={{ backgroundColor: '#f5f7fa', minHeight: '100vh' }}>
+            <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
                     <Title ta="center" order={2} mb="lg">
                         Welcome to the Admin Dashboard, {displayName}!
                     </Title>
 
-                    <Center mb={'md'}>
-                            <SearchUsers />
-                    </Center>
-                    {users && (
-                        <DisplayUsers users={users}/>
-                    )}
+                    <Group>
+                        <Card title="Modify Vendor"
+                              w={'20rem'}
+                            component='a'
+                              href={'/admin/add-vendor'}
+                        >
+                            <Text>Add or modify a vendor</Text>
+                        </Card>
+                        <Card title="Modify Market"
+                        w={'20rem'}
+                        component='a'
+                        href={'/admin/add-market'}>
+                            <Text>Add or modify a market</Text>
+                        </Card>
+                    </Group>
+
+                    {/*<Center mb={'md'}>*/}
+                    {/*        <SearchUsers />*/}
+                    {/*</Center>*/}
+                    {/*{users && (*/}
+                    {/*    <DisplayUsers users={users}/>*/}
+                    {/*)}*/}
                 </Container>
             </AppShellMain>
 
