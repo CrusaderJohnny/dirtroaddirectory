@@ -1,7 +1,8 @@
-import {Card, Flex, Group, Stack, Text} from "@mantine/core";
+import {Card, Group, Stack, Text} from "@mantine/core";
 import UserRoleActions from "@/app/_components/admincomps/userRoleActions";
 import {AdminSearchProps} from "@/app/_types/interfaces";
 import {EmailAddress} from "@clerk/backend";
+
 
 export default function DisplayUsers({users, searchType}: AdminSearchProps) {
     return (
@@ -13,47 +14,50 @@ export default function DisplayUsers({users, searchType}: AdminSearchProps) {
                     padding="lg"
                     radius="md"
                     withBorder
-                    style={{ backgroundColor: "#ffffff" }}
+                    style={{ backgroundColor: "#e9fbee" }}
                 >
-                    <Flex justify="space-between" align="flex-start" wrap="wrap">
-                        <Stack gap="xs">
-                            <Group>
-                                <Text fw={600}>Username:</Text>
-                                <Text>{user.firstName} {user.lastName}</Text>
-                            </Group>
-                            <Group>
-                                <Text fw={600}>Email:</Text>
-                                <Text>
-                                    {
-                                        user.emailAddresses.find(
-                                            (email: EmailAddress) =>
-                                                email.id === user.primaryEmailAddressId
-                                        )?.emailAddress
-                                    }
-                                </Text>
-                            </Group>
-                            <Group>
-                                <Text fw={600}>Role:</Text>
-                                <Text>{user.publicMetadata.role as string}</Text>
-                            </Group>
-
+                    <Group>
+                        <Stack gap={'xs'} w={'7rem'}>
+                            <Text fw={600}>Username:</Text>
+                            <Text fw={600}>Email:</Text>
+                            <Text fw={600}>Role:</Text>
                             {user.publicMetadata.isMarket as boolean && (
-                                <Group>
+                                <>
                                     <Text fw={600}>Is Market:</Text>
-                                    <Text>{String(user.publicMetadata.isMarket)}</Text>
-                                </Group>
+                                    <Text fw={600}>Market Name:</Text>
+                                </>
                             )}
                             {user.publicMetadata.isVendor as boolean && (
-                                <Group>
-                                    <Text fw={600}>Is Vendor:</Text>
-                                    <Text>{String(user.publicMetadata.isVendor)}</Text>
-                                </Group>
+                                <>
+                                    <Text fw={600}>Is Vendor</Text>
+                                    <Text fw={600}>Vendor Name:</Text>
+                                </>
                             )}
-
-
                         </Stack>
-                        <UserRoleActions userId={user.id} buttonType={searchType} />
-                    </Flex>
+                        <Stack gap="xs">
+                            <Text>{user.firstName} {user.lastName}</Text>
+                            <Text>{user.emailAddresses.find(
+                                (email: EmailAddress) =>
+                                    email.id === user.primaryEmailAddressId
+                            )?.emailAddress
+                            }
+                            </Text>
+                            <Text>{user.publicMetadata.role as string}</Text>
+                            {user.publicMetadata.isMarket as boolean && (
+                                <>
+                                    <Text>{String(user.publicMetadata.isMarket)}</Text>
+                                    <Text>{user.publicMetadata.marketName as string}</Text>
+                                </>
+                            )}
+                            {user.publicMetadata.isVendor as boolean && (
+                                <>
+                                    <Text>{String(user.publicMetadata.isVendor)}</Text>
+                                    <Text>{user.publicMetadata.vendorName as string}</Text>
+                                </>
+                            )}
+                        </Stack>
+                            <UserRoleActions userId={user.id} buttonType={searchType} />
+                    </Group>
                 </Card>
             ))}
         </Stack>

@@ -1,4 +1,4 @@
-'use client'; // This directive makes this a client component
+'use client';
 
 import React, { useEffect, useState, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
@@ -98,7 +98,7 @@ export default function UserRoleActions({ userId, buttonType }: UserRoleActionsP
 
     if(buttonType ==='Admin') {
         return (
-            <Stack>
+            <Stack w={'15rem'}>
                 {/* Form for Make Admin */}
                 <form action={setRoleFormAction}>
                     <input type="hidden" value={userId} name="id" />
@@ -125,7 +125,7 @@ export default function UserRoleActions({ userId, buttonType }: UserRoleActionsP
 
     if(buttonType ==='Market') {
         return (
-            <Stack>
+            <Stack w={'15rem'}>
                 {/* Form to Set Market, hopefully */}
                 <form action={setIsMarketFormAction}>
                     <input type="hidden" value={userId} name="id" />
