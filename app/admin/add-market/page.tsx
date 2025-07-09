@@ -1,4 +1,4 @@
-import {AppShell, AppShellHeader, AppShellMain, Center, Title} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain, Center, Text, Title} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import {SearchUsers} from "@/app/_components/admincomps/searchUsers";
 import DisplayUsers from "@/app/_components/admincomps/displayUsers";
@@ -18,9 +18,25 @@ export default async function Page(params: {searchParams: Promise<{search?: stri
                 <Center>
                     <SearchUsers searchName={'Market'}/>
                 </Center>
-                <Center pt={'2rem'}>
-                    <DisplayUsers users={users} searchType={'Market'}/>
-                </Center>
+                {!query ? (
+                    <Center pt={'2rem'}>
+                        <Text>
+                            Search for a Market
+                        </Text>
+                    </Center>
+                ) : (
+                    users.length === 0 ? (
+                        <Center  pt={'2rem'}>
+                            <Text>
+                                No users found matching your search criteria
+                            </Text>
+                        </Center>
+                    ) : (
+                        <Center pt={'2rem'}>
+                            <DisplayUsers users={users} searchType={'Market'}/>
+                        </Center>
+                    )
+                )}
             </AppShellMain>
         </AppShell>
     )
