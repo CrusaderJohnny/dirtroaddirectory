@@ -38,7 +38,6 @@ export default async function AdminDashboard() {
             <AppShellHeader>
                 <NavMT />
             </AppShellHeader>
-
             <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
                     <Title ta="center" order={2} mb="lg">
@@ -53,13 +52,17 @@ export default async function AdminDashboard() {
                                     component='a'
                                       href={'/admin/add-vendor'}
                                 >
-                                    <Text>Add or modify a vendor</Text>
+                                    <Center>
+                                        <Text>Add or modify a vendor</Text>
+                                    </Center>
                                 </Card>
                                 <Card title="Modify Market"
                                 w={'20rem'}
                                 component='a'
                                 href={'/admin/add-market'}>
-                                    <Text>Add or modify a market</Text>
+                                    <Center>
+                                        <Text>Add or modify a market</Text>
+                                    </Center>
                                 </Card>
                             </Group>
                             <Group>
@@ -68,25 +71,22 @@ export default async function AdminDashboard() {
                                       component='a'
                                       href={'/admin/add-post'}
                                 >
-                                    Make a post as an admin
+                                    <Center>
+                                        <Text>Make a post as an admin</Text>
+                                    </Center>
                                 </Card>
                                 <Card title="Messages"
                                       w={'20rem'}
                                       component='a'
                                       href={'/admin/messages'}
                                 >
-                                    View Messages
+                                    <Center>
+                                        <Text>View Messages</Text>
+                                    </Center>
                                 </Card>
                             </Group>
                         </Stack>
                     </Center>
-
-                    {/*<Center mb={'md'}>*/}
-                    {/*        <SearchUsers />*/}
-                    {/*</Center>*/}
-                    {/*{users && (*/}
-                    {/*    <DisplayUsers users={users}/>*/}
-                    {/*)}*/}
                 </Container>
             </AppShellMain>
 
