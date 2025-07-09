@@ -1,4 +1,4 @@
-import {AppShell, AppShellHeader, AppShellMain, Center, Title, Text} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain, Center, Title, Text, AppShellFooter, Button} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import {SearchUsers} from "@/app/_components/admincomps/searchUsers";
 import DisplayUsers from "@/app/_components/admincomps/displayUsers";
@@ -38,6 +38,13 @@ export default async function Page(params: {searchParams: Promise<{search?: stri
                     )
                     )}
             </AppShellMain>
+            <AppShellFooter>
+                <Center>
+                    <Button component={'a'} href={'/admin'}>
+                        Return to Admin Page
+                    </Button>
+                </Center>
+            </AppShellFooter>
         </AppShell>
     )
 }
