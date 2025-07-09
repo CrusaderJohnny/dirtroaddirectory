@@ -47,6 +47,7 @@ export interface MarketPostFormProps {
 
 export interface UserRoleActionsProps {
     userId: string;
+    buttonType: string;
 }
 
 export interface VendorPostFormProps {
@@ -137,6 +138,7 @@ export interface ImageUploaderProps {
 
 export interface AdminSearchProps {
     users: User[];
+    searchType: string;
 }
 
 export interface UserPublicMetaData {
@@ -145,4 +147,8 @@ export interface UserPublicMetaData {
     isVendor?: boolean;
     marketName?: string;
     vendorName?: string;
+}
+
+export interface SearchProps {
+    searchName: string;
 }

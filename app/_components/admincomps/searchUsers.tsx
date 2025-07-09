@@ -1,8 +1,9 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import {Container, TextInput, Text, Group, Button} from "@mantine/core";
+import {TextInput, Text, Group, Button} from "@mantine/core";
 import {useState} from "react";
+import {SearchProps} from "@/app/_types/interfaces";
 
 
 /*
@@ -10,11 +11,10 @@ import {useState} from "react";
     Will take any value, like name, email or possibly even phone number and searches
     Returns with a list of items that match search criteria
  */
-export const SearchUsers = () => {
+export const SearchUsers = ({searchName} : SearchProps) => {
     const router = useRouter()
     const pathname = usePathname()
     const [searchUsers, setSearchUsers] = useState('');
-
     const handleSearch = () => {
         const trimmedSearchTerm = searchUsers.trim();
         if(trimmedSearchTerm) {
@@ -27,7 +27,7 @@ export const SearchUsers = () => {
     return (
             <Group>
                 <Text>
-                    Search for users
+                    Search for {searchName}
                 </Text>
                 <TextInput
                     value={searchUsers}

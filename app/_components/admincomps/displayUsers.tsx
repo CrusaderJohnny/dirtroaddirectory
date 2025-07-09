@@ -3,13 +3,13 @@ import UserRoleActions from "@/app/_components/admincomps/userRoleActions";
 import {AdminSearchProps} from "@/app/_types/interfaces";
 import {EmailAddress} from "@clerk/backend";
 
-export default function DisplayUsers({users}: AdminSearchProps) {
+export default function DisplayUsers({users, searchType}: AdminSearchProps) {
     return (
         <Stack gap="lg">
             {users.map((user) => (
                 <Card
                     key={user.id}
-                    shadow="sm"
+                    shadow="lg"
                     padding="lg"
                     radius="md"
                     withBorder
@@ -52,7 +52,7 @@ export default function DisplayUsers({users}: AdminSearchProps) {
 
 
                         </Stack>
-                        <UserRoleActions userId={user.id} />
+                        <UserRoleActions userId={user.id} buttonType={searchType} />
                     </Flex>
                 </Card>
             ))}

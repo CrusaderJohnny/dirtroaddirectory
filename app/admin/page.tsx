@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
-import { SearchUsers } from '../_components/admincomps/searchUsers'
-import { clerkClient, currentUser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
@@ -10,23 +9,16 @@ import {
     Button,
     Center,
     Group,
-    Title, Container, Card, Text
+    Title, Container, Card, Text, Stack
 } from "@mantine/core";
 import Link from "next/link";
 import { checkMarket } from "@/utils/checkMarket";
 import { checkVendor } from "@/utils/checkVendor";
-import DisplayUsers from "@/app/_components/admincomps/displayUsers";
 
-export default async function AdminDashboard(params: {
-    searchParams: Promise<{ search?: string }>
-}) {
+export default async function AdminDashboard() {
     if (!await checkRole('admin')) {
         redirect('/')
     }
-
-    const query = (await params.searchParams).search
-    const client = await clerkClient()
-    const users = query ? (await client.users.getUserList({ query })).data : []
     const hasMarketAccess = await checkMarket();
     const hasVendorAccess = await checkVendor();
     const isAdmin = await checkRole('admin');
@@ -53,21 +45,41 @@ export default async function AdminDashboard(params: {
                         Welcome to the Admin Dashboard, {displayName}!
                     </Title>
 
-                    <Group>
-                        <Card title="Modify Vendor"
-                              w={'20rem'}
-                            component='a'
-                              href={'/admin/add-vendor'}
-                        >
-                            <Text>Add or modify a vendor</Text>
-                        </Card>
-                        <Card title="Modify Market"
-                        w={'20rem'}
-                        component='a'
-                        href={'/admin/add-market'}>
-                            <Text>Add or modify a market</Text>
-                        </Card>
-                    </Group>
+                    <Center>
+                        <Stack>
+                            <Group>
+                                <Card title="Modify Vendor"
+                                      w={'20rem'}
+                                    component='a'
+                                      href={'/admin/add-vendor'}
+                                >
+                                    <Text>Add or modify a vendor</Text>
+                                </Card>
+                                <Card title="Modify Market"
+                                w={'20rem'}
+                                component='a'
+                                href={'/admin/add-market'}>
+                                    <Text>Add or modify a market</Text>
+                                </Card>
+                            </Group>
+                            <Group>
+                                <Card title="Admin Post"
+                                      w={'20rem'}
+                                      component='a'
+                                      href={'/admin/add-post'}
+                                >
+                                    Make a post as an admin
+                                </Card>
+                                <Card title="Messages"
+                                      w={'20rem'}
+                                      component='a'
+                                      href={'/admin/messages'}
+                                >
+                                    View Messages
+                                </Card>
+                            </Group>
+                        </Stack>
+                    </Center>
 
                     {/*<Center mb={'md'}>*/}
                     {/*        <SearchUsers />*/}
