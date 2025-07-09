@@ -12,7 +12,7 @@ export default async function Page() {
         redirect("/");
     }
 
-    if(!checkRole('admin')) {
+    if(!await checkRole('admin')) {
         redirect("/");
     }
 
