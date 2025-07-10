@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { IconSearch, IconEye } from "@tabler/icons-react"; 
 import { useDisclosure } from '@mantine/hooks';
-import { ContactMessageInterface } from "../_types/interfaces";
+import { ContactMessageInterface } from "../../_types/interfaces";
 
 export default function ContactMessagesPage() {
   const [messages, setMessages] = useState<ContactMessageInterface[]>([]);
@@ -33,7 +33,8 @@ export default function ContactMessagesPage() {
       setError(null);
       const response = await fetch("http://localhost:8080/contact");
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        setError(`HTTP error! status: ${response.status}`);
+        return;
       }
       const data: ContactMessageInterface[] = await response.json();
       data.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
