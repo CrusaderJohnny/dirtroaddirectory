@@ -152,3 +152,11 @@ export interface UserPublicMetaData {
 export interface SearchProps {
     searchName: string;
 }
+
+export interface AzureApiErrorResponse {
+    error?: {
+        code: string;
+        message: string;
+        details?: string;
+    };
+}

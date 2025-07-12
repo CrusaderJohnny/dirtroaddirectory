@@ -38,6 +38,41 @@ export default function VendorPostForm({ vendorName, userId } : VendorPostFormPr
         setSubmissionMessage(null);
         setIsSubmitting(true);
         try {
+            const titleModerationResponse = await fetch('api/moderate-content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({textToModerate: values.title}),
+            });
+            const titleModerationResult = await titleModerationResponse.json();
+            if(!titleModerationResponse.ok) {
+                const errorMessage = titleModerationResult.message || "Title violates community guidelines.";
+                const reasons = titleModerationResult.reasons ? `Title Reasons: ${titleModerationResult.reasons.join(', ')}` : ``;
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Content guideline violation in title. ${errorMessage} ${reasons}`,
+                });
+                return;
+            }
+            const contentResponse = await fetch('/api/moderate-content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({textToModerate: values.content}),
+                }
+            );
+            const contentModerationResult = await contentResponse.json();
+            if(!contentModerationResult.ok) {
+                const errorMessage = contentModerationResult.message || "Content violates community guidelines.";
+                const reasons = contentModerationResult.reasons ? `Content Reasons: ${contentModerationResult.reasons.join(', ')}` : '';
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Content guideline violation in content. ${errorMessage} ${reasons}`,
+                });
+                return;
+            }
             const postData = {
                 user_id: userId,
                 title: values.title,
@@ -46,25 +81,20 @@ export default function VendorPostForm({ vendorName, userId } : VendorPostFormPr
                 is_featured: false,
                 image: values.image,
             };
-
             console.log('Market post data: ', postData);
-
             const response = await fetch(`https://localhost:8080/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
             });
-
             if(!response.ok){
                 const errorData = await response.json();
                 setSubmissionMessage({
                     type: 'error',
-                    message: `Failed to create post: ${errorData}`,
+                    message: `Failed to create post: ${errorData.message || JSON.stringify(errorData)}`,
                 });
-                setIsSubmitting(false);
                 return;
             }
-
             setSubmissionMessage({type: 'success', message: 'Post successfully created!'});
             form.reset();
         } catch (error) {
