@@ -1,4 +1,6 @@
 import {UserResource} from "@clerk/types";
+import {User} from "@clerk/backend";
+import {Roles} from "@/app/_types/globals";
 
 export interface MarketsInterface {
   id: number;
@@ -45,6 +47,7 @@ export interface MarketPostFormProps {
 
 export interface UserRoleActionsProps {
     userId: string;
+    buttonType: string;
 }
 
 export interface VendorPostFormProps {
@@ -130,4 +133,30 @@ export interface ImageUploaderProps {
     label?: string;
     uploadButtonText?: string;
     key?: number;
+}
+
+
+export interface AdminSearchProps {
+    users: User[];
+    searchType: string;
+}
+
+export interface UserPublicMetaData {
+    role?: Roles;
+    isMarket?: boolean;
+    isVendor?: boolean;
+    marketName?: string;
+    vendorName?: string;
+}
+
+export interface SearchProps {
+    searchName: string;
+}
+
+export interface AzureApiErrorResponse {
+    error?: {
+        code: string;
+        message: string;
+        details?: string;
+    };
 }
