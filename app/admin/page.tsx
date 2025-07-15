@@ -1,6 +1,6 @@
-import { redirect } from 'next/navigation'
-import { checkRole } from '@/utils/roles'
-import { currentUser } from '@clerk/nextjs/server'
+import {redirect} from 'next/navigation'
+import {checkRole} from '@/utils/roles'
+import {currentUser} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
@@ -12,8 +12,8 @@ import {
     Title, Container, Card, Text, Stack
 } from "@mantine/core";
 import Link from "next/link";
-import { checkMarket } from "@/utils/checkMarket";
-import { checkVendor } from "@/utils/checkVendor";
+import {checkMarket} from "@/utils/checkMarket";
+import {checkVendor} from "@/utils/checkVendor";
 
 export default async function AdminDashboard() {
     if (!await checkRole('admin')) {
@@ -36,9 +36,9 @@ export default async function AdminDashboard() {
     return (
         <AppShell>
             <AppShellHeader>
-                <NavMT />
+                <NavMT/>
             </AppShellHeader>
-            <AppShellMain style={{ minHeight: '100vh' }}>
+            <AppShellMain style={{minHeight: '100vh'}}>
                 <Container size="lg" py="xl">
                     <Title ta="center" order={2} mb="lg">
                         Welcome to the Admin Dashboard, {displayName}!
@@ -47,41 +47,49 @@ export default async function AdminDashboard() {
                     <Center>
                         <Stack>
                             <Group>
-                                <Card title="Modify Vendor"
-                                      w={'20rem'}
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Modify Vendor"
+                                    w={'20rem'}
                                     component='a'
-                                      href={'/admin/add-vendor'}
+                                    href={'/admin/add-vendor'}
                                 >
                                     <Center>
-                                        <Text>Add or modify a vendor</Text>
+                                        <Text fw={500}>Add or modify a vendor</Text>
                                     </Center>
                                 </Card>
-                                <Card title="Modify Market"
-                                w={'20rem'}
-                                component='a'
-                                href={'/admin/add-market'}>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Modify Market"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/add-market'}>
                                     <Center>
-                                        <Text>Add or modify a market</Text>
+                                        <Text fw={500}>Add or modify a market</Text>
                                     </Center>
                                 </Card>
                             </Group>
                             <Group>
-                                <Card title="Admin Post"
-                                      w={'20rem'}
-                                      component='a'
-                                      href={'/admin/add-post'}
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Admin Post"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/add-post'}
                                 >
                                     <Center>
-                                        <Text>Make a post as an admin</Text>
+                                        <Text fw={500}>Make a post as an admin</Text>
                                     </Center>
                                 </Card>
-                                <Card title="Messages"
-                                      w={'20rem'}
-                                      component='a'
-                                      href={'/admin/messages'}
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Messages"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/messages'}
                                 >
                                     <Center>
-                                        <Text>View Messages</Text>
+                                        <Text fw={500}>View Messages</Text>
                                     </Center>
                                 </Card>
                             </Group>
@@ -90,7 +98,7 @@ export default async function AdminDashboard() {
                 </Container>
             </AppShellMain>
 
-            <AppShellFooter style={{ backgroundColor: '#fff', padding: '1rem 0' }}>
+            <AppShellFooter style={{backgroundColor: '#fff', padding: '1rem 0'}}>
                 <Center>
                     <Group>
                         {hasMarketAccess && (

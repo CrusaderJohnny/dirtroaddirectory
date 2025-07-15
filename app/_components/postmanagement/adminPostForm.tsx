@@ -33,6 +33,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [posterId, setPosterId] = useState<number | null>(null);
     const [imageUploaderKey, setImageUploaderKey] = useState<number>(0);
 
+
     const {user, isLoaded} = useUser();
 
     const primaryEmail = user?.primaryEmailAddress;
