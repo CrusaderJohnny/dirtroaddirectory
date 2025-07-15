@@ -1,32 +1,28 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React from 'react';
+import { useRef } from 'react';
 import { Carousel } from '@mantine/carousel';
 import { Card, Text, Box, Flex, Button } from '@mantine/core';
 import Autoplay from 'embla-carousel-autoplay';
 
-import newsData from '@/app/_components/newscomps/newsData';
+// get rid of hardcoded data
+// import newsData from '@/app/_components/newscomps/newsData'; // Delete
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardSmall from "@/app/_components/newscomps/cards/newsCardSmall";
+// import {fetchArticlesAsJson} from "@/app/_components/apicomps/articlefetch";
 
-export default function ArticleCarousel() {
-
-    // Create Timer for Carousel autoplay
+export default function ArticleCarousel({ articles }: { articles: ArticleInterface[] }) {
     const autoplay = useRef(Autoplay({ delay: 4500 }));
 
-    // Map all Articles that are not featured
-    const [articles] = useState<ArticleInterface[]>(() => {
-        return newsData.map((article) => ({
-            ...article,
-            featured: false,
-        }));
-    });
-
-    const slides = articles.map((article) => (
-        <Carousel.Slide key={article.id}>
-            <NewsCardSmall article={article} />
-        </Carousel.Slide>
-    ));
+    // Filter out the featured article
+    const slides = articles
+        .filter(article => !article.featured)
+        .map(article => (
+            <Carousel.Slide key={article.id}>
+                <NewsCardSmall article={article} />
+            </Carousel.Slide>
+        ));
 
     return (
         <Card
@@ -45,6 +41,9 @@ export default function ArticleCarousel() {
                 alignItems: 'flex-start',
             }}
         >
+            {/*<ScrollArea>*/}
+            {/*Need to make the card Scrollable*/}
+
             <Text size="xl" fw={700} mb="md">Other News</Text>
 
             {/* This Flex container holds the Carousel and should occupy enough vertical space */}
@@ -90,6 +89,7 @@ export default function ArticleCarousel() {
                     Contact Us
                 </Button>
             </Flex>
+            {/*</ScrollArea>*/}
         </Card>
     );
 }

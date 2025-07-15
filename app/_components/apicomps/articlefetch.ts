@@ -4,9 +4,9 @@ import {ArticleInterface} from "@/app/_types/interfaces";
 const API_BASE_URL = 'http://localhost:8080';
 
 /**
- * Fetches market data from the API and returns it as a JSON array.
+ * Fetches article data from the API and returns it as a JSON array.
  * Throws an error if the fetch operation fails or the response is not OK.
- * @returns A Promise that resolves to an array of MarketsInterface.
+ * @returns A Promise that resolves to an array of ArticleInterface.
  */
 export async function fetchArticlesAsJson(): Promise<ArticleInterface[]> {
     try {

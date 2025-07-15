@@ -1,34 +1,50 @@
 'use client';
 
-import React, {useState} from 'react';
-// import React from "react";
+import React from 'react';
+import { useState, useEffect } from 'react';
 import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, AppShell} from '@mantine/core';
 
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
 import ArticleCarousel from "@/app/_components/newscomps/articleCarousel";
 
-// Importing data from hardcoded .ts file
-import newsData from '@/app/_components/newscomps/newsData'
+// Importing data from hardcoded \ts file (Need to phase this out today)
+// import newsData from '@/app/_components/newscomps/newsData'
 
-// Import data from api
-// import { fetchArticlesAsJson } from '@/app/_components/apicomps/articleFetch';
-
+// Import article API fetch and interface
+import { fetchArticlesAsJson } from '@/app/_components/apicomps/articlefetch';
 import {ArticleInterface} from "@/app/_types/interfaces";
-
 
 export default function Page() {
 
-    // For testing, admin is set to true / false
+    const [articles, setArticles] = useState<ArticleInterface[]>([]);
     const isAdmin = false;
 
+    // Fetch article data on mount
+    useEffect(() => {
+        const getArticles = async () => {
+            try {
+                const data = await fetchArticlesAsJson();
+                setArticles(data.map((article, index) => ({
+                    ...article,
+                    featured: index === 0,
+                })));
+            } catch (err) {
+                console.error("Failed to fetch articles:", err);
+            }
+        };
+        void getArticles();
+    }, []);
+
+
+
     // Map data to articles that can be called
-    const [articles, setArticles] = useState<ArticleInterface[]>(() => {
-        return newsData.map((article, index) => ({
-            ...article,
-            featured: index === 0,
-        }));
-    });
+    // const [articles, setArticles] = useState<ArticleInterface[]>(() => {
+    //     return newsData.map((article, index) => ({
+    //         ...article,
+    //         featured: index === 0,
+    //     }));
+    // });
 
     // Find articleSubPage that is set to featured in test data
     const featuredArticle = articles.find(article => article.featured);
@@ -103,7 +119,7 @@ export default function Page() {
                         <GridCol span={5} mah={'80vh'}>
                             {articleId2 ? (
                                 // Testing articleSubPage carousel
-                                <ArticleCarousel/>
+                                <ArticleCarousel articles={articles} />
                             ) : (
                                 <Text>Error: No articles exists</Text>
                             )
@@ -154,7 +170,7 @@ export default function Page() {
                     <GridCol span={5} mah={'80vh'}>
                         {articleId2 ? (
                             // Testing articleSubPage carousel
-                            <ArticleCarousel/>
+                            <ArticleCarousel articles={articles} />
                         ) : (
                             <Text>Error: No articles exists</Text>
                         )
