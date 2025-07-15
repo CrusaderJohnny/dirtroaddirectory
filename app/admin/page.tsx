@@ -1,35 +1,24 @@
 import { redirect } from 'next/navigation'
 import { checkRole } from '@/utils/roles'
-import { SearchUsers } from '../_components/admincomps/searchUsers'
-import { clerkClient, currentUser, EmailAddress } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
     AppShellHeader,
     AppShellMain,
     Button,
-    Card,
     Center,
-    Flex,
     Group,
-    Stack,
-    Text, Title, Container, Box
+    Title, Container, Card, Text, Stack
 } from "@mantine/core";
 import Link from "next/link";
 import { checkMarket } from "@/utils/checkMarket";
 import { checkVendor } from "@/utils/checkVendor";
-import UserRoleActions from "@/app/_components/admincomps/userRoleActions";
 
-export default async function AdminDashboard(params: {
-    searchParams: Promise<{ search?: string }>
-}) {
+export default async function AdminDashboard() {
     if (!await checkRole('admin')) {
         redirect('/')
     }
-
-    const query = (await params.searchParams).search
-    const client = await clerkClient()
-    const users = query ? (await client.users.getUserList({ query })).data : []
     const hasMarketAccess = await checkMarket();
     const hasVendorAccess = await checkVendor();
     const isAdmin = await checkRole('admin');
@@ -49,54 +38,55 @@ export default async function AdminDashboard(params: {
             <AppShellHeader>
                 <NavMT />
             </AppShellHeader>
-
-            <AppShellMain style={{ backgroundColor: '#f5f7fa', minHeight: '100vh' }}>
+            <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
                     <Title ta="center" order={2} mb="lg">
                         Welcome to the Admin Dashboard, {displayName}!
                     </Title>
 
-                    <Box mb="xl">
-                        <SearchUsers />
-                    </Box>
-
-                    <Stack gap="lg">
-                        {users.map((user) => (
-                            <Card
-                                key={user.id}
-                                shadow="sm"
-                                padding="lg"
-                                radius="md"
-                                withBorder
-                                style={{ backgroundColor: "#ffffff" }}
-                            >
-                                <Flex justify="space-between" align="flex-start" wrap="wrap">
-                                    <Stack gap="xs">
-                                        <Group>
-                                            <Text fw={600}>Username:</Text>
-                                            <Text>{user.firstName} {user.lastName}</Text>
-                                        </Group>
-                                        <Group>
-                                            <Text fw={600}>Email:</Text>
-                                            <Text>
-                                                {
-                                                    user.emailAddresses.find(
-                                                        (email: EmailAddress) =>
-                                                            email.id === user.primaryEmailAddressId
-                                                    )?.emailAddress
-                                                }
-                                            </Text>
-                                        </Group>
-                                        <Group>
-                                            <Text fw={600}>Role:</Text>
-                                            <Text>{user.publicMetadata.role as string}</Text>
-                                        </Group>
-                                    </Stack>
-                                    <UserRoleActions userId={user.id} />
-                                </Flex>
-                            </Card>
-                        ))}
-                    </Stack>
+                    <Center>
+                        <Stack>
+                            <Group>
+                                <Card title="Modify Vendor"
+                                      w={'20rem'}
+                                    component='a'
+                                      href={'/admin/add-vendor'}
+                                >
+                                    <Center>
+                                        <Text>Add or modify a vendor</Text>
+                                    </Center>
+                                </Card>
+                                <Card title="Modify Market"
+                                w={'20rem'}
+                                component='a'
+                                href={'/admin/add-market'}>
+                                    <Center>
+                                        <Text>Add or modify a market</Text>
+                                    </Center>
+                                </Card>
+                            </Group>
+                            <Group>
+                                <Card title="Admin Post"
+                                      w={'20rem'}
+                                      component='a'
+                                      href={'/admin/add-post'}
+                                >
+                                    <Center>
+                                        <Text>Make a post as an admin</Text>
+                                    </Center>
+                                </Card>
+                                <Card title="Messages"
+                                      w={'20rem'}
+                                      component='a'
+                                      href={'/admin/messages'}
+                                >
+                                    <Center>
+                                        <Text>View Messages</Text>
+                                    </Center>
+                                </Card>
+                            </Group>
+                        </Stack>
+                    </Center>
                 </Container>
             </AppShellMain>
 
