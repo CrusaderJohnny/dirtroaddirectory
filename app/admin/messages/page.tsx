@@ -18,11 +18,19 @@ import {
   ActionIcon,
   Box,
   Button,
+  SegmentedControl,
 } from "@mantine/core";
-import { IconSearch, IconTrash, IconMail } from "@tabler/icons-react";
+import {
+  IconSearch,
+  IconTrash,
+  IconMail,
+  IconStar,
+  IconStarFilled,
+} from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { ContactMessageInterface } from "../../_types/interfaces";
 import NavMT from "@/app/_components/navcomps/navmt";
+import { fetchContactMessages, deleteContactMessage } from "@/app/_components/apicomps/fetchContactMessages";
 
 export default function ContactMessagesPage() {
   const [messages, setMessages] = useState<ContactMessageInterface[]>([]);
@@ -30,40 +38,35 @@ export default function ContactMessagesPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedMessage, setSelectedMessage] = useState<ContactMessageInterface | null>(null);
+  const [selectedMessage, setSelectedMessage] =
+    useState<ContactMessageInterface | null>(null);
   const [readMessages, setReadMessages] = useState<Set<number>>(new Set());
+  const [starredMessages, setStarredMessages] = useState<Set<number>>(new Set());
+  const [filter, setFilter] = useState<"all" | "starred">("all");
 
-  const fetchContactMessages = async () => {
+  const loadMessages = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:8080/contact");
-      if (!response.ok) {
-        setError(`HTTP error! status: ${response.status}`);
-        return;
-      }
-      const data = await response.json();
-      data.sort(
-        (a: any, b: any) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
+      const data = await fetchContactMessages();
       setMessages(data);
     } catch (e) {
-      setError("Failed to fetch contact messages.");
-      console.error("Fetch error:", e);
+      setError((e as Error).message || "Failed to fetch contact messages.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchContactMessages();
+    loadMessages();
   }, []);
 
-  const filteredMessages = messages.filter((msg) =>
-    `${msg.name} ${msg.email} ${msg.subject} ${msg.message}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const filteredMessages = messages
+    .filter((msg) =>
+      `${msg.name} ${msg.email} ${msg.subject} ${msg.message}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    )
+    .filter((msg) => (filter === "starred" ? starredMessages.has(msg.id) : true));
 
   const handleViewDetails = (message: ContactMessageInterface) => {
     setSelectedMessage(message);
@@ -72,32 +75,27 @@ export default function ContactMessagesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this message?"
-    );
+    const confirmDelete = window.confirm("Are you sure you want to delete this message?");
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/contact/${id}`, {
-        method: "DELETE",
+      await deleteContactMessage(id);
+      setMessages((prev) => prev.filter((msg) => msg.id !== id));
+      setReadMessages((prev) => {
+        const updated = new Set(prev);
+        updated.delete(id);
+        return updated;
       });
-      if (res.ok) {
-        setMessages((prev) => prev.filter((msg) => msg.id !== id));
-        setReadMessages((prev) => {
-          const updated = new Set(prev);
-          updated.delete(id);
-          return updated;
-        });
-      } else {
-        const errData = await res.json();
-        alert(`Failed to delete: ${errData.message}`);
-      }
+      setStarredMessages((prev) => {
+        const updated = new Set(prev);
+        updated.delete(id);
+        return updated;
+      });
     } catch (err) {
-      console.error("Delete error:", err);
-      alert("An error occurred while deleting.");
+      alert((err as Error).message || "An error occurred while deleting.");
     }
   };
-
+  
   return (
     <AppShell>
       <AppShellHeader>
@@ -111,15 +109,25 @@ export default function ContactMessagesPage() {
               Contact Messages
             </Title>
 
-            <TextInput
-              placeholder="Search messages..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.currentTarget.value)}
-              leftSection={<IconSearch size={16} />}
-              radius="md"
-              size="md"
-              mb="lg"
-            />
+            <Group justify="space-between" mb="lg">
+              <TextInput
+                placeholder="Search messages..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.currentTarget.value)}
+                leftSection={<IconSearch size={16} />}
+                radius="md"
+                size="md"
+              />
+
+              <SegmentedControl
+                value={filter}
+                onChange={(val) => setFilter(val as "all" | "starred")}
+                data={[
+                  { label: "All", value: "all" },
+                  { label: "Starred", value: "starred" },
+                ]}
+              />
+            </Group>
 
             {loading ? (
               <Center my="xl">
@@ -137,6 +145,7 @@ export default function ContactMessagesPage() {
               <ScrollArea h={500}>
                 {filteredMessages.map((msg) => {
                   const isRead = readMessages.has(msg.id);
+                  const isStarred = starredMessages.has(msg.id);
                   return (
                     <Box
                       key={msg.id}
@@ -154,7 +163,32 @@ export default function ContactMessagesPage() {
                       }}
                       onClick={() => handleViewDetails(msg)}
                     >
-                      <Box style={{ flex: 1, fontWeight: isRead ? 400 : 700 }}>
+                      {/* Star + Name block */}
+                      <Box
+                        style={{
+                          flex: 1,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          fontWeight: isRead ? 400 : 700,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ActionIcon
+                          variant="light"
+                          color="yellow"
+                          title={isStarred ? "Unstar" : "Star"}
+                          onClick={() => {
+                            setStarredMessages((prev) => {
+                              const updated = new Set(prev);
+                              if (isStarred) updated.delete(msg.id);
+                              else updated.add(msg.id);
+                              return updated;
+                            });
+                          }}
+                        >
+                          {isStarred ? <IconStarFilled size={18} /> : <IconStar size={18} />}
+                        </ActionIcon>
                         {msg.name}
                       </Box>
 
@@ -167,9 +201,7 @@ export default function ContactMessagesPage() {
                       <Group
                         gap="xs"
                         className="message-actions"
-                        style={{
-                          flexShrink: 0,
-                        }}
+                        style={{ flexShrink: 0 }}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Text size="xs" c="dimmed">
