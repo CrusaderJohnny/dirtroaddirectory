@@ -15,7 +15,7 @@ import {
   Modal,
   ActionIcon,
 } from "@mantine/core";
-import { IconSearch, IconEye } from "@tabler/icons-react"; 
+import { IconSearch, IconEye, IconTrash } from "@tabler/icons-react";
 import { useDisclosure } from '@mantine/hooks';
 import { ContactMessageInterface } from "../../_types/interfaces";
 
@@ -60,6 +60,24 @@ export default function ContactMessagesPage() {
   const handleViewDetails = (message: ContactMessageInterface) => {
     setSelectedMessage(message);
     open();
+  };
+
+  const handleDelete = async (id: number) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this message?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:8080/contact/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setMessages((prev) => prev.filter((msg) => msg.id !== id));
+      } else {
+        const errData = await res.json();
+        alert(`Failed to delete: ${errData.message}`);
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("An error occurred while deleting.");
+    }
   };
 
   if (loading) {
@@ -118,12 +136,8 @@ export default function ContactMessagesPage() {
                     <Table.Td>{message.name}</Table.Td>
                     <Table.Td>{message.email}</Table.Td>
                     <Table.Td>{message.subject}</Table.Td>
-                    <Table.Td>
-                      {message.message.substring(0, 50)}...
-                    </Table.Td>
-                    <Table.Td>
-                      {new Date(message.created_at).toLocaleString()}
-                    </Table.Td>
+                    <Table.Td>{message.message.substring(0, 50)}...</Table.Td>
+                    <Table.Td>{new Date(message.created_at).toLocaleString()}</Table.Td>
                     <Table.Td>
                       <Group gap="xs" justify="center" wrap="nowrap">
                         <ActionIcon
@@ -133,6 +147,14 @@ export default function ContactMessagesPage() {
                           title="View Details"
                         >
                           <IconEye size={18} />
+                        </ActionIcon>
+                        <ActionIcon
+                          variant="light"
+                          color="red"
+                          onClick={() => handleDelete(message.id)}
+                          title="Delete Message"
+                        >
+                          <IconTrash size={18} />
                         </ActionIcon>
                       </Group>
                     </Table.Td>
