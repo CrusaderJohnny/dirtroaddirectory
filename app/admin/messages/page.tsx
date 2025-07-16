@@ -28,9 +28,13 @@ import {
   IconStarFilled,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+
 import { ContactMessageInterface } from "../../_types/interfaces";
 import NavMT from "@/app/_components/navcomps/navmt";
-import { fetchContactMessages, deleteContactMessage } from "@/app/_components/apicomps/fetchContactMessages";
+import {
+  fetchContactMessages,
+  deleteContactMessage,
+} from "@/app/_components/apicomps/fetchContactMessages";
 
 export default function ContactMessagesPage() {
   const [messages, setMessages] = useState<ContactMessageInterface[]>([]);
@@ -38,11 +42,23 @@ export default function ContactMessagesPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedMessage, setSelectedMessage] =
-    useState<ContactMessageInterface | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<ContactMessageInterface | null>(null);
   const [readMessages, setReadMessages] = useState<Set<number>>(new Set());
   const [starredMessages, setStarredMessages] = useState<Set<number>>(new Set());
   const [filter, setFilter] = useState<"all" | "starred">("all");
+
+  useEffect(() => {
+    loadMessages();
+
+    const storedRead = localStorage.getItem("readMessages");
+    if (storedRead) {
+      setReadMessages(new Set(JSON.parse(storedRead)));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("readMessages", JSON.stringify(Array.from(readMessages)));
+  }, [readMessages]);
 
   const loadMessages = async () => {
     try {
@@ -55,10 +71,6 @@ export default function ContactMessagesPage() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    loadMessages();
-  }, []);
 
   const filteredMessages = messages
     .filter((msg) =>
@@ -95,7 +107,7 @@ export default function ContactMessagesPage() {
       alert((err as Error).message || "An error occurred while deleting.");
     }
   };
-  
+
   return (
     <AppShell>
       <AppShellHeader>
@@ -109,7 +121,7 @@ export default function ContactMessagesPage() {
               Contact Messages
             </Title>
 
-            <Group justify="space-between" mb="lg">
+            <Group justify="space-between" mb="lg" align="flex-start" wrap="wrap" gap="sm">
               <TextInput
                 placeholder="Search messages..."
                 value={searchTerm}
@@ -117,6 +129,7 @@ export default function ContactMessagesPage() {
                 leftSection={<IconSearch size={16} />}
                 radius="md"
                 size="md"
+                style={{ flexGrow: 1, minWidth: 250 }}
               />
 
               <SegmentedControl
@@ -151,7 +164,6 @@ export default function ContactMessagesPage() {
                       key={msg.id}
                       px="md"
                       py="sm"
-                      className="message-row"
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -163,7 +175,7 @@ export default function ContactMessagesPage() {
                       }}
                       onClick={() => handleViewDetails(msg)}
                     >
-                      {/* Star + Name block */}
+
                       <Box
                         style={{
                           flex: 1,
@@ -198,12 +210,7 @@ export default function ContactMessagesPage() {
                         </Text>
                       </Box>
 
-                      <Group
-                        gap="xs"
-                        className="message-actions"
-                        style={{ flexShrink: 0 }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
+                      <Group gap="xs" style={{ flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
                         <Text size="xs" c="dimmed">
                           {new Date(msg.created_at).toLocaleString()}
                         </Text>
@@ -249,10 +256,11 @@ export default function ContactMessagesPage() {
                 <Text fw={700} mb="xs">
                   From: {selectedMessage.name} &lt;{selectedMessage.email}&gt;
                 </Text>
-                <Text fw={700} mb="xs">Subject: {selectedMessage.subject}</Text>
+                <Text fw={700} mb="xs">
+                  Subject: {selectedMessage.subject}
+                </Text>
                 <Text c="dimmed" mb="md" size="sm">
-                  Received:{" "}
-                  {new Date(selectedMessage.created_at).toLocaleString()}
+                  Received: {new Date(selectedMessage.created_at).toLocaleString()}
                 </Text>
                 <Text style={{ whiteSpace: "pre-wrap" }}>
                   {selectedMessage.message}
