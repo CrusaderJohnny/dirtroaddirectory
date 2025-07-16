@@ -17,9 +17,8 @@ import {
   ScrollArea,
   ActionIcon,
   Box,
-  Divider,
 } from "@mantine/core";
-import { IconSearch, IconEye, IconTrash, IconMail } from "@tabler/icons-react";
+import { IconSearch, IconTrash, IconMail } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { ContactMessageInterface } from "../../_types/interfaces";
 import NavMT from "@/app/_components/navcomps/navmt";
@@ -31,6 +30,7 @@ export default function ContactMessagesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessageInterface | null>(null);
+  const [readMessages, setReadMessages] = useState<Set<number>>(new Set());
 
   const fetchContactMessages = async () => {
     try {
@@ -61,6 +61,7 @@ export default function ContactMessagesPage() {
 
   const handleViewDetails = (message: ContactMessageInterface) => {
     setSelectedMessage(message);
+    setReadMessages((prev) => new Set(prev).add(message.id));
     open();
   };
 
@@ -72,6 +73,11 @@ export default function ContactMessagesPage() {
       const res = await fetch(`http://localhost:8080/contact/${id}`, { method: "DELETE" });
       if (res.ok) {
         setMessages((prev) => prev.filter((msg) => msg.id !== id));
+        setReadMessages((prev) => {
+          const updated = new Set(prev);
+          updated.delete(id);
+          return updated;
+        });
       } else {
         const errData = await res.json();
         alert(`Failed to delete: ${errData.message}`);
@@ -117,69 +123,76 @@ export default function ContactMessagesPage() {
               </Center>
             ) : (
               <ScrollArea h={500}>
-                {filteredMessages.map((msg) => (
-                  <Box
-                    key={msg.id}
-                    px="md"
-                    py="sm"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: "1rem",
-                      borderBottom: "1px solid #eee",
-                      cursor: "pointer",
-                      transition: "background-color 0.2s ease",
-                    }}
-                    onClick={() => handleViewDetails(msg)}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f9f9f9"}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
-                  >
-                    {/* Sender */}
-                    <Box style={{ flex: 1, fontWeight: 600 }}>{msg.name}</Box>
+                {filteredMessages.map((msg) => {
+                  const isRead = readMessages.has(msg.id);
+                  return (
+                    <Box
+                      key={msg.id}
+                      px="md"
+                      py="sm"
+                      className="message-row"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "1rem",
+                        borderBottom: "1px solid #eee",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s ease",
+                      }}
+                      onClick={() => handleViewDetails(msg)}
+                    >
+                      <Box style={{ flex: 1, fontWeight: isRead ? 400 : 700 }}>
+                        {msg.name}
+                      </Box>
 
-                    {/* Subject + Preview */}
-                    <Box style={{ flex: 4 }}>
-                      <Text size="sm" lineClamp={1}>
-                        <strong>{msg.subject}</strong> – {msg.message}
-                      </Text>
-                    </Box>
+                      <Box style={{ flex: 4 }}>
+                        <Text size="sm" lineClamp={1} fw={isRead ? 400 : 700}>
+                          {msg.subject} – {msg.message}
+                        </Text>
+                      </Box>
 
-                    {/* Time + Actions */}
-                    <Group gap="xs" style={{ flexShrink: 0 }}>
-                      <Text size="xs" c="dimmed">
-                        {new Date(msg.created_at).toLocaleTimeString([], {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </Text>
-                      <ActionIcon
-                        variant="light"
-                        color="green"
-                        component="a"
-                        href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject ?? "")}`}
-                        onClick={(e) => e.stopPropagation()}
-                        title="Reply"
-                      >
-                        <IconMail size={18} />
-                      </ActionIcon>
-                      <ActionIcon
-                        variant="light"
-                        color="red"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(msg.id);
+                      <Group
+                        gap="xs"
+                        className="message-actions"
+                        style={{
+                          flexShrink: 0,
                         }}
-                        title="Delete"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <IconTrash size={18} />
-                      </ActionIcon>
-                    </Group>
-                  </Box>
-                ))}
+                        <Text size="xs" c="dimmed">
+                          {new Date(msg.created_at).toLocaleString()}
+                        </Text>
+
+                        {isRead && (
+                          <ActionIcon
+                            variant="light"
+                            color="gray"
+                            onClick={() => {
+                              setReadMessages((prev) => {
+                                const updated = new Set(prev);
+                                updated.delete(msg.id);
+                                return updated;
+                              });
+                            }}
+                            title="Mark as Unread"
+                          >
+                            <IconMail size={18} />
+                          </ActionIcon>
+                        )}
+
+                        <ActionIcon
+                          variant="light"
+                          color="red"
+                          onClick={() => handleDelete(msg.id)}
+                          title="Delete"
+                        >
+                          <IconTrash size={18} />
+                        </ActionIcon>
+                      </Group>
+                    </Box>
+                  );
+                })}
               </ScrollArea>
             )}
           </Paper>
@@ -190,8 +203,10 @@ export default function ContactMessagesPage() {
             <ScrollArea h={400}>
               <Text fw={700} mb="xs">From: {selectedMessage.name} &lt;{selectedMessage.email}&gt;</Text>
               <Text fw={700} mb="xs">Subject: {selectedMessage.subject}</Text>
-              <Text c="dimmed" mb="md" size="sm">Received: {new Date(selectedMessage.created_at).toLocaleString()}</Text>
-              <Text style={{ whiteSpace: 'pre-wrap' }}>{selectedMessage.message}</Text>
+              <Text c="dimmed" mb="md" size="sm">
+                Received: {new Date(selectedMessage.created_at).toLocaleString()}
+              </Text>
+              <Text style={{ whiteSpace: "pre-wrap" }}>{selectedMessage.message}</Text>
             </ScrollArea>
           )}
         </Modal>
