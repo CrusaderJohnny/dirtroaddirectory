@@ -8,17 +8,18 @@ import {
   Title,
   Text,
   Center,
-  Table,
-  ScrollArea,
-  TextInput,
   Paper,
   Container,
   Loader,
+  TextInput,
   Group,
   Modal,
+  ScrollArea,
   ActionIcon,
+  Box,
+  Divider,
 } from "@mantine/core";
-import { IconSearch, IconEye, IconTrash } from "@tabler/icons-react";
+import { IconSearch, IconEye, IconTrash, IconMail } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { ContactMessageInterface } from "../../_types/interfaces";
 import NavMT from "@/app/_components/navcomps/navmt";
@@ -55,9 +56,7 @@ export default function ContactMessagesPage() {
   }, []);
 
   const filteredMessages = messages.filter((msg) =>
-    `${msg.name} ${msg.email} ${msg.subject} ${msg.message}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+    `${msg.name} ${msg.email} ${msg.subject} ${msg.message}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleViewDetails = (message: ContactMessageInterface) => {
@@ -95,7 +94,7 @@ export default function ContactMessagesPage() {
             <Title order={2} mb="sm">Contact Messages</Title>
 
             <TextInput
-              placeholder="Search by name, email, subject, or message"
+              placeholder="Search messages..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.currentTarget.value)}
               leftSection={<IconSearch size={16} />}
@@ -117,50 +116,70 @@ export default function ContactMessagesPage() {
                 <Text>No contact messages found matching your search.</Text>
               </Center>
             ) : (
-              <ScrollArea h={500} scrollbarSize={6}>
-                <Table striped highlightOnHover withTableBorder withColumnBorders>
-                  <Table.Thead>
-                    <Table.Tr>
-                      <Table.Th>Name</Table.Th>
-                      <Table.Th>Email</Table.Th>
-                      <Table.Th>Subject</Table.Th>
-                      <Table.Th>Message</Table.Th>
-                      <Table.Th>Date</Table.Th>
-                      <Table.Th>Actions</Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>
-                    {filteredMessages.map((message) => (
-                      <Table.Tr key={message.id}>
-                        <Table.Td>{message.name}</Table.Td>
-                        <Table.Td>{message.email}</Table.Td>
-                        <Table.Td>{message.subject}</Table.Td>
-                        <Table.Td>{message.message.substring(0, 50)}...</Table.Td>
-                        <Table.Td>{new Date(message.created_at).toLocaleString()}</Table.Td>
-                        <Table.Td>
-                          <Group gap="xs" justify="center" wrap="nowrap">
-                            <ActionIcon
-                              variant="light"
-                              color="blue"
-                              onClick={() => handleViewDetails(message)}
-                              title="View Details"
-                            >
-                              <IconEye size={18} />
-                            </ActionIcon>
-                            <ActionIcon
-                              variant="light"
-                              color="red"
-                              onClick={() => handleDelete(message.id)}
-                              title="Delete Message"
-                            >
-                              <IconTrash size={18} />
-                            </ActionIcon>
-                          </Group>
-                        </Table.Td>
-                      </Table.Tr>
-                    ))}
-                  </Table.Tbody>
-                </Table>
+              <ScrollArea h={500}>
+                {filteredMessages.map((msg) => (
+                  <Box
+                    key={msg.id}
+                    px="md"
+                    py="sm"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "1rem",
+                      borderBottom: "1px solid #eee",
+                      cursor: "pointer",
+                      transition: "background-color 0.2s ease",
+                    }}
+                    onClick={() => handleViewDetails(msg)}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f9f9f9"}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+                  >
+                    {/* Sender */}
+                    <Box style={{ flex: 1, fontWeight: 600 }}>{msg.name}</Box>
+
+                    {/* Subject + Preview */}
+                    <Box style={{ flex: 4 }}>
+                      <Text size="sm" lineClamp={1}>
+                        <strong>{msg.subject}</strong> – {msg.message}
+                      </Text>
+                    </Box>
+
+                    {/* Time + Actions */}
+                    <Group gap="xs" style={{ flexShrink: 0 }}>
+                      <Text size="xs" c="dimmed">
+                        {new Date(msg.created_at).toLocaleTimeString([], {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </Text>
+                      <ActionIcon
+                        variant="light"
+                        color="green"
+                        component="a"
+                        href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject ?? "")}`}
+                        onClick={(e) => e.stopPropagation()}
+                        title="Reply"
+                      >
+                        <IconMail size={18} />
+                      </ActionIcon>
+                      <ActionIcon
+                        variant="light"
+                        color="red"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(msg.id);
+                        }}
+                        title="Delete"
+                      >
+                        <IconTrash size={18} />
+                      </ActionIcon>
+                    </Group>
+                  </Box>
+                ))}
               </ScrollArea>
             )}
           </Paper>
