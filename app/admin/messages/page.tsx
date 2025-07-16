@@ -17,6 +17,7 @@ import {
   ScrollArea,
   ActionIcon,
   Box,
+  Button,
 } from "@mantine/core";
 import { IconSearch, IconTrash, IconMail } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -41,7 +42,10 @@ export default function ContactMessagesPage() {
         return;
       }
       const data = await response.json();
-      data.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      data.sort(
+        (a: any, b: any) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
       setMessages(data);
     } catch (e) {
       setError("Failed to fetch contact messages.");
@@ -56,7 +60,9 @@ export default function ContactMessagesPage() {
   }, []);
 
   const filteredMessages = messages.filter((msg) =>
-    `${msg.name} ${msg.email} ${msg.subject} ${msg.message}`.toLowerCase().includes(searchTerm.toLowerCase())
+    `${msg.name} ${msg.email} ${msg.subject} ${msg.message}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   const handleViewDetails = (message: ContactMessageInterface) => {
@@ -66,11 +72,15 @@ export default function ContactMessagesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this message?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this message?"
+    );
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/contact/${id}`, { method: "DELETE" });
+      const res = await fetch(`http://localhost:8080/contact/${id}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
         setMessages((prev) => prev.filter((msg) => msg.id !== id));
         setReadMessages((prev) => {
@@ -97,7 +107,9 @@ export default function ContactMessagesPage() {
       <AppShellMain style={{ minHeight: "100vh" }}>
         <Container size="lg" py="xl">
           <Paper shadow="md" radius="md" p="xl" withBorder bg="white">
-            <Title order={2} mb="sm">Contact Messages</Title>
+            <Title order={2} mb="sm">
+              Contact Messages
+            </Title>
 
             <TextInput
               placeholder="Search messages..."
@@ -200,14 +212,36 @@ export default function ContactMessagesPage() {
 
         <Modal opened={opened} onClose={close} title="Message Details" centered size="lg">
           {selectedMessage && (
-            <ScrollArea h={400}>
-              <Text fw={700} mb="xs">From: {selectedMessage.name} &lt;{selectedMessage.email}&gt;</Text>
-              <Text fw={700} mb="xs">Subject: {selectedMessage.subject}</Text>
-              <Text c="dimmed" mb="md" size="sm">
-                Received: {new Date(selectedMessage.created_at).toLocaleString()}
-              </Text>
-              <Text style={{ whiteSpace: "pre-wrap" }}>{selectedMessage.message}</Text>
-            </ScrollArea>
+            <>
+              <ScrollArea h={400}>
+                <Text fw={700} mb="xs">
+                  From: {selectedMessage.name} &lt;{selectedMessage.email}&gt;
+                </Text>
+                <Text fw={700} mb="xs">Subject: {selectedMessage.subject}</Text>
+                <Text c="dimmed" mb="md" size="sm">
+                  Received:{" "}
+                  {new Date(selectedMessage.created_at).toLocaleString()}
+                </Text>
+                <Text style={{ whiteSpace: "pre-wrap" }}>
+                  {selectedMessage.message}
+                </Text>
+              </ScrollArea>
+
+              <Group justify="end" mt="md">
+                <Button
+                  component="a"
+                  href={`mailto:${selectedMessage.email}?subject=Re: ${encodeURIComponent(
+                    selectedMessage.subject || ""
+                  )}`}
+                  variant="outline"
+                  radius="xl"
+                  color="blue"
+                  leftSection={<IconMail size={18} />}
+                >
+                  Reply
+                </Button>
+              </Group>
+            </>
           )}
         </Modal>
       </AppShellMain>
