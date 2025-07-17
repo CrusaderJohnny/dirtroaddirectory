@@ -25,6 +25,7 @@ export default function Page() {
         const getArticles = async () => {
             try {
                 const data = await fetchArticlesAsJson();
+                console.log("Fetched Articles: ", data);
                 setArticles(data.map((article, index) => ({
                     ...article,
                     featured: index === 0,
