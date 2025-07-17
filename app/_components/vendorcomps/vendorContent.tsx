@@ -32,6 +32,7 @@ import {
 } from "@tabler/icons-react";
 import vendorList from "../../_res/vendors.json";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
+import {trackEvent} from "@/analytics";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -52,7 +53,18 @@ export default function VendorsContent() {
   });
   const allCategories = [...new Set(vendorList.map((v) => v.category))];
 
+  const handleVendorView = (vendorId: string, vendorName: string) => {
+    trackEvent({
+      name: 'view_vendor_profile',
+      properties: {
+        vendor_id: vendorId,
+        vendor_name: vendorName,
+      },
+    });
+  };
+
   if (selectedVendor) {
+    handleVendorView(selectedVendor.id.toString(), selectedVendor.name);
     return (
       <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
         <Container size="lg" py="xl">
