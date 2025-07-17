@@ -84,3 +84,10 @@ a {
   cursor: pointer;
   background-color: var(--mantine-color-green-6);
 }
+
+.message-row:hover {
+            background-color: #f0f0f0;
+}
+.message-row:hover .message-actions {
+            opacity: 1 !important;
+}

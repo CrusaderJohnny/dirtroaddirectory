@@ -2,7 +2,8 @@ export {}
 
 // Create a type for the roles
 export type Roles = 'admin' | 'moderator'
-export type isMarket = true
+export type isMarket = boolean
+export type isVendor = boolean
 
 declare global {
     interface CustomJwtSessionClaims {

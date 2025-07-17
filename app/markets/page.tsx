@@ -11,6 +11,7 @@ import MarketsContent from "@/app/_components/marktecomponents/marketContent";
 
 export default function Page() {
     return (
+
         <AppShell>
             <AppShellHeader component={NavMT} />
             <AppShellMain>

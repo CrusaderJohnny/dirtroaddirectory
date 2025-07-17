@@ -20,7 +20,7 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [submissionMessage, setSubmissionMessage] = useState<{type: 'success' | 'error'; message: string} | null>(null);
     const theme = useMantineTheme();
-
+//test
     const form = useForm({
         initialValues: {
             title: '',
@@ -37,6 +37,41 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
         setSubmissionMessage(null);
         setIsSubmitting(true);
         try {
+            const titleModerationResponse = await fetch('api/moderate-content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({textToModerate: values.title}),
+            });
+            const titleModerationResult = await titleModerationResponse.json();
+            if(!titleModerationResponse.ok) {
+                const errorMessage = titleModerationResult.message || "Title violates community guidelines.";
+                const reasons = titleModerationResult.reasons ? `Title Reasons: ${titleModerationResult.reasons.join(', ')}` : ``;
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Content guideline violation in title. ${errorMessage} ${reasons}`,
+                });
+                return;
+            }
+            const contentResponse = await fetch('/api/moderate-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({textToModerate: values.content}),
+                }
+            );
+            const contentModerationResult = await contentResponse.json();
+            if(!contentModerationResult.ok) {
+                const errorMessage = contentModerationResult.message || "Content violates community guidelines.";
+                const reasons = contentModerationResult.reasons ? `Content Reasons: ${contentModerationResult.reasons.join(', ')}` : '';
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Content guideline violation in content. ${errorMessage} ${reasons}`,
+                });
+                return;
+            }
             const postData = {
                 user_id: userId,
                 title: values.title,
@@ -48,7 +83,7 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
 
             console.log('Market post data: ', postData);
 
-            const response = await fetch(`https://localhost:8080/articles`, {
+            const response = await fetch(`/api/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
@@ -60,7 +95,6 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
                     type: 'error',
                     message: `Failed to create post: ${errorData}`,
                 });
-                setIsSubmitting(false);
                 return;
             }
 
@@ -68,7 +102,13 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
             form.reset();
         } catch (error) {
             console.error('Error creating post: ', error);
-            setSubmissionMessage({type: 'error', message: `Failed to create post: ${error}`});
+            let errorMessage = 'An unexpected error occurred.';
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === 'object' && error !== null && 'message' in error) {
+                errorMessage = (error as Error).message;
+            }
+            setSubmissionMessage({type: 'error', message: `Failed to create post: ${errorMessage}`});
         } finally {
             setIsSubmitting(false);
         }

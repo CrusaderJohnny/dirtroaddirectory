@@ -1,10 +1,9 @@
-'use client'; // This directive makes this a client component
+'use client';
 
 import React, { useEffect, useState, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Button, Stack, Group, Text, Card } from '@mantine/core';
-//import { notifications } from '@mantine/notifications'; will need to install
-import { setRole, removeRole } from './_actions';
+import {Button, Stack, Group, Text, Card} from '@mantine/core';
+import {setRole, removeRole, setIsMarket, removeIsMarket, setIsVendor, removeIsVendor} from './_actions';
 import {UserRoleActionsProps} from "@/app/_types/interfaces";
 
 // Define the type for the action's return state
@@ -56,73 +55,112 @@ function MessagePopup({ message, type, onClose }: { message: string; type: 'succ
 function SubmitButton({ label }: { label: string }) {
     const { pending } = useFormStatus();
     return (
-        <Button type="submit" disabled={pending}>
+        <Button ml={'5rem'} w={'10rem'} type="submit" disabled={pending}>
             {pending ? 'Processing...' : label}
         </Button>
     );
 }
 
-export default function UserRoleActions({ userId}: UserRoleActionsProps) {
+export default function UserRoleActions({ userId, buttonType }: UserRoleActionsProps) {
     // useFormState for setRole
     const [setRoleState, setRoleFormAction] = useActionState<ActionState, FormData>(setRole, initialState);
     // useFormState for removeRole
     const [removeRoleState, removeRoleFormAction] = useActionState<ActionState, FormData>(removeRole, initialState);
+    const [setIsMarketState, setIsMarketFormAction] = useActionState<ActionState, FormData>(setIsMarket, initialState);
+    const [removeIsMarketState, removeIsMarketFormAction] = useActionState<ActionState, FormData>(removeIsMarket, initialState);
+    const [setIsVendorState, setIsVendorFormAction] = useActionState<ActionState, FormData>(setIsVendor, initialState);
+    const [removeIsVendorState, removeIsVendorFormAction] = useActionState<ActionState, FormData>(removeIsVendor, initialState);
 
     const [popupMessage, setPopupMessage] = useState('');
     const [popupType, setPopupType] = useState<'success' | 'error'>('success');
 
-    // Effect to show pop-up when setRoleState changes
-    useEffect(() => {
-        if (setRoleState.message) {
-            setPopupMessage(setRoleState.message);
-            setPopupType(setRoleState.success ? 'success' : 'error');
+    const showPopupEffect = (state: ActionState) => {
+        if(state.message){
+            setPopupMessage(state.message);
+            setPopupType(state.success ? 'success' : 'error');
             const timer = setTimeout(() => {
-                setPopupMessage(''); // Hide after 3 seconds
-            }, 3000);
-            return () => clearTimeout(timer); // Cleanup timer
+                setPopupMessage('');
+            }, 5000);
+            return () => clearTimeout(timer);
         }
-    }, [setRoleState]);
+    };
 
-    // Effect to show pop-up when removeRoleState changes
-    useEffect(() => {
-        if (removeRoleState.message) {
-            setPopupMessage(removeRoleState.message);
-            setPopupType(removeRoleState.success ? 'success' : 'error');
-            const timer = setTimeout(() => {
-                setPopupMessage(''); // Hide after 3 seconds
-            }, 3000);
-            return () => clearTimeout(timer); // Cleanup timer
-        }
-    }, [removeRoleState]);
+    useEffect(() => showPopupEffect(setRoleState), [setRoleState]);
+    useEffect(() => showPopupEffect(removeRoleState), [removeRoleState]);
+    useEffect(() => showPopupEffect(setIsMarketState), [setIsMarketState]);
+    useEffect(() => showPopupEffect(removeIsMarketState), [removeIsMarketState]);
+    useEffect(() => showPopupEffect(setIsVendorState), [setIsVendorState]);
+    useEffect(() => showPopupEffect(removeIsVendorState), [removeIsVendorState]);
 
     const handleClosePopup = () => {
         setPopupMessage('');
     };
 
-    return (
-        <Stack>
-            {/* Form for Make Admin */}
-            <form action={setRoleFormAction}>
-                <input type="hidden" value={userId} name="id" />
-                <input type="hidden" value="admin" name="role" />
-                <SubmitButton label="Make Admin" />
-            </form>
+    if(buttonType ==='Admin') {
+        return (
+            <Stack w={'15rem'}>
+                {/* Form for Make Admin */}
+                <form action={setRoleFormAction}>
+                    <input type="hidden" value={userId} name="id" />
+                    <input type="hidden" value="admin" name="role" />
+                    <SubmitButton label="Make Admin" />
+                </form>
 
-            {/* Form for Make Moderator */}
-            <form action={setRoleFormAction}>
-                <input type="hidden" value={userId} name="id" />
-                <input type="hidden" value="moderator" name="role" />
-                <SubmitButton label="Make Moderator" />
-            </form>
+                {/* Form for Make Moderator */}
+                <form action={setRoleFormAction}>
+                    <input type="hidden" value={userId} name="id" />
+                    <input type="hidden" value="moderator" name="role" />
+                    <SubmitButton label="Make Moderator" />
+                </form>
 
-            {/* Form for Remove Role */}
-            <form action={removeRoleFormAction}>
-                <input type="hidden" value={userId} name="id" />
-                <SubmitButton label="Remove Role" />
-            </form>
+                {/* Form for Remove Role */}
+                <form action={removeRoleFormAction}>
+                    <input type="hidden" value={userId} name="id" />
+                    <SubmitButton label="Remove Role" />
+                </form>
+                <MessagePopup message={popupMessage} type={popupType} onClose={handleClosePopup} />
+            </Stack>
+        )
+    }
 
-            {/* Pop-up message display */}
-            <MessagePopup message={popupMessage} type={popupType} onClose={handleClosePopup} />
-        </Stack>
-    );
+    if(buttonType ==='Market') {
+        return (
+            <Stack w={'15rem'}>
+                {/* Form to Set Market, hopefully */}
+                <form action={setIsMarketFormAction}>
+                    <input type="hidden" value={userId} name="id" />
+                    <input type="hidden" value="true" name="isMarket" />
+                    <SubmitButton label={"Make Market"} />
+                </form>
+
+                {/* Remove Is Market */}
+                <form action={removeIsMarketFormAction}>
+                    <input type="hidden" value={userId} name="id" />
+                    <SubmitButton label={'Remove Market'} />
+                </form>
+                <MessagePopup message={popupMessage} type={popupType} onClose={handleClosePopup} />
+            </Stack>
+        )
+    }
+    if(buttonType ==='Vendor') {
+        return (
+            <Stack w={'15rem'}>
+                {/* Set Is Vendor */}
+                <form action={setIsVendorFormAction}>
+                    <input type="hidden" value={userId} name="id" />
+                    <input type="hidden" value="true" name="isVendor" />
+                    <SubmitButton label="Make Vendor" />
+                </form>
+
+                {/* Remove Is Vendor */}
+                <form action={removeIsVendorFormAction}>
+                    <input type="hidden" value={userId} name="id" />
+                    <SubmitButton label={'Remove Vendor'}/>
+                </form>
+
+                {/* Pop-up message display */}
+                <MessagePopup message={popupMessage} type={popupType} onClose={handleClosePopup} />
+            </Stack>
+        )
+    }
 }

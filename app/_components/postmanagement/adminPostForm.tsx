@@ -33,6 +33,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [posterId, setPosterId] = useState<number | null>(null);
     const [imageUploaderKey, setImageUploaderKey] = useState<number>(0);
 
+
     const {user, isLoaded} = useUser();
 
     const primaryEmail = user?.primaryEmailAddress;
@@ -131,6 +132,41 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
         }
         setIsSubmitting(true);
         try {
+            const titleModerationResponse = await fetch('api/moderate-content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({textToModerate: values.title}),
+            });
+            const titleModerationResult = await titleModerationResponse.json();
+            if(!titleModerationResponse.ok) {
+                const errorMessage = titleModerationResult.message || "Title violates community guidelines.";
+                const reasons = titleModerationResult.reasons ? `Title Reasons: ${titleModerationResult.reasons.join(', ')}` : ``;
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Content guideline violation in title. ${errorMessage} ${reasons}`,
+                });
+                return;
+            }
+            const contentResponse = await fetch('/api/moderate-content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({textToModerate: values.content}),
+                }
+            );
+            const contentModerationResult = await contentResponse.json();
+            if(!contentModerationResult.ok) {
+                const errorMessage = contentModerationResult.message || "Content violates community guidelines.";
+                const reasons = contentModerationResult.reasons ? `Content Reasons: ${contentModerationResult.reasons.join(', ')}` : '';
+                setSubmissionMessage({
+                    type: 'error',
+                    message: `Content guideline violation in content. ${errorMessage} ${reasons}`,
+                });
+                return;
+            }
             const postData = {
                 user_id: posterId,
                 title: values.title,
