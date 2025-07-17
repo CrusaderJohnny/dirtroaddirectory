@@ -2,11 +2,12 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
-import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, AppShell} from '@mantine/core';
+import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, AppShell, Center} from '@mantine/core';
 
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
 import ArticleCarousel from "@/app/_components/newscomps/articleCarousel";
+// import FakeAdmin from "@/app/fakeAdmin";
 
 // Importing data from hardcoded \ts file (Need to phase this out today)
 // import newsData from '@/app/_components/newscomps/newsData'
@@ -145,7 +146,10 @@ export default function Page() {
 
             {/*This container is the for the intro to website section*/}
             <Box pt='md'>
-                <SiteIntroCard/>
+                <Center component={'a'} href={'/fakeAdmin'}>
+                    Go to fake page
+                </Center>
+                {/*<SiteIntroCard/>*/}
             </Box>
             <Container size='xl' pt='lg'>
                 {/*<Button component='a' href='/news/datapulltest' mt='sm' variant="light" fullWidth>*/}
