@@ -162,7 +162,7 @@ export default function App() {
             </AppShell.Navbar>
             <AppShell.Main>
                 <Group align='center' p={'sm'}>
-                    <Button onClick={toggleDesktop} visibleFrom="sm" mb={'sm'} p={8}>
+                    <Button onClick={toggleDesktop} visibleFrom="sm" p={8}>
                         <IconChevronLeft style={iconStyle(desktopOpened)} />
                     </Button>
                     <Button onClick={toggleMobile} hiddenFrom="sm" p={8}>
