@@ -34,6 +34,11 @@ import vendorList from "../../_res/vendors.json";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 import {trackEvent} from "@/analytics";
 
+// Import the API fetching functions and interfaces
+//import { fetchMarketsAsJson } from '../apicomps/marketfetch';
+//import { fetchVendorsAsJson } from '../apicomps/vendorfetch';
+//import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
