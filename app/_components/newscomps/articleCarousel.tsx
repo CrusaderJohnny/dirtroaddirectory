@@ -6,11 +6,8 @@ import { Carousel } from '@mantine/carousel';
 import { Card, Text, Box, Flex, Button } from '@mantine/core';
 import Autoplay from 'embla-carousel-autoplay';
 
-// get rid of hardcoded data
-// import newsData from '@/app/_components/newscomps/newsData'; // Delete
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardSmall from "@/app/_components/newscomps/cards/newsCardSmall";
-// import {fetchArticlesAsJson} from "@/app/_components/apicomps/articlefetch";
 
 export default function ArticleCarousel({ articles }: { articles: ArticleInterface[] }) {
     const autoplay = useRef(Autoplay({ delay: 4500 }));
@@ -41,9 +38,6 @@ export default function ArticleCarousel({ articles }: { articles: ArticleInterfa
                 alignItems: 'flex-start',
             }}
         >
-            {/*<ScrollArea>*/}
-            {/*Need to make the card Scrollable*/}
-
             <Text size="xl" fw={700} mb="md">Other News</Text>
 
             {/* This Flex container holds the Carousel and should occupy enough vertical space */}
@@ -58,7 +52,7 @@ export default function ArticleCarousel({ articles }: { articles: ArticleInterfa
             >
                 <Box maw={'100%'} w={'auto'} h='100%' >
                     <Carousel
-                        withIndicators // Removed indicators for now
+                        withIndicators
                         height="60%"
                         slideSize="100%"
                         slideGap="md"
@@ -74,8 +68,6 @@ export default function ArticleCarousel({ articles }: { articles: ArticleInterfa
                     </Carousel>
                 </Box>
             </Flex>
-
-            {/* The final text */}
             <Flex
                 w='100%'
                 direction="row"
@@ -89,7 +81,6 @@ export default function ArticleCarousel({ articles }: { articles: ArticleInterfa
                     Contact Us
                 </Button>
             </Flex>
-            {/*</ScrollArea>*/}
         </Card>
     );
 }

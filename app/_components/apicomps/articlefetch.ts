@@ -14,7 +14,7 @@ export async function fetchArticlesAsJson(): Promise<ArticleInterface[]> {
 
         // Manually check if the HTTP response was successful (status 2xx)
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: 'Unknown error' })); // Attempt to parse error body, fallback if it's not JSON
+            const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
             throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
         }
 

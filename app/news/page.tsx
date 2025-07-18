@@ -7,10 +7,6 @@ import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, A
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
 import ArticleCarousel from "@/app/_components/newscomps/articleCarousel";
-// import FakeAdmin from "@/app/fakeAdmin";
-
-// Importing data from hardcoded \ts file (Need to phase this out today)
-// import newsData from '@/app/_components/newscomps/newsData'
 
 // Import article API fetch and interface
 import { fetchArticlesAsJson } from '@/app/_components/apicomps/articlefetch';
@@ -37,16 +33,6 @@ export default function Page() {
         };
         void getArticles();
     }, []);
-
-
-
-    // Map data to articles that can be called
-    // const [articles, setArticles] = useState<ArticleInterface[]>(() => {
-    //     return newsData.map((article, index) => ({
-    //         ...article,
-    //         featured: index === 0,
-    //     }));
-    // });
 
     // Find articleSubPage that is set to featured in test data
     const featuredArticle = articles.find(article => article.featured);
@@ -98,9 +84,6 @@ export default function Page() {
                     <SiteIntroCard/>
                 </Box>
                 <Container size='xl' pt='lg'>
-                    {/*<Button component='a' href='/news/datapulltest' mt='sm' variant="light" fullWidth>*/}
-                    {/*    Let us see*/}
-                    {/*</Button>*/}
                     <Button component="a" href="/aboutus" mt='sm' fullWidth>
                         Learn More About Us
                     </Button>
@@ -120,7 +103,6 @@ export default function Page() {
 
                         <GridCol span={5} mah={'80vh'}>
                             {articleId2 ? (
-                                // Testing articleSubPage carousel
                                 <ArticleCarousel articles={articles} />
                             ) : (
                                 <Text>Error: No articles exists</Text>
@@ -146,15 +128,13 @@ export default function Page() {
 
             {/*This container is the for the intro to website section*/}
             <Box pt='md'>
-                <Center component={'a'} href={'/fakeAdmin'}>
-                    Go to fake page
-                </Center>
-                {/*<SiteIntroCard/>*/}
+                {/*<Center component={'a'} href={'/fakeAdmin'}>*/}
+                {/*    Go to fake page*/}
+                {/*</Center>*/}
+                <SiteIntroCard/>
             </Box>
             <Container size='xl' pt='lg'>
-                {/*<Button component='a' href='/news/datapulltest' mt='sm' variant="light" fullWidth>*/}
-                {/*    Let us see*/}
-                {/*</Button>*/}
+
                 <Button component="a" href="/aboutus" mt='sm' fullWidth>
                     Learn More About Us
                 </Button>
@@ -174,7 +154,6 @@ export default function Page() {
 
                     <GridCol span={5} mah={'80vh'}>
                         {articleId2 ? (
-                            // Testing articleSubPage carousel
                             <ArticleCarousel articles={articles} />
                         ) : (
                             <Text>Error: No articles exists</Text>
@@ -182,13 +161,7 @@ export default function Page() {
                         }
                     </GridCol>
                 </Grid>
-
-                {/*Option is just for admin*/}
-                {/*<Button onClick={handleChangeFeaturedClick} mt="md">*/}
-                {/*    Change Featured Article*/}
-                {/*</Button>*/}
             </Container>
-
         </AppShellSection>
         </AppShell>
     );

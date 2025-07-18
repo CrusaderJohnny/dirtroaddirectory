@@ -1,25 +1,18 @@
 import {AppShell, AppShellFooter, AppShellHeader, AppShellMain, Button, Center} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
-// import {currentUser} from "@clerk/nextjs/server";
 import ArticlePutForm from "@/app/_components/postmanagement/articlePutForm";
-// import {redirect} from "next/navigation";
-// import {checkRole} from "@/utils/roles";
+import {currentUser} from "@clerk/nextjs/server";
+import {redirect} from "next/navigation";
+import {checkRole} from "@/utils/roles";
 
-export default function Page() {
+export default async function Page() {
+    const user = await currentUser();
 
-    // For testing this was commented out
-    // if(!user) {
-    //     redirect("/");
-    // }
-    //
-    // if(!await checkRole('admin')) {
-    //     redirect("/");
-    // }
-    //
-    // // In his example, he passed serializedUser to it
-    // const serializedUser = user ? JSON.parse(JSON.stringify(user)) : null;
+    if (!user || !await checkRole('admin')) {
+        redirect("/");
+    }
 
-    return(
+    return (
         <AppShell>
             <AppShellHeader component={NavMT}/>
             <AppShellMain>
@@ -29,8 +22,7 @@ export default function Page() {
             </AppShellMain>
             <AppShellFooter>
                 <Center>
-                    {/*change "fakeAdmin" to "admin" when done*/}
-                    <Button component={'a'} href={'/fakeAdmin'}>
+                    <Button component={'a'} href={'/admin'}>
                         Return to Admin Page
                     </Button>
                 </Center>

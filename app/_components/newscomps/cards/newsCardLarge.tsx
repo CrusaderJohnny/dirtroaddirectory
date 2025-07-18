@@ -79,7 +79,6 @@ export default function NewsCardLarge( { article }: { article: ArticleInterface 
                     backgroundColor: '#ebfbee',
                 }}
             >
-                {/*<Divider color='gray' size="xs"/>*/}
                 <Flex
                     justify="center"
                     align="center"
