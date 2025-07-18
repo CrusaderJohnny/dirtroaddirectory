@@ -26,9 +26,8 @@ import {
     IconCalendar,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react'; // Import useEffect
+import { useState, useEffect } from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
-// REMOVE THESE IMPORTS:
 // import data from '../../_res/markets.json';
 // import vendorList from '../../_res/vendors.json';
 import { trackEvent } from "@/analytics";
@@ -36,7 +35,7 @@ import { trackEvent } from "@/analytics";
 // Import the API fetching functions and interfaces
 import { fetchMarketsAsJson } from '../apicomps/marketfetch';
 import { fetchVendorsAsJson } from '../apicomps/vendorfetch';
-import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces'; // Import your interfaces
+import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
