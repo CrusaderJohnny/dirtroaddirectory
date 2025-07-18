@@ -93,6 +93,19 @@ export default async function AdminDashboard() {
                                     </Center>
                                 </Card>
                             </Group>
+                            <Group>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Modify Article"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/edit-post'}
+                                >
+                                    <Center>
+                                        <Text fw={500}>Edit Existing Post</Text>
+                                    </Center>
+                                </Card>
+                            </Group>
                         </Stack>
                     </Center>
                 </Container>

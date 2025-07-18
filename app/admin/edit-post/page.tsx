@@ -29,6 +29,7 @@ export default function Page() {
             </AppShellMain>
             <AppShellFooter>
                 <Center>
+                    {/*change "fakeAdmin" to "admin" when done*/}
                     <Button component={'a'} href={'/fakeAdmin'}>
                         Return to Admin Page
                     </Button>
