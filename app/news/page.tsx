@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
-import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, AppShell, Center} from '@mantine/core';
+import {Container, Text, Divider, Button, Box, Grid, AppShellSection, GridCol, AppShell} from '@mantine/core';
+// import {Center} from "@mantine/core";
 
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
