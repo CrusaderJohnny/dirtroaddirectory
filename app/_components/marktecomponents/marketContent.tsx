@@ -26,7 +26,7 @@ import {
   IconCalendar,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import data from '../../_res/markets.json';
 import vendorList from '../../_res/vendors.json';
@@ -53,20 +53,21 @@ export default function MarketContent() {
     return matchesName && matchesRegion;
   });
 
-  const handleMarketView = (marketId: string, marketName: string) => {
+  const handleMarketView = async (marketName: string) => {
     trackEvent({
       name: 'view_market_profile',
       properties: {
-        market_id: marketId,
         market_name: marketName,
       },
     });
   };
+  useEffect(() => {
+    if(selectedMarket){
+      handleMarketView(selectedMarket.label as string);
+    }
+  }, [selectedMarket]);
 
   if (selectedMarket) {
-    const name = selectedMarket.label;
-    const id = selectedMarket.id.toString();
-    handleMarketView(id, name);
     return (
       <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh' }}>
         <Container size="lg" py="xl">
