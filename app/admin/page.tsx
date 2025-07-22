@@ -1,5 +1,5 @@
 import {redirect} from 'next/navigation'
-import {checkRole} from '@/utils/roles'
+import {checkRole} from '@/_utils/roles'
 import {currentUser} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
@@ -12,8 +12,8 @@ import {
     Title, Container, Card, Text, Stack
 } from "@mantine/core";
 import Link from "next/link";
-import {checkMarket} from "@/utils/checkMarket";
-import {checkVendor} from "@/utils/checkVendor";
+import {checkMarket} from "@/_utils/checkMarket";
+import {checkVendor} from "@/_utils/checkVendor";
 
 export default async function AdminDashboard() {
     if (!await checkRole('admin')) {
@@ -96,13 +96,13 @@ export default async function AdminDashboard() {
                             <Group>
                                 <Card
                                     bg={'#d0f2da'}
-                                    title="Modify Article"
+                                    title="Admin Role Panel"
                                     w={'20rem'}
                                     component='a'
-                                    href={'/admin/edit-post'}
+                                    href={'/admin/add-roles'}
                                 >
                                     <Center>
-                                        <Text fw={500}>Edit Existing Post</Text>
+                                        <Text fw={500}>Modify admin roles</Text>
                                     </Center>
                                 </Card>
                             </Group>

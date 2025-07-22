@@ -1,5 +1,5 @@
 import MarketPostForm from "@/app/_components/postmanagement/marketPostForm";
-import {checkMarket} from "@/utils/checkMarket";
+import {checkMarket} from "@/_utils/checkMarket";
 import {redirect} from "next/navigation";
 import {currentUser} from "@clerk/nextjs/server";
 import {AppShell, AppShellHeader, AppShellMain, Center} from "@mantine/core";

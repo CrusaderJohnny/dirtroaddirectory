@@ -4,9 +4,13 @@ import UserFavs from "@/app/_components/usercomps/userfavs";
 import rawData from "../_res/usermarkets.json";
 import {currentUser} from "@clerk/nextjs/server";
 import {MarketsInterface} from "@/app/_types/interfaces";
+import {redirect} from "next/navigation";
 
 export default async function Page() {
     const user = await currentUser();
+    if(!user) {
+        redirect('/');
+    }
 
     const data: MarketsInterface[] = rawData as MarketsInterface[];
 

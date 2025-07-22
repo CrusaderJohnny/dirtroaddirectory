@@ -1,6 +1,6 @@
 'use server'
 
-import { checkRole } from '@/utils/roles'
+import { checkRole } from '@/_utils/roles'
 import { clerkClient } from '@clerk/nextjs/server'
 import {revalidatePath} from "next/cache";
 
