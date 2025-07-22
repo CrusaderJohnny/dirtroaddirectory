@@ -35,9 +35,9 @@
   import {trackEvent} from "@/analytics";
 
   // Import the API fetching functions and interfaces
-  import { fetchMarketsAsJson } from '../apicomps/marketfetch';
+
   import { fetchVendorsAsJson } from '../apicomps/vendorfetch';
-  import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
+  import { VendorsInterface } from '@/app/_types/interfaces';
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -113,8 +113,6 @@
 
 
     if (vendorIdParam && selectedVendor) {
-      const name = selectedVendor.name;
-      const id = selectedVendor.id.toString();
       handleVendorView(selectedVendor.id.toString(), selectedVendor.name);
       return (
         <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
