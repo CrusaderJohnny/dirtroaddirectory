@@ -8,12 +8,12 @@
         "lat":51.0656112,
         "lng":-114.2236629,
         "hours": {
-            "dateRange": "Jan 2, 2025 – Dec 28, 2025",
+            "dateRange": "Jan 2, 2025 - Dec 28, 2025",
             "days": [
-                { "day": "Thursdays", "time": "9:00 AM – 5:00 PM" },
-                { "day": "Fridays", "time": "9:00 AM – 5:00 PM" },
-                { "day": "Saturdays", "time": "9:00 AM – 5:00 PM" },
-                { "day": "Sundays", "time": "9:00 AM – 5:00 PM" }
+                { "day": "Thursdays", "time": "9:00 AM - 5:00 PM" },
+                { "day": "Fridays", "time": "9:00 AM - 5:00 PM" },
+                { "day": "Saturdays", "time": "9:00 AM - 5:00 PM" },
+                { "day": "Sundays", "time": "9:00 AM - 5:00 PM" }
             ]
         },
         "contact": {
@@ -32,13 +32,13 @@
         "vendors": [
         { "id": 1, "name": "Valentines Farm", "category": "Produce" },{ "id": 2, "name": "1904 Farm Family Faves", "category": "Preserves" },{ "id": 3, "name": "Local Honey", "category": "honey" },{ "id": 4, "name": "Veggie Delight", "category": "produce" }
     ]
-},
-{
+    },
+    {
         "id": 2,
-        "label": "Cochrane Farmers’ Market",
+        "label": "Cochrane Farmers' Market",
         "image": "https://cochranefarmersmarket.ca/wp-content/uploads/2021/03/cropped-CFM-logo-final-300x300.png",
         "description": "The market in the heart of Big Hill Country",
-        "content": "The Cochrane Environmental Action Committee (CEAC) sponsors and operates the Cochrane Farmers’ Market. The market is run entirely by CEAC volunteers, and proceeds from the market are used to support CEAC in its efforts to make Cochrane a more environmentally aware and active community.",
+        "content": "The Cochrane Environmental Action Committee (CEAC) sponsors and operates the Cochrane Farmers' Market. The market is run entirely by CEAC volunteers, and proceeds from the market are used to support CEAC in its efforts to make Cochrane a more environmentally aware and active community.",
         "link": "https://www.google.com/maps/dir//Cochrane+Farmers+Market,+parking+lot+Spray+Lake+Sawmills+Family+Sports+Centre,+Griffin+Road+East,+Cochrane,+AB/@51.1766119,-114.4938705,13z/data=!3m2!4b1!5s0x5371407e95a8f6df:0x5fc8cafd47c8bf67!4m9!4m8!1m0!1m5!1m1!1s0x53713f5fda992313:0x4b100c656f014150!2m2!1d-114.4525855!2d51.1765654!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D",
         "lat":51.1765687,
         "lng":-114.4551604,
@@ -46,10 +46,10 @@
     },
     {
         "id": 3,
-        "label": "Dalhousie Farmers’ Market",
+        "label": "Dalhousie Farmers' Market",
         "image": "https://www.albertafarmersmarket.com/wp-content/uploads/DalhousieFarmersMarketLogo-wpcf_225x225.png",
-        "description": "The Dalhousie Farmers’ Market adhere’s to the “Made, Baked, or Grown” in Alberta Rule.",
-        "content": "The Dalhousie Farmers’ Market adhere’s to the “Made, Baked, or Grown” in Alberta Rule. 80% of our vendors must have products that are Alberta Made, Baked or Grown. We are an Approved Farmer’s Market and follow rules and regulations set by the Alberta Agricultural Society. By hosting a market, Dalhousie is enabling entrepreneurs to test their products and ideas while keeping costs low, interacting with the community, and learning new business skills. All funds raised by this market will go directly towards community improvement projects.",
+        "description": "The Dalhousie Farmers' Market adhere's to the “Made, Baked, or Grown” in Alberta Rule.",
+        "content": "The Dalhousie Farmers' Market adhere's to the “Made, Baked, or Grown” in Alberta Rule. 80% of our vendors must have products that are Alberta Made, Baked or Grown. We are an Approved Farmer's Market and follow rules and regulations set by the Alberta Agricultural Society. By hosting a market, Dalhousie is enabling entrepreneurs to test their products and ideas while keeping costs low, interacting with the community, and learning new business skills. All funds raised by this market will go directly towards community improvement projects.",
         "link": "https://www.google.com/maps/dir//Dalhousie+Community+Association+(Dallyn+Building),+Dallyn+Street+Northwest,+Calgary,+AB/@51.1072521,-114.1926607,13z/data=!3m2!4b1!5s0x5371407e95a8f6df:0x5fc8cafd47c8bf67!4m9!4m8!1m0!1m5!1m1!1s0x53716f8126a568c9:0x293c5ce3b9fad921!2m2!1d-114.1513757!2d51.1072055!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D",
         "lat":51.1127841,
         "lng":-114.1980368,

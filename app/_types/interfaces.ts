@@ -7,6 +7,7 @@ export interface MarketsInterface {
   image: string;
   label: string;
   description: string;
+  content: string;
   link: string;
   lat: number;
   lng: number;
