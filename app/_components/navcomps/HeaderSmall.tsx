@@ -5,9 +5,11 @@ import {
     Menu,
     Burger,
     Flex,
+    Avatar,
+    ScrollArea,
 } from "@mantine/core";
 
-import {useDisclosure} from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
 import Link from "next/link";
 import {
@@ -29,6 +31,7 @@ import {
 
 export default function HeaderSmall() {
     const [opened, {open, close}] = useDisclosure(false);
+    const isMobile = useMediaQuery('(max-width: 20rem) ');
     return (
         <>
             {/*Set default for modal*/}
@@ -38,12 +41,14 @@ export default function HeaderSmall() {
                 withCloseButton={false}
                 centered
                 padding={0}
+                scrollAreaComponent={ScrollArea.Autosize}
+                fullScreen={isMobile}
                 style={{
                     body: {
                       backgroundColor: 'transparent',
                     },
                 }}
-                size='sm'
+                size='20rem'
                 overlayProps={{
                     backgroundOpacity: 0.55,
                     blur: 3,
@@ -145,6 +150,17 @@ export default function HeaderSmall() {
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
+                <SignedOut>
+                    <Avatar
+                        component='button'
+                        onClick={open}
+                        radius='xl'
+                        size='sm'
+                        color='green'
+                    >
+                        <IconUser size={14}/>
+                    </Avatar>
+                </SignedOut>
                 <UserButton/>
             </Flex>
         </>

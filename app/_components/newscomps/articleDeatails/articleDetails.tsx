@@ -1,26 +1,59 @@
-// app/news/ArticleDetailsContent.tsx
-"use client"; // <<< --- CRUCIAL: Mark this as a Client Component
+"use client";
 
-import { Card, Container, Text } from "@mantine/core";
-import NewsData from "@/app/_components/newscomps/newsData"; // Assuming newsData is your array of articles
-import { ArticleInterface } from "@/app/_types/interfaces"; // Import your articleSubPage interface
-import NewsCardLarge from '@/app/_components/newscomps/cards/newsCardLarge'; // Your large card component
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Card, Container, Text } from "@mantine/core";
+import { fetchArticlesAsJson } from "@/app/_components/apicomps/articlefetch";
+import { ArticleInterface } from "@/app/_types/interfaces";
+import NewsCardLarge from '@/app/_components/newscomps/cards/newsCardLarge';
 
 export default function ArticleDetailsContent() {
     const searchParams = useSearchParams();
-    const articleIdParam = searchParams.get('articleId'); // Get the articleId from the URL
-
-    // Convert the ID to a number
+    const articleIdParam = searchParams.get('articleId');
     const articleId = articleIdParam ? parseInt(articleIdParam, 10) : null;
 
-    // Find the article from your newsData
-    const article: ArticleInterface | undefined = articleId !== null
-        ? NewsData.find(item => item.id === articleId)
-        : undefined;
+    const [article, setArticle] = useState<ArticleInterface | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const getArticle = async () => {
+            if (articleId === null || isNaN(articleId)) {
+                setError("Invalid article ID");
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const data = await fetchArticlesAsJson();
+                const matchedArticle = data.find(item => item.id === articleId);
+
+                if (!matchedArticle) {
+                    setError("Article not found");
+                } else {
+                    setArticle(matchedArticle);
+                }
+            } catch (err) {
+                console.error("Error fetching article:", err);
+                setError("Failed to fetch article");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        void getArticle();
+    }, [articleId]);
+
+    if (loading) {
+        return (
+            <Container size="md" py="xl">
+                <Text>Loading article...</Text>
+            </Container>
+        );
+    }
 
     // Handle case where article is not found or ID is invalid
-    if (article === undefined) {
+    if (error || !article) {
         return (
             <Container size="md" py="xl">
                 <Card withBorder shadow="sm" p="lg" radius="md">
@@ -34,7 +67,6 @@ export default function ArticleDetailsContent() {
     // If the article is found, render NewsCardLarge
     return (
         <Container size="lg" py="xl">
-            {/* Pass the found article to your NewsCardLarge component */}
             <NewsCardLarge article={article} />
         </Container>
     );

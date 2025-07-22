@@ -1,7 +1,8 @@
 import {VendorsInterface} from "@/app/_types/interfaces";
 
-// Define your backend API base URL
-const API_BASE_URL = 'http://localhost:8080';
+//backend API base URL
+//const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://drd-api-azure-dfbbhza6becvhfhn.centralus-01.azurewebsites.net'; // Azure API URL
 
 /**
  * Fetches vendor data from the API and returns it as a JSON array.
