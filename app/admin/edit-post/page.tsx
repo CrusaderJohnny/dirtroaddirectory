@@ -3,7 +3,7 @@ import NavMT from "@/app/_components/navcomps/navmt";
 import ArticlePutForm from "@/app/_components/postmanagement/articlePutForm";
 import {currentUser} from "@clerk/nextjs/server";
 import {redirect} from "next/navigation";
-import {checkRole} from "@/utils/roles";
+import {checkRole} from "@/_utils/roles";
 
 export default async function Page() {
     const user = await currentUser();
