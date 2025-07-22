@@ -141,8 +141,8 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
             });
             const titleModerationResult = await titleModerationResponse.json();
             if(!titleModerationResponse.ok) {
-                const errorMessage = titleModerationResult.message || "Title violates community guidelines.";
-                const reasons = titleModerationResult.reasons ? `Title Reasons: ${titleModerationResult.reasons.join(', ')}` : ``;
+                const errorMessage = titleModerationResult.message || "Event Title violates community guidelines.";
+                const reasons = titleModerationResult.reasons ? `Event Title Reasons: ${titleModerationResult.reasons.join(', ')}` : ``;
                 setSubmissionMessage({
                     type: 'error',
                     message: `Content guideline violation in title. ${errorMessage} ${reasons}`,
@@ -159,11 +159,11 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
             );
             const contentModerationResult = await contentResponse.json();
             if(!contentModerationResult.ok) {
-                const errorMessage = contentModerationResult.message || "Content violates community guidelines.";
+                const errorMessage = contentModerationResult.message || "Event Details violates community guidelines.";
                 const reasons = contentModerationResult.reasons ? `Content Reasons: ${contentModerationResult.reasons.join(', ')}` : '';
                 setSubmissionMessage({
                     type: 'error',
-                    message: `Content guideline violation in content. ${errorMessage} ${reasons}`,
+                    message: `Event Details violates community guidelines. ${errorMessage} ${reasons}`,
                 });
                 return;
             }

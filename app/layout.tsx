@@ -10,6 +10,7 @@ import {
 } from '@clerk/nextjs'
 import MantineThemeWrapper from "@/app/mantineTheme";
 import {Analytics} from "@vercel/analytics/next";
+import React from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
