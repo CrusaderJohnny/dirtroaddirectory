@@ -196,22 +196,57 @@ export default function MarketContent() {
   }
 
   return (
-    <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', paddingTop: 0 }}>
-      <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
-        <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
-        <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
-        <Group mb="lg" grow>
-          <TextInput placeholder="Search by market name" leftSection={<IconSearch size={16} />} value={searchTerm} onChange={(e) => setSearchTerm(e.currentTarget.value)} radius="md" size="md" />
-          <Select data={allRegions} placeholder="Filter by region" clearable value={selectedRegion} onChange={setSelectedRegion} radius="md" size="md" />
-        </Group>
-      </Paper>
-      <Grid gutter="xl">
-        {filteredMarkets.map((market) => (
-          <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
-            <MarketCard market={market} />
-          </Grid.Col>
-        ))}
-      </Grid>
+    <AppShellMain>
+      <Container size="xl" px="sm" style={{ maxWidth: '1400px', marginTop: 0, paddingTop: 0 }}>
+        <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white" style={{ marginTop: 0, paddingTop: 0 }}>
+          <Title
+          order={1}
+          mb={4}
+          style={{
+            fontSize: '2rem',
+            fontWeight: 700,
+            color: '#1f4d2e',
+            fontFamily: 'Georgia, serif',
+          }}
+          >
+            All Markets
+          </Title>
+          <Text size="sm" c="dimmed" mb="md">
+            Browse verified farmers&apos; markets by name or region
+          </Text>
+          <Group mb="lg" grow>
+            <TextInput
+            placeholder="Search by market name"
+            leftSection={<IconSearch size={16} />}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.currentTarget.value)}
+            radius="md"
+            size="md"
+            />
+            <Select
+            data={allRegions}
+            placeholder="Filter by region"
+            clearable
+            value={selectedRegion}
+            onChange={setSelectedRegion}
+            radius="md"
+            size="md"
+            />
+          </Group>
+        </Paper>
+      </Container>
+
+      <Container size="100%" px="md" style={{ maxWidth: '1400px', paddingBottom: '2rem' }}>
+        <SimpleGrid
+        cols={{ base: 1, sm: 2, md: 3 }}
+        spacing="xl"
+        verticalSpacing="xl"
+        >
+          {filteredMarkets.map((market) => (
+            <MarketCard market={market} key={market.id} />
+          ))}
+        </SimpleGrid>
+      </Container>
     </AppShellMain>
   );
 }

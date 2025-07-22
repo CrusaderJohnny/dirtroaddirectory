@@ -17,6 +17,7 @@ import {
   Paper,
   AppShellMain,
   Button,
+  SimpleGrid,
 } from "@mantine/core";
 import { motion } from "framer-motion";
 import {
@@ -173,41 +174,44 @@ export default function VendorsContent() {
 
   // All vendors list view (fallback)
   return (
-    <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
-      <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
-        <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
-          Our Vendors
-        </Title>
-        <Text size="sm" c="dimmed" mb="md">
-          Browse our trusted vendors by name or category
-        </Text>
-        <Group mb="lg" grow>
-          <TextInput
-            placeholder="Search by name"
-            leftSection={<IconSearch size={16} />}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.currentTarget.value)}
-            radius="md"
-            size="md"
-          />
-          <Select
-            data={allCategories}
-            placeholder="Filter by category"
-            clearable
-            value={selectedCategory}
-            onChange={setSelectedCategory}
-            radius="md"
-            size="md"
-          />
-        </Group>
-      </Paper>
-      <Grid gutter="xl">
-        {filteredVendors.map((vendor) => (
-          <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
-            <VendorCard vendor={vendor} />
-          </Grid.Col>
-        ))}
-      </Grid>
+    <AppShellMain>
+      <Container size="xl" px="sm" style={{ maxWidth: "1400px", paddingTop: "2rem"  }}>
+        <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
+          <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
+            Our Vendors
+          </Title>
+          <Text size="sm" c="dimmed" mb="md">
+            Browse our trusted vendors by name or category
+          </Text>
+          <Group mb="lg" grow>
+            <TextInput
+              placeholder="Search by name"
+              leftSection={<IconSearch size={16} />}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.currentTarget.value)}
+              radius="md"
+              size="md"
+            />
+            <Select
+              data={allCategories}
+              placeholder="Filter by category"
+              clearable
+              value={selectedCategory}
+              onChange={setSelectedCategory}
+              radius="md"
+              size="md"
+            />
+          </Group>
+        </Paper>
+      </Container>
+
+      <Container size="100%" px="md" style={{ maxWidth: "1400px", paddingBottom: "2rem" }}>
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xl" verticalSpacing="xl">
+          {filteredVendors.map((vendor) => (
+            <VendorCard vendor={vendor} key={vendor.id} />
+          ))}
+        </SimpleGrid>
+      </Container>
     </AppShellMain>
   );
 }
