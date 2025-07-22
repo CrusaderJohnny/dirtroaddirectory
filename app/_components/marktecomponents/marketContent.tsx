@@ -63,7 +63,7 @@ export default function MarketContent() {
   };
   useEffect(() => {
     if(selectedMarket){
-      handleMarketView(selectedMarket.label as string);
+      handleMarketView(selectedMarket.label as string).then();
     }
   }, [selectedMarket]);
 

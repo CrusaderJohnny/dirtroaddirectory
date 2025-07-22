@@ -93,6 +93,19 @@ export default async function AdminDashboard() {
                                     </Center>
                                 </Card>
                             </Group>
+                            <Group>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Admin Role Panel"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/add-roles'}
+                                >
+                                    <Center>
+                                        <Text fw={500}>Modify admin roles</Text>
+                                    </Center>
+                                </Card>
+                            </Group>
                         </Stack>
                     </Center>
                 </Container>
