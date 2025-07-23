@@ -160,3 +160,9 @@ export interface AzureApiErrorResponse {
         details?: string;
     };
 }
+
+export interface EventData {
+    event_type: string;
+    event_name: string;
+    count: number;
+}

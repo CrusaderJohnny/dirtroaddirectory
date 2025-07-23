@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Container,
   Grid,
@@ -33,6 +33,7 @@ import {
 import vendorList from "../../_res/vendors.json";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 import {trackEvent} from "@/analytics";
+import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 
 // Import the API fetching functions and interfaces
 //import { fetchMarketsAsJson } from '../apicomps/marketfetch';
@@ -58,18 +59,22 @@ export default function VendorsContent() {
   });
   const allCategories = [...new Set(vendorList.map((v) => v.category))];
 
-  const handleVendorView = (vendorId: string, vendorName: string) => {
+  const handleVendorView = (vendorName: string) => {
+    AnalyticsTracker("vendor_view", vendorName);
     trackEvent({
       name: 'view_vendor_profile',
       properties: {
-        vendor_id: vendorId,
         vendor_name: vendorName,
       },
     });
   };
+  useEffect(() => {
+    if(selectedVendor){
+      handleVendorView(selectedVendor.name);
+    }
+  }, [selectedVendor]);
 
   if (selectedVendor) {
-    handleVendorView(selectedVendor.id.toString(), selectedVendor.name);
     return (
       <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
         <Container size="lg" py="xl">
