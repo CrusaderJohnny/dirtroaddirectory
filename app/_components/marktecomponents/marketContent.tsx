@@ -26,10 +26,11 @@ import {
   IconCalendar,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import data from '../../_res/markets.json';
 import vendorList from '../../_res/vendors.json';
+import {trackEvent} from "@/analytics";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -51,6 +52,20 @@ export default function MarketContent() {
     const matchesRegion = selectedRegion ? market.region === selectedRegion : true;
     return matchesName && matchesRegion;
   });
+
+  const handleMarketView = async (marketName: string) => {
+    trackEvent({
+      name: 'view_market_profile',
+      properties: {
+        market_name: marketName,
+      },
+    });
+  };
+  useEffect(() => {
+    if(selectedMarket){
+      handleMarketView(selectedMarket.label as string).then();
+    }
+  }, [selectedMarket]);
 
   if (selectedMarket) {
     return (

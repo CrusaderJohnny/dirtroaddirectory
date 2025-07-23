@@ -3,7 +3,7 @@ import NavMT from "@/app/_components/navcomps/navmt";
 import VendorPostForm from "@/app/_components/postmanagement/vendorPostForm";
 import {currentUser} from "@clerk/nextjs/server";
 import {redirect} from "next/navigation";
-import {checkVendor} from "@/utils/checkVendor";
+import {checkVendor} from "@/_utils/checkVendor";
 
 export default async function Page() {
     const user = await currentUser();

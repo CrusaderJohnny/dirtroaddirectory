@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -31,8 +31,14 @@ import {
   IconBrandInstagram,
   IconShare2,
 } from "@tabler/icons-react";
-import vendorList from "../../_res/vendors.json";
+//import vendorList from "../../_res/vendors.json";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
+import {trackEvent} from "@/analytics";
+
+// Import the API fetching functions and interfaces
+
+import { fetchVendorsAsJson } from '../apicomps/vendorfetch';
+import { VendorsInterface } from '@/app/_types/interfaces';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -42,18 +48,66 @@ const fadeInUp = {
 export default function VendorsContent() {
   const searchParams = useSearchParams();
   const vendorIdParam = searchParams.get("vendorId");
-  const selectedVendor = vendorList.find((v) => v.id === Number(vendorIdParam));
+  const [vendors, setVendors] = useState<VendorsInterface[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const filteredVendors = vendorList.filter((vendor) => {
-    const matchesName = vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory ? vendor.category === selectedCategory : true;
-    return matchesName && matchesCategory;
-  });
-  const allCategories = [...new Set(vendorList.map((v) => v.category))];
 
-  if (selectedVendor) {
+  const handleVendorView = (vendorName: string) => {
+      trackEvent({
+          name: 'view_vendor_profile',
+          properties: {
+              vendor_name: vendorName,
+          },
+      });
+  };
+
+    useEffect(() => {
+        const loadData = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const fetchedVendors = await fetchVendorsAsJson();
+                setVendors(fetchedVendors);
+            } catch (err) {
+                console.error("Failed to load data:", err);
+                setError(err instanceof Error ? err.message : "Failed to load data.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadData();
+    }, []);
+    const selectedVendor = vendors.find((v) => v.id === Number(vendorIdParam));
+
+    const filteredVendors = vendors.filter((vendor) => {
+        const matchesName = vendor.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory ? vendor.category === selectedCategory : true;
+        return matchesName && matchesCategory;
+    });
+    const allCategories = [...new Set(vendors.map((v) => v.category))];
+    // Add loading and error states for initial render
+    if (loading) {
+        return (
+            <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Text size="xl">Loading vendor data...</Text>
+            </AppShellMain>
+        );
+    }
+
+    if (error) {
+        return (
+            <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Text size="xl" c="red">Error loading data: {error}</Text>
+            </AppShellMain>
+        );
+    }
+
+    if (vendorIdParam && selectedVendor) {
+        handleVendorView(selectedVendor.name);
     return (
       <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
         <Container size="lg" py="xl">
@@ -86,12 +140,15 @@ export default function VendorsContent() {
                 <ThemeIcon variant="light" color="green" radius="xl" size="lg"><IconShoppingCart size={20} /></ThemeIcon>
                 <Title order={4} c="#1f4d2e" m={0}>Products Offered</Title>
               </Group>
-              {selectedVendor.products?.length > 0 ? (
+                {selectedVendor ? (
+                    selectedVendor.products && selectedVendor.products.length > 0 ? (
                 <Grid gutter="md">
                   {selectedVendor.products.map((product, index) => (
                     <Grid.Col span={{ base: 12, sm: 6 }} key={index}>
                       <Group gap="xs">
-                        <ThemeIcon variant="light" color="dark" size="xs" radius="xs"><IconCircleDot size={14} /></ThemeIcon>
+                        <ThemeIcon variant="light" color="dark" size="xs" radius="xs">
+                            <IconCircleDot size={14} />
+                        </ThemeIcon>
                         <Text size="sm">{product}</Text>
                       </Group>
                     </Grid.Col>
@@ -99,7 +156,8 @@ export default function VendorsContent() {
                 </Grid>
               ) : (
                 <Text size="sm" c="dimmed" ta="center">No product list available.</Text>
-              )}
+              )
+            ) : null}
             </Card>
           </motion.div>
 

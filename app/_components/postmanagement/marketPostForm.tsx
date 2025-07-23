@@ -83,7 +83,7 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
 
             console.log('Market post data: ', postData);
 
-            const response = await fetch(`https://localhost:8080/articles`, {
+            const response = await fetch(`/api/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),
@@ -102,7 +102,7 @@ export default function MarketPostForm({ marketName, userId } : MarketPostFormPr
             form.reset();
         } catch (error) {
             console.error('Error creating post: ', error);
-            let errorMessage = 'An unexpected error occured.';
+            let errorMessage = 'An unexpected error occurred.';
             if (error instanceof Error) {
                 errorMessage = error.message;
             } else if (typeof error === 'object' && error !== null && 'message' in error) {

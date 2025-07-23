@@ -23,7 +23,6 @@ export const SearchUsers = ({searchName} : SearchProps) => {
             router.push(pathname);
         }
     }
-
     return (
             <Group>
                 <Text>
