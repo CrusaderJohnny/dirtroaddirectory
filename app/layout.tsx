@@ -11,6 +11,7 @@ import {
 import MantineThemeWrapper from "@/app/mantineTheme";
 import {Analytics} from "@vercel/analytics/next";
 import React from "react";
+import {PageViewTracker} from "@/app/_components/analytic-tracking/PageViewTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,6 +64,7 @@ export default function RootLayout({
           <MantineThemeWrapper>
             {children}
             <Analytics/>
+            <PageViewTracker/>
           </MantineThemeWrapper>
         </body>
       </html>

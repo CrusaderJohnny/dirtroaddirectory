@@ -22,7 +22,7 @@ export default async function Page() {
             </AppShellMain>
             <AppShellFooter>
                 <Center>
-                    <Button component={'a'} href={'/admin'}>
+                    <Button variant={'light'} component={'a'} href={'/admin'}>
                         Return to Admin Page
                     </Button>
                 </Center>

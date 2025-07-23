@@ -105,6 +105,17 @@ export default async function AdminDashboard() {
                                         <Text fw={500}>Modify admin roles</Text>
                                     </Center>
                                 </Card>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Admin Analytics Dashboard"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/analytics-board'}
+                                >
+                                    <Center>
+                                        <Text fw={500}>View Website Analytics</Text>
+                                    </Center>
+                                </Card>
                             </Group>
                         </Stack>
                     </Center>
