@@ -17,7 +17,7 @@ import {
     useMantineTheme, Stack
 } from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
-import {BarChart, DonutChart} from '@mantine/charts';
+import {BarChart, DonutChart, RadarChart} from '@mantine/charts';
 import {useEffect, useState} from "react";
 import {IconAlertCircle} from '@tabler/icons-react';
 import {EventData} from "@/app/_types/interfaces";
@@ -73,7 +73,7 @@ export default function Page() {
     const eventsByTypeList = Object.entries(eventsByTypeMap).map(([type, count]) => ({
         type: type,
         count: count,
-    }));
+    })).sort((a, b) => b.count - a.count);
 
     return (
         <AppShell>
@@ -130,20 +130,14 @@ export default function Page() {
                                 <Paper shadow="sm" p="lg" withBorder bg={theme.colors[theme.primaryColor][0]}>
                                     <Title order={4} mb="md">Events by Type</Title>
                                     {eventsByTypeList.length > 0 ? (
-                                        <BarChart
-                                            p={10}
+                                        <RadarChart
                                             h={300}
-                                            orientation={'vertical'}
                                             data={eventsByTypeList}
-                                            dataKey={'type'}
-                                            series={[{name: 'count', color: 'indigo.7'}]}
-                                            tickLine={'x'}
-                                            gridAxis={'y'}
-                                            xAxisProps={{
-                                                domain: [0, 'auto'],
-                                                allowDecimals: false,
-                                            }}
-                                        />
+                                            dataKey="type"
+                                            withTooltip
+                                            withDots
+                                            series={[{ name: 'count', color: 'teal.7', opacity: 0.2}]}
+                                            />
                                     ) : (
                                         <Center>
                                             <Text c={'dimmed'}>No event data available yet.</Text>
