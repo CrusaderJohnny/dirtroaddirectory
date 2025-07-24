@@ -61,13 +61,10 @@ export interface VendorsInterface {
   category: string;
   location: string;
   image: string;
-  contact: string;
+  contact?: string;
   email?: string;
   website?: string;
-  markets: {
-    id: string;
-    label: string;
-  }[];
+  markets: number[];
   products?: string[];
   description: string;
 }
