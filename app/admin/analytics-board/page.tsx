@@ -17,7 +17,7 @@ import {
     useMantineTheme, Stack
 } from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
-import {BarChart, DonutChart, RadarChart} from '@mantine/charts';
+import {BarChart, DonutChart} from '@mantine/charts';
 import {useEffect, useState} from "react";
 import {IconAlertCircle} from '@tabler/icons-react';
 import {EventData} from "@/app/_types/interfaces";
@@ -130,13 +130,17 @@ export default function Page() {
                                 <Paper shadow="sm" p="lg" withBorder bg={theme.colors[theme.primaryColor][0]}>
                                     <Title order={4} mb="md">Events by Type</Title>
                                     {eventsByTypeList.length > 0 ? (
-                                        <RadarChart
+                                        <BarChart
+                                            p={10}
                                             h={300}
                                             data={eventsByTypeList}
-                                            dataKey="type"
-                                            withTooltip
-                                            withDots
-                                            series={[{ name: 'count', color: 'teal.7', opacity: 0.2}]}
+                                            dataKey={"type"}
+                                            series={[{name: 'count', color: 'cyan.5'}]}
+                                            orientation={'vertical'}
+                                            gridAxis={'y'}
+                                            tooltipProps={{
+                                                cursor: { fill: 'transparent'},
+                                            }}
                                             />
                                     ) : (
                                         <Center>
