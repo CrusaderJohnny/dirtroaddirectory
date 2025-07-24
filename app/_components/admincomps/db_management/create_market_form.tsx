@@ -1,10 +1,20 @@
 'use client'
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Group, TextInput, Textarea, NumberInput, Select, Text, Divider, Box, Flex, Loader } from '@mantine/core';
+import {
+    Button,
+    Group,
+    TextInput,
+    Textarea,
+    NumberInput,
+    Select,
+    Text,
+    Divider,
+    Box,
+    Flex,
+    Loader } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isNotEmpty } from '@mantine/form';
 import {MarketsInterface} from "@/app/_types/interfaces";
-import { postMarket } from '@/app/_components/apicomps/marketpost';
 import { notifications } from '@mantine/notifications';
 import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';

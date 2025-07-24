@@ -123,7 +123,7 @@ export default async function AdminDashboard() {
                                     title="Admin Role Panel"
                                     w={'20rem'}
                                     component='a'
-                                    href={'/admin/create-market'}
+                                    href={'/admin/create-vendor'}
                                 >
                                     <Center>
                                         <Text fw={500}>Create new or edit Vendor</Text>

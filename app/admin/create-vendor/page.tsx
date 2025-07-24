@@ -1,7 +1,7 @@
 import {AppShell, AppShellFooter, AppShellHeader, AppShellMain, Button, Center, Text, Title} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import {clerkClient} from "@clerk/nextjs/server";
-import CreateMarketForm from "@/app/_components/admincomps/db_management/create_market_form";
+import CreateVendorForm from "@/app/_components/admincomps/db_management/create_vendor_form";
 
 export default async function Page(params: {searchParams: Promise<{search?: string}>}) {
 
@@ -16,10 +16,10 @@ export default async function Page(params: {searchParams: Promise<{search?: stri
             <AppShellHeader component={NavMT}/>
             <AppShellMain>
                 <Title ta={'center'} p={'1rem'}>
-                    Create new or edit Market
+                    Create new or edit Vendor
                 </Title>
                 <Center>
-                    <CreateMarketForm/>
+                    <CreateVendorForm/>
                 </Center>
             </AppShellMain>
             <AppShellFooter>
