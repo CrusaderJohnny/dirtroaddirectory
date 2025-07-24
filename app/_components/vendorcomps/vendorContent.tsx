@@ -36,9 +36,9 @@ import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 import { trackEvent } from "@/analytics";
 
 // Import the API fetching functions and interfaces
-import { fetchVendorsAsJson } from '../apicomps/vendorfetch'; // Assuming this fetches all vendors
 import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces'; // <--- Ensure MarketsInterface is imported
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD'; // <--- Added: Import marketsAPI
+import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
+import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -67,7 +67,7 @@ export default function VendorsContent() {
       setLoading(true);
       setError(null);
       try {
-        const fetchedVendors = await fetchVendorsAsJson();
+        const fetchedVendors = await vendorsAPI.getVendors();
         setVendors(fetchedVendors);
       } catch (err) {
         console.error("Failed to load vendor data:", err);
