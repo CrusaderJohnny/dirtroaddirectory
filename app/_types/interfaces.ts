@@ -64,10 +64,7 @@ export interface VendorsInterface {
   contact: string;
   email?: string;
   website?: string;
-  markets: {
-    id: string;
-    label: string;
-  }[];
+  markets: number[];
   products?: string[];
   description: string;
 }

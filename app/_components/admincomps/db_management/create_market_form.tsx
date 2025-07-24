@@ -225,10 +225,6 @@ export default function CreateMarketForm() {
         label: `${market.label} (ID: ${market.id})`, // Include ID for clarity
     }));
 
-    const handleSave = () => {
-
-    }
-
     if (loading) {
         return (
             <Flex justify="center" align="center" style={{ minHeight: '300px' }}>
