@@ -4,6 +4,7 @@ import {SearchUsers} from "@/app/_components/admincomps/searchUsers";
 import DisplayUsers from "@/app/_components/admincomps/displayUsers";
 import {clerkClient} from "@clerk/nextjs/server";
 
+
 export default async function Page(params: {searchParams: Promise<{search?: string}>}) {
     const query = (await params.searchParams).search;
     const client = await clerkClient();
