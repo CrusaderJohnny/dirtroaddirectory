@@ -5,7 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import { Card, Container, Text } from "@mantine/core";
 import { fetchArticlesAsJson } from "@/app/_components/apicomps/articlefetch";
 import { ArticleInterface } from "@/app/_types/interfaces";
-import NewsCardLarge from '@/app/_components/newscomps/cards/newsCardLarge';
+import NewsCardFullPage from '@/app/_components/newscomps/cards/newsCardFullPage';
+
+// Hardcoded data fro demo & testing
+import articleData from "@/app/_res/articles.json";
 
 export default function ArticleDetailsContent() {
     const searchParams = useSearchParams();
@@ -25,8 +28,13 @@ export default function ArticleDetailsContent() {
             }
 
             try {
-                const data = await fetchArticlesAsJson();
-                const matchedArticle = data.find(item => item.id === articleId);
+                // OPTION A: Use API
+                // const data = await fetchArticlesAsJson();
+
+                // OPTION B: Use HARDCODED DATA
+                const data = articleData[0];
+
+                const matchedArticle = data.find((item: ArticleInterface) => item.id === articleId);
 
                 if (!matchedArticle) {
                     setError("Article not found");
@@ -67,7 +75,7 @@ export default function ArticleDetailsContent() {
     // If the article is found, render NewsCardLarge
     return (
         <Container size="lg" py="xl">
-            <NewsCardLarge article={article} />
+            <NewsCardFullPage article={article} />
         </Container>
     );
 }

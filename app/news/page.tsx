@@ -10,8 +10,11 @@ import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
 import ArticleCarousel from "@/app/_components/newscomps/articleCarousel";
 
 // Import article API fetch and interface
-import { fetchArticlesAsJson } from '@/app/_components/apicomps/articlefetch';
+// import { fetchArticlesAsJson } from '@/app/_components/apicomps/articlefetch';
 import {ArticleInterface} from "@/app/_types/interfaces";
+
+// Import hardcoded data for demo
+import articleData from "@/app/_res/articles.json";
 
 export default function Page() {
 
@@ -22,14 +25,19 @@ export default function Page() {
     useEffect(() => {
         const getArticles = async () => {
             try {
-                const data = await fetchArticlesAsJson();
-                console.log("Fetched Articles: ", data);
+                // OPTION A: USE API
+                // const data = await fetchArticlesAsJson();
+
+                // OPTION B: USE HARDCODED DATA
+                const data = articleData[0]; // unwrap from nested array
+
+                console.log("Loaded Articles: ", data);
                 setArticles(data.map((article, index) => ({
                     ...article,
                     featured: index === 0,
                 })));
             } catch (err) {
-                console.error("Failed to fetch articles:", err);
+                console.error("Failed to load articles:", err);
             }
         };
         void getArticles();
