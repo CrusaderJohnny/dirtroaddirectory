@@ -2,7 +2,12 @@ import {MarketsInterface} from "@/app/_types/interfaces";
 
 //backend API base URL
 //const API_BASE_URL = 'http://localhost:8080';
-const API_BASE_URL = 'https://drd-api-azure-dfbbhza6becvhfhn.centralus-01.azurewebsites.net'; // Azure API URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
+
+// IMPORTANT: Add a check to ensure the environment variable is defined
+if (!API_BASE_URL) {
+  throw new Error('NEXT_PUBLIC_API_BASE_URL is not defined in your environment variables.');
+}
 
 /**
  * Fetches market data from the API and returns it as a JSON array.
