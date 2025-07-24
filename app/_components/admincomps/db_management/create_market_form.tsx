@@ -4,8 +4,13 @@ import { Button, Checkbox, Group, TextInput, Textarea, NumberInput } from '@mant
 import { useForm } from '@mantine/form';
 import { isNotEmpty } from '@mantine/form';
 import {MarketsInterface} from "@/app/_types/interfaces";
+import { postMarket } from '@/app/_components/apicomps/marketpost';
 
-
+// Define props for the form component
+interface CreateMarketFormProps {
+    onSubmissionSuccess: () => void; // Callback to notify parent component that a market was successfully posted
+    onCancel: () => void; // Callback for when the user cancels
+}
 
 export default function CreateMarketForm() {
 
@@ -17,10 +22,9 @@ export default function CreateMarketForm() {
         image: '',
         label: '',
         description: '',
-        content: '',
         link: '',
-        lat: undefined as number | undefined, // Explicitly define as number | undefined
-        lng: undefined as number | undefined, // Explicitly define as number | undefined
+        lat: 0.0,
+        lng: 0.0,
         },
 
         // Define validation rules for each field
@@ -28,10 +32,45 @@ export default function CreateMarketForm() {
         image: (value) => (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(value) ? 'Invalid URL for website link' : null), // Optional URL validation for image link
         label: isNotEmpty('Market Name is required'), // Label cannot be empty
         link: (value) => (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(value) ? 'Invalid URL for website link' : null), // Optional URL validation for link
-        lat: (value) => (value !== undefined && value !== null && (value < -90 || value > 90) ? 'Latitude must be between -90 and 90' : null),
-        lng: (value) => (value !== undefined && value !== null && (value < -180 || value > 180) ? 'Longitude must be between -180 and 180' : null),
+            lat: (value) => {
+                if (value === null || value === undefined) {
+                    return 'Latitude is required'; // Catches cases where NumberInput might return null/undefined
+                }
+                if (typeof value !== 'number' || isNaN(value)) {
+                    return 'Latitude must be a number';
+                }
+                if (value < -90 || value > 90) {
+                    return 'Latitude must be between -90 and 90';
+                }
+                return null;
+            },
+            lng: (value) => {
+                if (value === null || value === undefined) {
+                    return 'Longitude is required'; // Catches cases where NumberInput might return null/undefined
+                }
+                if (typeof value !== 'number' || isNaN(value)) {
+                    return 'Longitude must be a number';
+                }
+                if (value < -180 || value > 180) {
+                    return 'Longitude must be between -180 and 180';
+                }
+                return null;
+            },
         },
     });
+
+    const handleSubmit = async (values: typeof form.values) => {
+        try {
+            // For now, only handle POST functionality (creating a new market)
+            const newMarket = await postMarket(values); // Call your new postMarket function
+            console.log('New market created successfully:', newMarket);
+            form.reset(); // Clear the form after successful submission
+        } catch (error) {
+            console.error('Error creating market:', error);
+            // You might want to show an error notification to the user here
+            // e.g., notifications.show({ message: 'Failed to create market', color: 'red' });
+        }
+    };
 
     // Populate form fields when a 'market' prop is provided (for editing)
     useEffect(() => {
@@ -39,7 +78,7 @@ export default function CreateMarketForm() {
         form.setValues({
             image: editingMarket.image,
             label: editingMarket.label,
-            content: editingMarket.description || '',
+            description: editingMarket.description || '',
             link: editingMarket.link || '',
             lat: editingMarket.lat !== null ? Number(editingMarket.lat) : undefined, // Convert Decimal to Number, handle null
             lng: editingMarket.lng !== null ? Number(editingMarket.lng) : undefined, // Convert Decimal to Number, handle null
@@ -59,23 +98,6 @@ export default function CreateMarketForm() {
             
     }
 
-    const handleSubmit = async (values: typeof form.values) => {
-        try {
-        if (editingMarket && editingMarket.id) {
-            // Edit existing market
-            //await api.updateMarket(market.id, values);
-            console.log('Market updated:', values);
-        } else {
-            // Create new market
-            //await api.createMarket(values);
-            console.log('New market created:', values);
-        }
-        handleSave(); // Call onSave callback to signal parent component to refresh/close form
-        } catch (error) {
-        console.error('Error saving market:', error);
-        // You might want to show an error notification here
-        }
-    };
 
     return (
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -100,8 +122,8 @@ export default function CreateMarketForm() {
         <Textarea
             label="Content"
             placeholder="Detailed description about the market..."
-            key={form.key('content')}
-            {...form.getInputProps('content')}
+            key={form.key('description')}
+            {...form.getInputProps('description')}
             rows={5}
             mb="md"
         />
@@ -116,6 +138,7 @@ export default function CreateMarketForm() {
 
         <Group grow mb="md"> {/* Group for lat/lng to be side-by-side */}
             <NumberInput
+            withAsterisk
             label="Latitude"
             placeholder="e.g., 51.0447"
             key={form.key('lat')}
@@ -123,6 +146,7 @@ export default function CreateMarketForm() {
             decimalScale={6}
             />
             <NumberInput
+            withAsterisk
             label="Longitude"
             placeholder="e.g., -114.0719"
             key={form.key('lng')}
