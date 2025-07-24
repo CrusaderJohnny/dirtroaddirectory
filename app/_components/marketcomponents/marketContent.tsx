@@ -33,8 +33,8 @@ import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import { trackEvent } from "@/analytics";
 
 // Import the API fetching functions and interfaces
-import { fetchMarketsAsJson } from '../apicomps/marketfetch';
-import { fetchVendorsAsJson } from '../apicomps/vendorfetch';
+import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
+import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 
@@ -62,10 +62,10 @@ export default function MarketContent() {
             setLoading(true);
             setError(null);
             try {
-                const fetchedMarkets = await fetchMarketsAsJson();
+                const fetchedMarkets = await marketsAPI.getMarkets();
                 setMarkets(fetchedMarkets);
 
-                const fetchedVendors = await fetchVendorsAsJson();
+                const fetchedVendors = await vendorsAPI.getVendors();
                 setVendors(fetchedVendors);
             } catch (err) {
                 console.error("Failed to load data:", err);
