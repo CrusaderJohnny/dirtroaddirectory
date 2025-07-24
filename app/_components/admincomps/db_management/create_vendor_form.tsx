@@ -147,6 +147,9 @@ export default function CreateVendorForm() {
             } else {
                 // CREATE new vendor
                 const newVendor = await vendorsAPI.createVendor(vendorData);
+
+                //console.log('DEBUG: Object passed to notification for NEW vendor:', newVendor); //-------------------------------------------------- DEBUG --------------------
+
                 notifications.show({
                     title: 'Success!',
                     message: `Vendor "${newVendor.name}" created successfully! ID: ${newVendor.id}`,
