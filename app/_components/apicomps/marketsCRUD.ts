@@ -2,9 +2,6 @@ import { MarketsInterface } from "@/app/_types/interfaces";
 
 const API_BASE_URL = 'https://drd-api-azure-dfbbhza6becvhfhn.centralus-01.azurewebsites.net';
 
-interface MarketDataForCreate extends Omit<MarketsInterface, 'id'> {}
-interface MarketDataForUpdate extends MarketsInterface {} // For update, we need the ID
-
 // I AM CURRENTLY CONSOLIDATING ALL MARKET API FUNCTIONS INTO THIS FILE -mace
 
 const marketsAPI = {
@@ -28,7 +25,8 @@ const marketsAPI = {
     /**
      * Creates a new market.
      */
-    createMarket: async (marketData: MarketDataForCreate): Promise<MarketsInterface> => {
+    // Use Omit directly here
+    createMarket: async (marketData: Omit<MarketsInterface, 'id'>): Promise<MarketsInterface> => {
         try {
             const response = await fetch(`${API_BASE_URL}/markets`, {
                 method: 'POST',
@@ -39,7 +37,11 @@ const marketsAPI = {
                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
             }
-            return await response.json();
+            // Assuming the API returns the created market object directly
+            const responseData = await response.json(); 
+            // If your API returns { message: "...", market: {...} }
+            // return responseData.market; 
+            return responseData; // If API returns the market object directly
         } catch (err) {
             console.error("Error creating market:", err);
             throw new Error(`Failed to create market: ${err instanceof Error ? err.message : 'Unknown error'}`);
@@ -49,7 +51,8 @@ const marketsAPI = {
     /**
      * Updates an existing market.
      */
-    updateMarket: async (id: number, marketData: MarketDataForUpdate): Promise<MarketsInterface> => {
+    // Use Partial<MarketsInterface> directly here, as not all fields might be updated
+    updateMarket: async (id: number, marketData: Partial<MarketsInterface>): Promise<MarketsInterface> => {
         try {
             const response = await fetch(`${API_BASE_URL}/markets/${id}`, {
                 method: 'PUT',
@@ -60,7 +63,11 @@ const marketsAPI = {
                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
             }
-            return await response.json(); // Often PUT returns the updated resource or just a success status
+            // Often PUT returns the updated resource or just a success status
+            const responseData = await response.json();
+            // If your API returns { message: "...", market: {...} }
+            // return responseData.market; 
+            return responseData; // If API returns the market object directly
         } catch (err) {
             console.error(`Error updating market with ID ${id}:`, err);
             throw new Error(`Failed to update market: ${err instanceof Error ? err.message : 'Unknown error'}`);

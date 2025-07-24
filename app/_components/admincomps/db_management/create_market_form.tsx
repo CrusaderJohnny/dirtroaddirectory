@@ -19,11 +19,6 @@ import { notifications } from '@mantine/notifications';
 import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 
-// Define props for the form component
-interface CreateMarketFormProps {
-    onSubmissionSuccess: () => void; // Callback to notify parent component that a market was successfully posted
-    onCancel: () => void; // Callback for when the user cancels
-}
 
 export default function CreateMarketForm() {
     const [allMarkets, setAllMarkets] = useState<MarketsInterface[]>([]);
@@ -34,8 +29,6 @@ export default function CreateMarketForm() {
     const marketToEdit = useMemo(() => {
         return allMarkets.find((m) => m.id === Number(selectedMarketId));
     }, [allMarkets, selectedMarketId]);
-
-    const [editingMarket, setEditingMarket] = useState<MarketsInterface | undefined>(undefined);
 
     const form = useForm({
         mode: 'uncontrolled', // 'uncontrolled' is good for simple forms or when integrating with external state
