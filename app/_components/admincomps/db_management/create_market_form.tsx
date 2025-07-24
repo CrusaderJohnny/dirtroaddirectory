@@ -1,10 +1,11 @@
 'use client'
 import React, { useState,useEffect } from 'react';
-import { Button, Checkbox, Group, TextInput, Textarea, NumberInput } from '@mantine/core';
+import { Button, Group, TextInput, Textarea, NumberInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isNotEmpty } from '@mantine/form';
 import {MarketsInterface} from "@/app/_types/interfaces";
 import { postMarket } from '@/app/_components/apicomps/marketpost';
+import { notifications } from '@mantine/notifications';
 
 // Define props for the form component
 interface CreateMarketFormProps {
@@ -64,11 +65,26 @@ export default function CreateMarketForm() {
             // For now, only handle POST functionality (creating a new market)
             const newMarket = await postMarket(values); // Call your new postMarket function
             console.log('New market created successfully:', newMarket);
+
+            // --- Show success notification ---
+            notifications.show({
+                title: 'Success!',
+                message: `Market "${newMarket.label}" created successfully! ID: ${newMarket.id}`,
+                color: 'teal', // Greenish color for success
+                autoClose: 5000, // Close after 5 seconds
+            });
+
             form.reset(); // Clear the form after successful submission
         } catch (error) {
             console.error('Error creating market:', error);
-            // You might want to show an error notification to the user here
-            // e.g., notifications.show({ message: 'Failed to create market', color: 'red' });
+
+            // --- Show error notification ---
+            notifications.show({
+                title: 'Error!',
+                message: `Failed to create market: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                color: 'red', // Red color for error
+                autoClose: false, // Keep open until user closes it
+            });
         }
     };
 
@@ -95,7 +111,12 @@ export default function CreateMarketForm() {
     }
 
     const handleCancel = () => {
-            
+        notifications.show({
+                title: 'Success!',
+                message: `Market created successfully!`,
+                color: 'teal', // Greenish color for success
+                autoClose: 5000, // Close after 5 seconds
+        });
     }
 
 
