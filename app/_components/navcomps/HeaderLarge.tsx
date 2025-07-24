@@ -39,6 +39,20 @@ export default function HeaderLarge() {
                     Contact
                 </Button>
             </Group>
+            <Group>
+                <Button
+                    component="a"
+                    href="/admin"
+                    variant="outline"
+                    color="white"
+                    size="xs"
+                    style={{
+                        backgroundColor: "#ff7070",
+                    }}
+                >
+                    Admin Panel
+                </Button>
+            </Group>
 
             <Group>
                 <SignedOut>
