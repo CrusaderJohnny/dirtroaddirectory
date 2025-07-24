@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 
-const EXPRESS_BACKEND_URL = process.env.EXPRESS_BACKEND_URL || 'http://localhost:8080';
+const EXPRESS_BACKEND_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 if (!process.env.EXPRESS_BACKEND_URL) {
     console.warn(`EXPRESS_BACKEND_URL is not set, defaulting to http://localhost:8080`);
