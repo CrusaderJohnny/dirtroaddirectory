@@ -55,7 +55,7 @@ export default async function AdminDashboard() {
                                     href={'/admin/add-vendor'}
                                 >
                                     <Center>
-                                        <Text fw={500}>Add or modify a vendor</Text>
+                                        <Text fw={500}>Add or modify a vendor user</Text>
                                     </Center>
                                 </Card>
                                 <Card
@@ -65,7 +65,7 @@ export default async function AdminDashboard() {
                                     component='a'
                                     href={'/admin/add-market'}>
                                     <Center>
-                                        <Text fw={500}>Add or modify a market</Text>
+                                        <Text fw={500}>Add or modify a market user</Text>
                                     </Center>
                                 </Card>
                             </Group>
@@ -114,6 +114,30 @@ export default async function AdminDashboard() {
                                 >
                                     <Center>
                                         <Text fw={500}>View Website Analytics</Text>
+                                    </Center>
+                                </Card>
+                            </Group>
+                            <Group>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Admin Role Panel"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/create-market'}
+                                >
+                                    <Center>
+                                        <Text fw={500}>Create new or edit Vendor</Text>
+                                    </Center>
+                                </Card>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Admin Analytics Dashboard"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/create-market'}
+                                >
+                                    <Center>
+                                        <Text fw={500}>Create new or edit Market</Text>
                                     </Center>
                                 </Card>
                             </Group>
