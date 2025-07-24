@@ -23,6 +23,29 @@ const marketsAPI = {
     },
 
     /**
+     * Fetches a single market by its ID.
+     * @param id The ID of the market to fetch.
+     * @returns A Promise that resolves to the MarketsInterface object.
+     */
+    getMarketById: async (id: number): Promise<MarketsInterface> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/markets/${id}`); // Assuming your API has /markets/:id endpoint
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+            }
+            const responseData = await response.json();
+            // IMPORTANT: Adjust this return based on your API's actual response structure for GET /markets/:id
+            // If your API returns { message: "...", market: {...} }, uncomment the next line:
+            // return responseData.market;
+            return responseData; // If API returns the market object directly
+        } catch (err) {
+            console.error(`Error fetching market with ID ${id}:`, err);
+            throw new Error(`Failed to fetch market data: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        }
+    },
+
+    /**
      * Creates a new market.
      */
     // Use Omit directly here
