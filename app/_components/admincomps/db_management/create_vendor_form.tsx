@@ -126,7 +126,7 @@ export default function CreateVendorForm() {
             category: values.category,
             location: values.location,
             image: values.image || '',
-            contact: values.contact,
+            contact: values.contact || '',
             email: values.email || '',
             website: values.website || '',
             products: values.products ? values.products.split(',').map(s => s.trim()).filter(Boolean) : [], // Split string to array

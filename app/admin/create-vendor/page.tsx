@@ -16,7 +16,7 @@ export default async function Page(params: {searchParams: Promise<{search?: stri
             <AppShellHeader component={NavMT}/>
             <AppShellMain>
                 <Title ta={'center'} p={'1rem'}>
-                    Create new or edit Vendor
+                    Create New or Edit Vendor
                 </Title>
                 <Center>
                     <CreateVendorForm/>
