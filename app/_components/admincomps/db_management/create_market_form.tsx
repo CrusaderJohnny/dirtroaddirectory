@@ -251,7 +251,8 @@ export default function CreateMarketForm() {
             backgroundColor: 'rgba(255, 255, 255, 0.8)', // White with 80% opacity
             borderRadius: '8px', // Rounded corners
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-            maxWidth: '800px', // Max width for better form readability
+            maxWidth: '500px',
+            width: '100%',
             margin: 'auto', // Center the box on the page
             backdropFilter: 'blur(5px)' // Optional: Adds a blur effect to content behind the box
         }}>

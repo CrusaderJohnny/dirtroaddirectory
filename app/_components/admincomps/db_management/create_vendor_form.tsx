@@ -51,7 +51,17 @@ export default function CreateVendorForm() {
             category: isNotEmpty('Category is required'),
             location: isNotEmpty('Location is required'),
             image: (value) => (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(value) ? 'Invalid URL for image link' : null),
-            contact: isNotEmpty('Contact is required'),
+            contact: (value) => {
+                if (!value) { // It's optional, so no error if empty
+                    return null;
+                }
+                // Flexible regex for North American phone numbers (e.g., 123-456-7890, (123) 456-7890, +1 123-456-7890)
+                const phoneRegex = /^(\+\d{1,3}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+                if (!phoneRegex.test(value)) {
+                    return 'Invalid phone number format (e.g., 123-456-7890 or +1 123-456-7890)';
+                }
+                return null;
+            },
             email: (value) => (value && !isEmail(value) ? 'Invalid email' : null),
             website: (value) => (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(value) ? 'Invalid URL for website' : null),
             description: isNotEmpty('Description is required'),
@@ -228,19 +238,21 @@ export default function CreateVendorForm() {
         return (
             <Flex justify="center" align="center" style={{ minHeight: '300px' }}>
                 <Loader size="lg" />
-                <Text ml="md">Loading vendor and market data...</Text>
+                <Text ml="md">Loading vendors and markets...</Text>
             </Flex>
         );
     }
 
     return (
         <Box
+            mb="5rem"
             p="lg"
             style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 borderRadius: '8px',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                maxWidth: '800px',
+                maxWidth: '500px',
+                width: '100%',
                 margin: 'auto',
                 backdropFilter: 'blur(5px)'
             }}
@@ -248,7 +260,7 @@ export default function CreateVendorForm() {
             <Text size="lg" mb="sm" fw={700}>Vendor Management</Text>
             <Text c="dimmed" mb="md">Select an existing vendor to edit/delete, or create a new one.</Text>
 
-            <Group grow mb="xl">
+            <Group grow mb="md">
                 <Select
                     placeholder="Select an existing vendor"
                     searchable
@@ -268,13 +280,13 @@ export default function CreateVendorForm() {
                 </Button>
             </Group>
 
-            <Divider my="md" label={vendorToEdit ? "Edit Existing Vendor" : "Create New Vendor"} labelPosition="center" />
+            <Divider my="xs" label={vendorToEdit ? "Edit Existing Vendor" : "Create New Vendor"} labelPosition="center" />
 
             <form onSubmit={form.onSubmit(handleSubmit)}>
                 <TextInput
                     withAsterisk
                     label="Vendor Name"
-                    placeholder="e.g., Green Valley Organics"
+                    placeholder=""
                     key={form.key('name')}
                     {...form.getInputProps('name')}
                     mb="md"
@@ -294,7 +306,7 @@ export default function CreateVendorForm() {
                 <TextInput
                     withAsterisk
                     label="Location"
-                    placeholder="e.g., Booth 12, Main Street"
+                    placeholder=""
                     key={form.key('location')}
                     {...form.getInputProps('location')}
                     mb="md"
@@ -303,7 +315,7 @@ export default function CreateVendorForm() {
 
                 <TextInput
                     label="Image Link (URL)"
-                    placeholder="e.g., https://example.com/vendor.jpg"
+                    placeholder=""
                     key={form.key('image')}
                     {...form.getInputProps('image')}
                     mb="md"
@@ -311,9 +323,8 @@ export default function CreateVendorForm() {
                 />
 
                 <TextInput
-                    withAsterisk
-                    label="Contact Person"
-                    placeholder="e.g., Jane Doe"
+                    label="Phone Number"
+                    placeholder="e.g., 123-456-7890"
                     key={form.key('contact')}
                     {...form.getInputProps('contact')}
                     mb="md"
@@ -331,7 +342,7 @@ export default function CreateVendorForm() {
 
                 <TextInput
                     label="Website Link (URL)"
-                    placeholder="e.g., https://www.vendor.com"
+                    placeholder=""
                     key={form.key('website')}
                     {...form.getInputProps('website')}
                     mb="md"
@@ -368,6 +379,7 @@ export default function CreateVendorForm() {
                     searchable
                     clearable
                     mb="md"
+                    w="100%"
                     disabled={isSaving}
                 />
 
