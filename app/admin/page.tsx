@@ -1,4 +1,4 @@
-import {redirect} from 'next/navigation'
+
 import {checkRole} from '@/_utils/roles'
 import {currentUser} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
@@ -16,9 +16,6 @@ import {checkMarket} from "@/_utils/checkMarket";
 import {checkVendor} from "@/_utils/checkVendor";
 
 export default async function AdminDashboard() {
-    if (!await checkRole('admin')) {
-        redirect('/')
-    }
     const hasMarketAccess = await checkMarket();
     const hasVendorAccess = await checkVendor();
     const isAdmin = await checkRole('admin');
