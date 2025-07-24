@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import {Button, Group, Image, Title, Burger, Menu, Text, ScrollArea, Modal} from '@mantine/core';
-import {SignedIn, SignedOut, SignInButton, SignUpButton, UserButton} from '@clerk/nextjs';
+import {SignedIn, SignedOut, UserButton} from '@clerk/nextjs';
 import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
 import {useDisclosure, useMediaQuery} from "@mantine/hooks";
 
@@ -70,6 +70,7 @@ export default function HeaderMedium() {
             </Link>
 
             <Group>
+                <UserButton/>
                 <Menu position="bottom-start">
                     <Menu.Target>
                         <Button
