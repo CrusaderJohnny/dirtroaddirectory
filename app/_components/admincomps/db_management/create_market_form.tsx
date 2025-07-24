@@ -240,7 +240,15 @@ export default function CreateMarketForm() {
 
 
     return (
-        <Box p="lg">
+        <Box p="lg"
+        style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.8)', // White with 80% opacity
+            borderRadius: '8px', // Rounded corners
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+            maxWidth: '800px', // Max width for better form readability
+            margin: 'auto', // Center the box on the page
+            backdropFilter: 'blur(5px)' // Optional: Adds a blur effect to content behind the box
+        }}>
             <Text size="lg" mb="sm" fw={700}>Market Management</Text>
                 <Text c="dimmed" mb="md">Select an existing market to edit/delete, or create a new one.</Text>
 
