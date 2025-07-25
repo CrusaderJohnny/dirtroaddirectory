@@ -1,6 +1,6 @@
-import {redirect} from 'next/navigation'
-import {checkRole} from '@/_utils/roles'
-import {currentUser} from '@clerk/nextjs/server'
+// import {redirect} from 'next/navigation'
+// import {checkRole} from '@/utils/roles'
+// import {currentUser} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
     AppShell, AppShellFooter,
@@ -12,17 +12,18 @@ import {
     Title, Container, Card, Text, Stack
 } from "@mantine/core";
 import Link from "next/link";
-import {checkMarket} from "@/_utils/checkMarket";
-import {checkVendor} from "@/_utils/checkVendor";
 
 export default async function AdminDashboard() {
-    if (!await checkRole('admin')) {
-        redirect('/')
-    }
-    const hasMarketAccess = await checkMarket();
-    const hasVendorAccess = await checkVendor();
-    const isAdmin = await checkRole('admin');
-    const user = await currentUser();
+    // Bypass all auth/role checks
+    // const hasMarketAccess = true;
+    // const hasVendorAccess = true;
+    // const isAdmin = true;
+
+    // Fake user object
+    const user = {
+        username: 'testuser',
+        firstName: 'Test'
+    };
 
     function titleFix(str: string | null | undefined): string {
         if (!str) {
@@ -96,13 +97,13 @@ export default async function AdminDashboard() {
                             <Group>
                                 <Card
                                     bg={'#d0f2da'}
-                                    title="Admin Role Panel"
+                                    title="Modify Article"
                                     w={'20rem'}
                                     component='a'
-                                    href={'/admin/add-roles'}
+                                    href={'/admin/edit-post'}
                                 >
                                     <Center>
-                                        <Text fw={500}>Modify admin roles</Text>
+                                        <Text fw={500}>Edit Existing Post</Text>
                                     </Center>
                                 </Card>
                             </Group>
@@ -114,26 +115,18 @@ export default async function AdminDashboard() {
             <AppShellFooter style={{backgroundColor: '#fff', padding: '1rem 0'}}>
                 <Center>
                     <Group>
-                        {hasMarketAccess && (
-                            <Button component={Link} href="/post-market" variant="light">
-                                Market Post
-                            </Button>
-                        )}
-                        {hasVendorAccess && (
-                            <Button component={Link} href="/post-vendor" variant="light">
-                                Vendor Post
-                            </Button>
-                        )}
-                        {isAdmin && (
-                            <>
-                                <Button component={Link} href="/post-admin" variant="light">
-                                    Admin Post
-                                </Button>
-                                <Button component={Link} href="/contact-form-messages" variant="light">
-                                    Contact Messages
-                                </Button>
-                            </>
-                        )}
+                        <Button component={Link} href="/post-market" variant="light">
+                            Market Post
+                        </Button>
+                        <Button component={Link} href="/post-vendor" variant="light">
+                            Vendor Post
+                        </Button>
+                        <Button component={Link} href="/post-admin" variant="light">
+                            Admin Post
+                        </Button>
+                        <Button component={Link} href="/contact-form-messages" variant="light">
+                            Contact Messages
+                        </Button>
                     </Group>
                 </Center>
             </AppShellFooter>

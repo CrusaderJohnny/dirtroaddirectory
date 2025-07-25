@@ -17,5 +17,3 @@ export default function NewsCardSmall( { article }: { article: ArticleInterface 
         </Link>
     );
 }
-
-//Issue with scaling images within a box

@@ -1,32 +1,25 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React from 'react';
+import { useRef } from 'react';
 import { Carousel } from '@mantine/carousel';
 import { Card, Text, Box, Flex, Button } from '@mantine/core';
 import Autoplay from 'embla-carousel-autoplay';
 
-import newsData from '@/app/_components/newscomps/newsData';
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardSmall from "@/app/_components/newscomps/cards/newsCardSmall";
 
-export default function ArticleCarousel() {
-
-    // Create Timer for Carousel autoplay
+export default function ArticleCarousel({ articles }: { articles: ArticleInterface[] }) {
     const autoplay = useRef(Autoplay({ delay: 4500 }));
 
-    // Map all Articles that are not featured
-    const [articles] = useState<ArticleInterface[]>(() => {
-        return newsData.map((article) => ({
-            ...article,
-            featured: false,
-        }));
-    });
-
-    const slides = articles.map((article) => (
-        <Carousel.Slide key={article.id}>
-            <NewsCardSmall article={article} />
-        </Carousel.Slide>
-    ));
+    // Filter out the featured article
+    const slides = articles
+        .filter(article => !article.featured)
+        .map(article => (
+            <Carousel.Slide key={article.id}>
+                <NewsCardSmall article={article} />
+            </Carousel.Slide>
+        ));
 
     return (
         <Card
@@ -59,7 +52,7 @@ export default function ArticleCarousel() {
             >
                 <Box maw={'100%'} w={'auto'} h='100%' >
                     <Carousel
-                        withIndicators // Removed indicators for now
+                        withIndicators
                         height="60%"
                         slideSize="100%"
                         slideGap="md"
@@ -75,8 +68,6 @@ export default function ArticleCarousel() {
                     </Carousel>
                 </Box>
             </Flex>
-
-            {/* The final text */}
             <Flex
                 w='100%'
                 direction="row"

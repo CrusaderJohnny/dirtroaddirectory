@@ -1,7 +1,7 @@
 import {AppShell, AppShellHeader, AppShellMain} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import { Suspense } from 'react';
-import MarketsContent from "@/app/_components/marktecomponents/marketContent";
+import MarketsContent from "@/app/_components/marketcomponents/marketContent";
 
 // You might want a simple loading component or just a div for fallback
 // app/markets/loading.tsx (optional, but good practice for Suspense fallback)
@@ -11,6 +11,7 @@ import MarketsContent from "@/app/_components/marktecomponents/marketContent";
 
 export default function Page() {
     return (
+
         <AppShell>
             <AppShellHeader component={NavMT} />
             <AppShellMain>

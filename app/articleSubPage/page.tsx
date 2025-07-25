@@ -3,13 +3,7 @@
 import {AppShell, AppShellHeader, AppShellMain} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import { Suspense } from 'react';
-import ArticleDetailsContent from "@/app/_components/newscomps/articleDeatails/articleDetails"; // Import Suspense from React
-
-// You can optionally create a loading.tsx file or use a simple div for fallback
-// Example app/news/loading.tsx (optional)
-// export default function Loading() {
-//   return <div>Loading article details...</div>;
-// }
+import ArticleDetailsContent from "@/app/_components/newscomps/articleDeatails/articleDetails";
 
 export default function ArticleDetailsPage() {
     return (
