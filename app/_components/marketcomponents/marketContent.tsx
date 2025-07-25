@@ -88,7 +88,7 @@ export default function MarketContent() {
         return matchesName && matchesRegion;
     });
     const handleMarketView = async (marketName: string) => {
-        AnalyticsTracker('market_view', marketName);
+        await AnalyticsTracker('market_view', marketName);
         trackEvent({
             name: 'view_market_profile',
             properties: {
