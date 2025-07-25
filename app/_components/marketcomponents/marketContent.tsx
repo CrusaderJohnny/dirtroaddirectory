@@ -105,7 +105,7 @@ export default function MarketContent() {
     // Add loading and error states for initial render
     if (loading) {
         return (
-            <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Text size="xl">Loading market data...</Text>
             </AppShellMain>
         );
@@ -113,7 +113,7 @@ export default function MarketContent() {
 
     if (error) {
         return (
-            <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Text size="xl" c="red">Error loading data: {error}</Text>
             </AppShellMain>
         );
@@ -122,7 +122,7 @@ export default function MarketContent() {
     // Conditional rendering for a specific market profile
     if (marketId && selectedMarket) { // Check if marketId is present and selectedMarket is found
         return (
-            <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh' }}>
+            <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
                     {/* Hero Image */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
@@ -266,7 +266,7 @@ export default function MarketContent() {
 
     // Default view for all markets (when no marketId is in search params)
     return (
-        <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', paddingTop: 0 }}>
+        <AppShellMain style={{ minHeight: '100vh', paddingTop: 0 }}>
             <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
                 <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
                 <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
