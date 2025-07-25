@@ -55,7 +55,7 @@ export default function VendorsContent() {
 
   if (selectedVendor) {
     return (
-      <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
+      <AppShellMain style={{ minHeight: "100vh" }}>
         <Container size="lg" py="xl">
           {/* Hero Image */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>

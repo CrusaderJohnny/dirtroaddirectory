@@ -54,7 +54,7 @@ export default function MarketContent() {
 
   if (selectedMarket) {
     return (
-      <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh' }}>
+      <AppShellMain style={{ minHeight: '100vh' }}>
         <Container size="lg" py="xl">
           {/* Hero Image */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
