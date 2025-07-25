@@ -36,7 +36,7 @@
     "summary": "Get the most out of market day with tips like arriving early, bringing reusable bags, and talking to vendors. Discover new produce, enjoy samples, and make shopping a fun, flavorful experience every week."
   },
   {
-    "id": 1,
+    "id": 5,
     "title": "From Farm to Table: The Benefits of Shopping Local",
     "date": "March 7, 2025",
     "content": "Curabitur convallis laoreet vulputate. Fusce tristique, quam nec placerat facilisis, justo justo pretium urna,\nsit amet lobortis metus metus vel augue. Ut suscipit ligula et vehicula venenatis. Vestibulum aliquam tortor\nat libero pretium, eget gravida risus gravida. Aenean molestie a dolor a rutrum. Donec sed sodales nunc.\nVestibulum pharetra ultricies magna, in sagittis purus suscipit sit amet. Nullam id lacinia nisl. Maecenas\nconsequat diam id lacus malesuada aliquet bibendum eget dolor. Curabitur malesuada placerat finibus",
@@ -45,7 +45,7 @@
     "summary": "baseContent"
   },
   {
-    "id": 2,
+    "id": 6,
     "title": "Know Your Market",
     "date": "March 20, 2025",
     "content": "Shopping local means more than just fresh food—it’s a choice that supports your community. Buying directly from farmers ensures peak flavor, reduces environmental impact, and keeps dollars in the local economy. You’ll enjoy seasonal variety, build relationships with growers, and know exactly where your food comes from.",
@@ -54,7 +54,7 @@
     "summary": "Buying local supports farmers, strengthens your community, and offers fresher, tastier food. It’s a sustainable choice that connects you to the source of your meals—bringing the farm straight to your table."
   },
   {
-    "id": 3,
+    "id": 7,
     "title": "Spotlight On: This Week's Featured Vendor",
     "date": "April 1, 2025",
     "content": "Each week, we highlight a vendor who brings something special to the market. This time, meet (Healthy Markets), known for [unique product or story]. From sustainable farming practices to standout flavors, their dedication shines through. Stop by their stall to learn more, taste samples, and support local passion.",
@@ -63,7 +63,7 @@
     "summary": "This week’s featured vendor, (Healthy Markets), offers standout products and a unique story. Visit their stall to discover what makes them special, sample their goods, and support a dedicated local maker in your community."
   },
   {
-    "id": 4,
+    "id": 8,
     "title": "Harvest Health: How Farmers' Market Produce Boosts Your Wellness",
     "date": "April 20, 2025",
     "content": "Fresh, local produce isn’t just delicious—it’s packed with nutrients that support your health. Farmers' market fruits and vegetables are often harvested at peak ripeness, offering more vitamins and antioxidants than store-bought options. Eating seasonally helps you stay energized, supports digestion, and strengthens your immune system.",
