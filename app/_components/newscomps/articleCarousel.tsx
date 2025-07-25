@@ -1,18 +1,22 @@
 'use client';
 
-import React from 'react';
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { Carousel } from '@mantine/carousel';
-import { Card, Text, Box, Flex, Button } from '@mantine/core';
+import { Card, Text, Box, Button } from '@mantine/core';
 import Autoplay from 'embla-carousel-autoplay';
 
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardSmall from "@/app/_components/newscomps/cards/newsCardSmall";
 
-export default function ArticleCarousel({ articles }: { articles: ArticleInterface[] }) {
+export default function ArticleCarousel({
+                                            articles,
+                                            height,
+                                        }: {
+    articles: ArticleInterface[];
+    height?: number | string;
+}) {
     const autoplay = useRef(Autoplay({ delay: 4500 }));
 
-    // Filter out the featured article
     const slides = articles
         .filter(article => !article.featured)
         .map(article => (
@@ -29,58 +33,41 @@ export default function ArticleCarousel({ articles }: { articles: ArticleInterfa
             shadow='sm'
             p="md"
             w='100%'
-            h='100%'
-            className="cursor-pointer"
             style={{
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
+                alignItems: 'stretch',
+                gap: '1rem',
             }}
         >
-            <Text size="xl" fw={700} mb="md">Other News</Text>
+            <Text size="xl" fw={700}>Other News</Text>
 
-            {/* This Flex container holds the Carousel and should occupy enough vertical space */}
-            <Flex
-                direction="column"
-                justify="center"
-                align="center"
-                style={{
-                    minHeight: '200px',
-                    width: '100%',
-                }}
-            >
-                <Box maw={'100%'} w={'auto'} h='100%' >
-                    <Carousel
-                        withIndicators
-                        height="60%"
-                        slideSize="100%"
-                        slideGap="md"
-                        controlsOffset="md"
-                        plugins={[autoplay.current]}
-                        onMouseEnter={autoplay.current.stop}
-                        onMouseLeave={() => autoplay.current.play()}
-                        emblaOptions={{
-                            dragFree: false,
-                        }}
-                    >
-                        {slides}
-                    </Carousel>
-                </Box>
-            </Flex>
-            <Flex
-                w='100%'
-                direction="row"
-                align="center"
-                justify='center'
-                gap="md"
-                wrap="wrap"
-            >
-                <Text size="lg" fw={700}>Want Your Story Featured?</Text>
-                <Button component="a" href="/contact" mt='sm' fullWidth>
+            {/* Carousel Section */}
+            <Box style={{ width: '100%' }}>
+                <Carousel
+                    withIndicators
+                    height={height ?? 400}
+                    slideSize="100%"
+                    slideGap="md"
+                    controlsOffset="md"
+                    plugins={[autoplay.current]}
+                    onMouseEnter={autoplay.current.stop}
+                    onMouseLeave={() => autoplay.current.play()}
+                    emblaOptions={{ dragFree: false }}
+                >
+                    {slides}
+                </Carousel>
+            </Box>
+
+            {/* Call-to-action Section */}
+            <Box mt="xs">
+                <Text size="lg" fw={700} ta="center" mb="xs">
+                    Want Your Story Featured?
+                </Text>
+                <Button component="a" href="/contact" fullWidth size="sm">
                     Contact Us
                 </Button>
-            </Flex>
+            </Box>
         </Card>
     );
 }

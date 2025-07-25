@@ -1,42 +1,24 @@
-import {
-    Modal,
-    Image,
-    Title,
-    Menu,
-    Burger,
-    Flex,
-    Avatar,
-    ScrollArea,
-    Tooltip,
-} from "@mantine/core";
-
-import {useDisclosure, useMediaQuery} from "@mantine/hooks";
+import Link from 'next/link';
+import {Button, Group, Image, Title, Burger, Menu, Text, ScrollArea, Modal} from '@mantine/core';
+import {SignedIn, SignedOut, UserButton} from '@clerk/nextjs';
 import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
-import Link from "next/link";
-import {
-    SignedIn,
-    SignedOut,
-    UserButton
-} from "@clerk/nextjs";
+import {useDisclosure, useMediaQuery} from "@mantine/hooks";
 
 import {
     IconApple,
     IconBuildingStore,
-    IconMapRoute,
-    IconHelpHexagon,
-    IconMailbox,
-    IconUser,
     IconHeartStar,
-    IconLockCode,
-} from '@tabler/icons-react';
+    IconHelpHexagon, IconMailbox,
+    IconMapRoute,
+    IconUser
+} from "@tabler/icons-react";
 
-
-export default function HeaderSmall() {
+export default function HeaderMedium() {
     const [opened, {open, close}] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width: 20rem) ');
     return (
-        <>
-            {/*Set default for modal*/}
+        // Test one tried adding "style={{ flexWrap: 'nowrap' }}" to main-group to stop it from wrapping
+        <Group justify="space-between" w="100%" style={{flexWrap: 'nowrap'}}>
             <Modal
                 opened={opened}
                 onClose={close}
@@ -58,37 +40,51 @@ export default function HeaderSmall() {
             >
                 <UserLoginModal/>
             </Modal>
-
-            <Flex
-                justify="center"
-                align="center"
-                direction="row"
-                gap="lg"
-            >
-                <Link href="/">
-                    <Flex
-                        align="center"
-                        direction="row"
-                    >
-                        <Image
-                            src="https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8="
-                            h={40}
-                            w="auto"
-                            fit="contain"
-                            radius="md"
-                            alt="Farmers Market Logo"
-                            mr="sm"
-                        />
-                        <Title
-                            order={1} c="white">
-                            DRD
+            <Link href="/">
+                <Group>
+                    <Image
+                        src="https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8="
+                        h={40}
+                        w="auto"
+                        fit="contain"
+                        radius="md"
+                        alt="Farmers Market Logo"
+                    />
+                    <Group gap={4} align="center">
+                        <Title order={2} c="white">
+                            <span style={{fontSize: '2.5rem', verticalAlign: 'middle'}}>D</span>
+                            <span style={{fontSize: '1.5rem'}}>irt</span>
                         </Title>
-                    </Flex>
-                </Link>
 
-                <Menu>
+                        <Title order={2} c="white">
+                            <span style={{fontSize: '2.5rem', verticalAlign: 'middle'}}>R</span>
+                            <span style={{fontSize: '1.5rem'}}>oad</span>
+                        </Title>
+
+                        <Title order={2} c="white">
+                            <span style={{fontSize: '2.5rem', verticalAlign: 'middle'}}>D</span>
+                            <span style={{fontSize: '1.5rem'}}>irectory</span>
+                        </Title>
+                    </Group>
+                </Group>
+            </Link>
+
+            <Group>
+                <UserButton/>
+                <Menu position="bottom-start">
                     <Menu.Target>
-                        <Burger color="white"/>
+                        <Button
+                            component="a"
+                            variant="outline"
+                            color="white"
+                            size="xs"
+                            style={{
+                                backgroundColor: "#2f9e44"
+                            }}
+                        >
+                            <Burger color="white" size="sm"/>
+                            <Text pl="sm">Pages</Text>
+                        </Button>
                     </Menu.Target>
                     {/*Drop down menu options*/}
                     <Menu.Dropdown>
@@ -152,36 +148,22 @@ export default function HeaderSmall() {
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
-                <SignedOut>
-                    <Tooltip label="Accounts">
-                    <Avatar
-                        component="button"
-                        onClick={open}
-                        radius="xl"
-                        size="sm"
-                        color="green"
-                    >
-                        <IconUser size={14}/>
-                    </Avatar>
-                    </Tooltip>
-                </SignedOut>
-                <UserButton/>
-                <Tooltip label="Admin Panel" >
-                    <Avatar
+
+                <Group>
+                    <Button
                         component="a"
                         href="/admin"
-                        variant="subtle"
-                        radius="xl"
-                        color="green"
-                        size="sm"
+                        variant="outline"
+                        color="white"
+                        size="xs"
                         style={{
-                            backgroundColor: '#ffc2c2'
+                            backgroundColor: "#ff7070"
                         }}
                     >
-                        <IconLockCode size={14}/>
-                    </Avatar>
-                </Tooltip>
-            </Flex>
-        </>
+                        Admin Panel
+                    </Button>
+                </Group>
+            </Group>
+        </Group>
     );
 }
