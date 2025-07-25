@@ -16,7 +16,7 @@ import MapComponent from "@/app/_components/mapcomps/map";
 import { useState, useEffect } from "react";
 import NavMT from '../_components/navcomps/navmt';
 import regions from '../_res/regions.json';
-import { fetchMarketsAsJson } from '../_components/apicomps/marketfetch'; // Import your fetch function
+import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import { MarketsInterface } from '../_types/interfaces'; // Import your MarketsInterface
 
 // Interface for region json
@@ -52,7 +52,7 @@ export default function App() {
     useEffect(() => {
         const getMarkets = async () => {
             try {
-                const data = await fetchMarketsAsJson();
+                const data = await marketsAPI.getMarkets();
                 setAllMarkets(data);
                 // Initialize autocomplete data with all market names
                 setAutocompleteData(data.map(market => market.label));
