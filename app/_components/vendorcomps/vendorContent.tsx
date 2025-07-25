@@ -144,7 +144,7 @@ export default function VendorsContent() {
   // Add loading and error states for initial render (all vendors list)
   if (loading) {
     return (
-      <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Text size="xl">Loading vendor data...</Text>
       </AppShellMain>
     );
@@ -152,7 +152,7 @@ export default function VendorsContent() {
 
   if (error) {
     return (
-      <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Text size="xl" c="red">Error loading data: {error}</Text>
       </AppShellMain>
     );
@@ -166,7 +166,7 @@ export default function VendorsContent() {
     handleVendorView(selectedVendor.id.toString(), selectedVendor.name);
 
     return (
-      <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
+      <AppShellMain style={{ minHeight: "100vh" }}>
         <Container size="lg" py="xl">
           {/* Hero Image */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
@@ -295,7 +295,7 @@ export default function VendorsContent() {
 
   // --- All vendors list view (fallback) ---
   return (
-    <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
+    <AppShellMain style={{ minHeight: "100vh" }}>
       <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
         <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
           Our Vendors
