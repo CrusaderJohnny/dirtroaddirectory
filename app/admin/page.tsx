@@ -1,4 +1,3 @@
-
 import {checkRole} from '@/_utils/roles'
 import {currentUser} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
