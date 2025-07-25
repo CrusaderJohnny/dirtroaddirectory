@@ -26,7 +26,6 @@
     "@vis.gl/react-google-maps": "^1.5.2",
     "cloudinary": "^2.7.0",
     "dayjs": "^1.11.13",
-    "dotenv": "^17.2.0",
     "embla-carousel": "^8.6.0",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
