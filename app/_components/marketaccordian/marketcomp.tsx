@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {MarketsInterface} from "@/app/_types/interfaces";
-import { fetchMarketsAsJson } from "../apicomps/marketfetch";
+import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 
 // All information taken from respective websites for each individual farmers market. Pictures taken from their websites.
 // Image URL was copied as well as description and content was taken from the websites for each respective market
@@ -62,7 +62,7 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
             setLoading(true); // Start loading
             setError(null); // Clear any previous errors
             try {
-                const fetchedData = await fetchMarketsAsJson(); // Call the async function
+                const fetchedData = await marketsAPI.getMarkets(); // Call the async function
                 setMarkets(fetchedData); // Set the fetched data to state
             } catch (err) {
                 console.error("Failed to load markets:", err);

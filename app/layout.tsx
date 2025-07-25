@@ -11,6 +11,9 @@ import {
 import MantineThemeWrapper from "@/app/mantineTheme";
 import {Analytics} from "@vercel/analytics/next";
 import React from "react";
+import {PageViewTracker} from "@/app/_components/analytic-tracking/PageViewTracker";
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +35,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID;
   return (
     <ClerkProvider>
       <html lang="en" {...mantineHtmlProps}>
@@ -63,6 +66,8 @@ export default function RootLayout({
           <MantineThemeWrapper>
             {children}
             <Analytics/>
+            <PageViewTracker/>
+            <Notifications/>
           </MantineThemeWrapper>
         </body>
       </html>

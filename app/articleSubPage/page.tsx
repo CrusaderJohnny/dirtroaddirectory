@@ -1,5 +1,3 @@
-// app/news/[articleId]/page.tsx  (or app/news/article-details/page.tsx)
-// NO "use client"; directive here. This file will be a Server Component.
 import {AppShell, AppShellHeader, AppShellMain} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import { Suspense } from 'react';

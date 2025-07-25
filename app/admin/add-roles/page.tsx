@@ -40,7 +40,7 @@ export default async function Page(params: {searchParams: Promise<{search?: stri
             </AppShellMain>
             <AppShellFooter>
                 <Center>
-                    <Button component={'a'} href={'/admin'}>
+                    <Button variant={'light'} component={'a'} href={'/admin'}>
                         Return to Admin Page
                     </Button>
                 </Center>

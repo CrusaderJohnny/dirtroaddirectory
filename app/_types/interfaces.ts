@@ -61,13 +61,10 @@ export interface VendorsInterface {
   category: string;
   location: string;
   image: string;
-  contact: string;
+  contact?: string;
   email?: string;
   website?: string;
-  markets: {
-    id: string;
-    label: string;
-  }[];
+  markets: number[];
   products?: string[];
   description: string;
 }
@@ -159,4 +156,10 @@ export interface AzureApiErrorResponse {
         message: string;
         details?: string;
     };
+}
+
+export interface EventData {
+    event_type: string;
+    event_name: string;
+    count: number;
 }

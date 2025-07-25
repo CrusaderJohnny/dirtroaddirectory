@@ -33,9 +33,10 @@ import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import { trackEvent } from "@/analytics";
 
 // Import the API fetching functions and interfaces
-import { fetchMarketsAsJson } from '../apicomps/marketfetch';
-import { fetchVendorsAsJson } from '../apicomps/vendorfetch';
+import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
+import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
+import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -61,10 +62,10 @@ export default function MarketContent() {
             setLoading(true);
             setError(null);
             try {
-                const fetchedMarkets = await fetchMarketsAsJson();
+                const fetchedMarkets = await marketsAPI.getMarkets();
                 setMarkets(fetchedMarkets);
 
-                const fetchedVendors = await fetchVendorsAsJson();
+                const fetchedVendors = await vendorsAPI.getVendors();
                 setVendors(fetchedVendors);
             } catch (err) {
                 console.error("Failed to load data:", err);
@@ -86,16 +87,20 @@ export default function MarketContent() {
         const matchesRegion = selectedRegion ? market.region === selectedRegion : true;
         return matchesName && matchesRegion;
     });
-
-    const handleMarketView = (marketId: string, marketName: string) => {
+    const handleMarketView = async (marketName: string) => {
+        AnalyticsTracker('market_view', marketName);
         trackEvent({
             name: 'view_market_profile',
             properties: {
-                market_id: marketId,
                 market_name: marketName,
             },
         });
     };
+    useEffect(() => {
+        if(selectedMarket){
+            handleMarketView(selectedMarket.label as string).then();
+        }
+    }, [selectedMarket]);
 
     // Add loading and error states for initial render
     if (loading) {
@@ -116,9 +121,6 @@ export default function MarketContent() {
 
     // Conditional rendering for a specific market profile
     if (marketId && selectedMarket) { // Check if marketId is present and selectedMarket is found
-        const name = selectedMarket.label;
-        const id = selectedMarket.id.toString();
-        handleMarketView(id, name);
         return (
             <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
