@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, Container, Text } from "@mantine/core";
-import { fetchArticlesAsJson } from "@/app/_components/apicomps/articlefetch";
+// import { fetchArticlesAsJson } from "@/app/_components/apicomps/articlefetch";
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardFullPage from '@/app/_components/newscomps/cards/newsCardFullPage';
 
