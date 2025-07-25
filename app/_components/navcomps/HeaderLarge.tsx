@@ -64,9 +64,9 @@ export default function HeaderLarge() {
                     </SignUpButton>
                 </SignedOut>
                 <SignedIn>
-                    <Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">
-                        Favs
-                    </Button>
+                    {/*<Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">*/}
+                    {/*    Favs*/}
+                    {/*</Button>*/}
                     <UserButton />
                 </SignedIn>
             </Group>

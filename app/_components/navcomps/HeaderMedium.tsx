@@ -7,7 +7,6 @@ import {useDisclosure, useMediaQuery} from "@mantine/hooks";
 import {
     IconApple,
     IconBuildingStore,
-    IconHeartStar,
     IconHelpHexagon, IconMailbox,
     IconMapRoute,
     IconUser
@@ -99,14 +98,14 @@ export default function HeaderMedium() {
                             </Menu.Item>
                         </SignedOut>
                         <SignedIn>
-                            <Menu.Item
-                                leftSection={<IconHeartStar size={14}/>}
-                                color="blue"
-                                component="a"
-                                href="/userfavs"
-                            >
-                                Favorites
-                            </Menu.Item>
+                            {/*<Menu.Item*/}
+                            {/*    leftSection={<IconHeartStar size={14}/>}*/}
+                            {/*    color="blue"*/}
+                            {/*    component="a"*/}
+                            {/*    href="/userfavs"*/}
+                            {/*>*/}
+                            {/*    Favorites*/}
+                            {/*</Menu.Item>*/}
                         </SignedIn>
 
                         <Menu.Divider/>
