@@ -162,6 +162,7 @@ export default function App() {
                     style={{
                         height: '100%',
                         overflowY: 'auto', // Enable vertical scrolling when content exceeds height
+                        // CHANGE TO SCROLL AREA AND USE SCROLLTO METHOD FOR JUMPING TO OPENED MARKET
                     }}>
                     <MarketAccordion defaultOpenItemId={openMarketId}/>
                 </div>
