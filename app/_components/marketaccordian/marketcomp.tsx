@@ -11,7 +11,7 @@ import {
     Flex,
 } from "@mantine/core";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {MarketsInterface} from "@/app/_types/interfaces";
 import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 
@@ -41,14 +41,27 @@ function AccordionLabel({ label, image, description } : MarketsInterface) {
 // Define props for MarketAccordion()
 interface MarketAccordionProps {
     defaultOpenItemId?: number | null; // ? allows the prompt to be optional
+    onCardSelect?: (node: HTMLElement | null, marketId: number | null) => void; // New prop for sending ref to parent
 }
 
 //displays the accordion information. essentially a read more pop out
-export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProps) {
+export default function MarketAccordion({defaultOpenItemId,onCardSelect}: MarketAccordionProps) {
     const [activeItem, setActiveItem] = useState<number | null>(defaultOpenItemId ?? null); // if defaultOpenItemId is null or undefined set to null
     const [markets, setMarkets] = useState<MarketsInterface[]>([]); // State to store fetched markets
     const [loading, setLoading] = useState<boolean>(true); // State for loading indicator
     const [error, setError] = useState<string | null>(null); // State for error messages
+
+    // Ref to store a map of item IDs to their respective HTML elements
+    const itemRefs = useRef<Map<number, HTMLElement>>(new Map());
+
+    // Function to set the ref for a specific item
+    const setItemRef = (id: number, node: HTMLElement | null) => {
+        if (node) {
+            itemRefs.current.set(id, node);
+        } else {
+            itemRefs.current.delete(id);
+        }
+    };
 
     // rerender the component when changing the value of "defaultOpenItemId"
     useEffect(() => {
@@ -92,10 +105,18 @@ export default function MarketAccordion({defaultOpenItemId}: MarketAccordionProp
         // convert the string value back to a number, or null if it's null
         const numericValue = value !== null ? parseInt(value, 10) : null;
         setActiveItem(numericValue);
+
+        // If a callback is provided, call it with the selected node
+        if (onCardSelect) {
+        const selectedNode = numericValue
+            ? itemRefs.current.get(numericValue) || null
+            : null;
+        onCardSelect(selectedNode, numericValue);
+        }
     };
 
     const items = markets.map((item) => (
-        <AccordionItem value={String(item.id)} key={item.label}>
+        <AccordionItem value={String(item.id)} key={item.label} ref={(node) => setItemRef(item.id, node)}>
             <AccordionControl>
                 <AccordionLabel {...item} />
             </AccordionControl>
