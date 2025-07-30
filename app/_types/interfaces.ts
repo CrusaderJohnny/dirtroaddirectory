@@ -163,3 +163,8 @@ export interface EventData {
     event_name: string;
     count: number;
 }
+
+export interface Message {
+    role: "system" | "user" | "assistant";
+    content: string;
+}

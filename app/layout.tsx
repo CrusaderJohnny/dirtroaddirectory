@@ -14,6 +14,7 @@ import React from "react";
 import {PageViewTracker} from "@/app/_components/analytic-tracking/PageViewTracker";
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
+import ChatbotOverlay from "@/app/_components/shazbot/chatBotOverlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,6 +66,7 @@ export default function RootLayout({
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
           <MantineThemeWrapper>
             {children}
+            <ChatbotOverlay/>
             <Analytics/>
             <PageViewTracker/>
             <Notifications/>
