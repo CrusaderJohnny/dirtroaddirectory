@@ -48,7 +48,7 @@ export default function App() {
     const [searchInputValue, setSearchInputValue] = useState<string>(''); // State for search input value
 
     const { scrollIntoView, targetRef, scrollableRef } = useScrollIntoView<HTMLElement>({ // Hook for changing scroll position
-
+        duration: 500
     });
 
 

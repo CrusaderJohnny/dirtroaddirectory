@@ -66,7 +66,46 @@ export default function MarketAccordion({defaultOpenItemId,onCardSelect}: Market
     // rerender the component when changing the value of "defaultOpenItemId"
     useEffect(() => {
         setActiveItem(defaultOpenItemId ?? null);
-    }, [defaultOpenItemId]);
+
+        // If a defaultOpenItemId is provided and the onCardSelect callback exists,
+        // attempt to get the ref and call the callback.
+        if (defaultOpenItemId !== null && defaultOpenItemId !== undefined && onCardSelect) {
+            // We need to wait for the next tick for the itemRefs to be populated
+            // after the AccordionItems have rendered.
+            // A common pattern is to use setTimeout with 0 delay for this.
+            // However, a more robust solution in this context might be to
+            // ensure the AccordionItems are rendered before this effect tries to access them.
+            // For initial load, the `markets` data needs to be present first.
+            // Let's assume `markets` is already loaded when `defaultOpenItemId` might change
+            // or we handle the initial load within the fetch effect if defaultOpenItemId is present from start.
+
+            // To ensure the ref is available, this part often requires careful timing.
+            // For simplicity and assuming AccordionItems are already rendered if defaultOpenItemId is set,
+            // we can try to access it directly. If not, a setTimeout(..., 0) might be needed,
+            // or triggering this after `markets` is set.
+            const node = itemRefs.current.get(defaultOpenItemId) || null;
+            if (node) {
+                onCardSelect(node, defaultOpenItemId);
+            } else {
+                // If the node isn't immediately available (e.g., due to initial render order),
+                // you might need a more sophisticated approach, like a separate effect
+                // that runs when `markets` is loaded and `defaultOpenItemId` is set.
+                // For now, if the node isn't found, we'll try to find it after a short delay.
+                // This is a common workaround for rendering timing issues.
+                const timeoutId = setTimeout(() => {
+                    const delayedNode = itemRefs.current.get(defaultOpenItemId) || null;
+                    if (delayedNode) {
+                        onCardSelect(delayedNode, defaultOpenItemId);
+                    }
+                }, 0); // Short delay to allow DOM to update
+
+                return () => clearTimeout(timeoutId); // Cleanup timeout
+            }
+        } else if (defaultOpenItemId === null && onCardSelect) {
+            // If defaultOpenItemId becomes null, also signal that no card is selected
+            onCardSelect(null, null);
+        }
+    }, [defaultOpenItemId, onCardSelect, markets]);
 
 
     // Effect to fetch market data when the component mounts
