@@ -15,9 +15,13 @@ export async function GET() {
         const backendResponse = await fetch(`${ANALYTICS_API_ENDPOINT}/events`);
 
         if (!backendResponse.ok) {
-            // If backend responds with an error, forward that error
-            const errorData = await backendResponse.json();
-            return NextResponse.json(errorData, { status: backendResponse.status });
+            // Attempt to parse json error from backend
+            try{
+                const errorData = await backendResponse.json();
+                return NextResponse.json(errorData, { status: backendResponse.status });
+            } catch (jsonErr) {
+                return NextResponse.json({ message: `Backend Error: ${backendResponse.statusText}, ${jsonErr}` }, { status: backendResponse.status });
+            }
         }
 
         const data = await backendResponse.json();
