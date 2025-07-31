@@ -101,7 +101,7 @@ export default function HeaderMedium() {
                 </Group>
                 )}
                 {/*Clerk User Icon*/}
-                <UserButton style={{}}/>
+                <UserButton />
                 {/*Hamburger Menu for pages*/}
                 <Menu position="bottom-start">
                     <Menu.Target>

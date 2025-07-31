@@ -1,11 +1,39 @@
 import Link from 'next/link';
-import { Button, Group, Image, Title } from '@mantine/core';
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import {Avatar, Button, Group, Image, Modal, ScrollArea, Title} from '@mantine/core';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
+import {IconUser} from "@tabler/icons-react";
 
 export default function HeaderLarge() {
+    const [opened, { open, close }] = useDisclosure(false);
+    const isMobile = useMediaQuery('(max-width: 20rem)');
+    const {  user } = useUser();
+    const isAdmin = user?.publicMetadata?.role === 'admin';
     return (
-        // Test one tried adding "style={{ flexWrap: 'nowrap' }}" to main-group to stop it from wrapping
         <Group justify="space-between" w="100%" style={{ flexWrap: 'nowrap' }}>
+            {/* Modal for login */}
+            <Modal
+                opened={opened}
+                onClose={close}
+                withCloseButton={false}
+                centered
+                padding={0}
+                scrollAreaComponent={ScrollArea.Autosize}
+                fullScreen={isMobile}
+                style={{
+                    body: {
+                        backgroundColor: 'transparent'
+                    }
+                }}
+                size="20rem"
+                overlayProps={{
+                    backgroundOpacity: 0.55,
+                    blur: 3
+                }}
+            >
+                <UserLoginModal />
+            </Modal>
             <Link href="/">
                 <Group>
                     <Image
@@ -39,6 +67,9 @@ export default function HeaderLarge() {
                     Contact
                 </Button>
             </Group>
+
+            {/*The Admin Panel*/}
+            {isAdmin && (
             <Group>
                 <Button
                     component="a"
@@ -53,20 +84,38 @@ export default function HeaderLarge() {
                     Admin Panel
                 </Button>
             </Group>
+            )}
 
             <Group>
                 <SignedOut>
-                    <SignInButton>
-                        <button className="signin-button">Sign In</button>
-                    </SignInButton>
-                    <SignUpButton>
-                        <button className="signup-button">Sign Up</button>
-                    </SignUpButton>
+                <Button
+                    component="a"
+                    onClick={open}
+                    variant="outline"
+                    color="white"
+                    size="xs"
+                    style={{
+                        backgroundColor: "#2f9e44"
+                    }}
+                >
+                    <Avatar
+                        // onClick={open}
+                        radius="xl"
+                        size="xs"
+                        color="white"
+                        style={{
+                            backgroundColor: '#ffc2c2',
+                        }}
+                    >
+                        <IconUser size={14} />
+                    </Avatar>
+                    <Title pl="sm" order={6}>Accounts</Title>
+                </Button>
                 </SignedOut>
                 <SignedIn>
-                    {/*<Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">*/}
-                    {/*    Favs*/}
-                    {/*</Button>*/}
+                    <Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">
+                        Favs
+                    </Button>
                     <UserButton />
                 </SignedIn>
             </Group>
