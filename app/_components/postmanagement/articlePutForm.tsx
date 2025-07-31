@@ -9,6 +9,8 @@ import {
 import {ArticleInterface} from "@/app/_types/interfaces";
 import {fetchArticlesAsJson} from "@/app/_components/apicomps/articlefetch";
 
+const apiUrl = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
+
 export default function ArticlePutForm() {
     const theme = useMantineTheme();
 
@@ -66,7 +68,7 @@ export default function ArticlePutForm() {
         if (!selectedId) return;
 
         try {
-            const res = await fetch(`http://localhost:8080/articles/${selectedId}`, {
+            const res = await fetch(`${apiUrl}/articles/${selectedId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

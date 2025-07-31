@@ -1,4 +1,3 @@
-
 import {checkRole} from '@/_utils/roles'
 import {currentUser} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
@@ -137,6 +136,30 @@ export default async function AdminDashboard() {
                                         <Text fw={500}>Create new or edit Market</Text>
                                     </Center>
                                 </Card>
+                            </Group>
+                            <Group>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="Shazbot Test"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'/admin/chatTest'}
+                                >
+                                    <Center>
+                                        <Text fw={500}>Shazbot Test</Text>
+                                    </Center>
+                                </Card>
+                                {/*<Card*/}
+                                {/*    bg={'#d0f2da'}*/}
+                                {/*    title="Admin Analytics Dashboard"*/}
+                                {/*    w={'20rem'}*/}
+                                {/*    component='a'*/}
+                                {/*    href={'/admin/create-market'}*/}
+                                {/*>*/}
+                                {/*    <Center>*/}
+                                {/*        <Text fw={500}>Create new or edit Market</Text>*/}
+                                {/*    </Center>*/}
+                                {/*</Card>*/}
                             </Group>
                         </Stack>
                     </Center>

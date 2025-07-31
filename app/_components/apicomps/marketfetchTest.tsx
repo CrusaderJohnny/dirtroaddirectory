@@ -7,7 +7,7 @@ const [markets, setMarkets] = useState<MarketsInterface[]>([]);
 const [loading, setLoading] = useState<boolean>(true);
 const [error, setError] = useState<string | null>(null);
 
-const API_BASE_URL = 'http://localhost:8080'; // Backend API URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL; // Backend API URL
 
 const fetchMarkets = async () => {
     setLoading(true);

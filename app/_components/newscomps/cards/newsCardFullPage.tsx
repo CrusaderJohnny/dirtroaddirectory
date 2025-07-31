@@ -3,7 +3,7 @@ import { ArticleInterface } from "@/app/_types/interfaces";
 import {useState} from "react";
 
 
-export default function NewsCardLarge( { article }: { article: ArticleInterface } ) {
+export default function NewsCardFullPage({ article }: { article: ArticleInterface } ) {
 
     const [expanded, setExpanded] = useState(false);
 
