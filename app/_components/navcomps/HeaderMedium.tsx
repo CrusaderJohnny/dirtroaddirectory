@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import {Button, Group, Image, Title, Burger, Menu, Text, ScrollArea, Modal} from '@mantine/core';
-import {SignedIn, SignedOut, UserButton} from '@clerk/nextjs';
+import {Button, Group, Image, Title, Burger, Menu, ScrollArea, Modal, Avatar} from '@mantine/core';
+import {SignedIn, SignedOut, UserButton, useUser} from '@clerk/nextjs';
 import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
 import {useDisclosure, useMediaQuery} from "@mantine/hooks";
 
@@ -9,14 +9,17 @@ import {
     IconBuildingStore,
     IconHelpHexagon, IconMailbox,
     IconMapRoute,
-    IconUser
+    IconUser,
+    IconHeartStar, IconLockCode
 } from "@tabler/icons-react";
 
 export default function HeaderMedium() {
     const [opened, {open, close}] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width: 20rem) ');
+    const { user} = useUser();
+    const isAdmin = user?.publicMetadata?.role === 'admin';
+
     return (
-        // Test one tried adding "style={{ flexWrap: 'nowrap' }}" to main-group to stop it from wrapping
         <Group justify="space-between" w="100%" style={{flexWrap: 'nowrap'}}>
             <Modal
                 opened={opened}
@@ -69,7 +72,37 @@ export default function HeaderMedium() {
             </Link>
 
             <Group>
-                <UserButton/>
+                {/*Amin Panel only display when logged in as admin*/}
+                {isAdmin && (
+                <Group>
+                    <Button
+                        component="a"
+                        href="/admin"
+                        variant="outline"
+                        color="white"
+                        size="xs"
+                        style={{
+                            backgroundColor: "#ff7070"
+                        }}
+                    >
+                        <Avatar
+                            variant="subtle"
+                            radius="xl"
+                            color="green"
+                            size="xs"
+                            style={{
+                                backgroundColor: '#ffc2c2',
+                            }}
+                        >
+                            <IconLockCode size={14} />
+                        </Avatar>
+                        <Title pl="sm" order={6}>Admin Panel</Title>
+                    </Button>
+                </Group>
+                )}
+                {/*Clerk User Icon*/}
+                <UserButton style={{}}/>
+                {/*Hamburger Menu for pages*/}
                 <Menu position="bottom-start">
                     <Menu.Target>
                         <Button
@@ -81,8 +114,8 @@ export default function HeaderMedium() {
                                 backgroundColor: "#2f9e44"
                             }}
                         >
-                            <Burger color="white" size="sm"/>
-                            <Text pl="sm">Pages</Text>
+                            <Burger color="white" size="xs"/>
+                            <Title pl="sm" order={6}>Pages</Title>
                         </Button>
                     </Menu.Target>
                     {/*Drop down menu options*/}
@@ -98,14 +131,14 @@ export default function HeaderMedium() {
                             </Menu.Item>
                         </SignedOut>
                         <SignedIn>
-                            {/*<Menu.Item*/}
-                            {/*    leftSection={<IconHeartStar size={14}/>}*/}
-                            {/*    color="blue"*/}
-                            {/*    component="a"*/}
-                            {/*    href="/userfavs"*/}
-                            {/*>*/}
-                            {/*    Favorites*/}
-                            {/*</Menu.Item>*/}
+                            <Menu.Item
+                                leftSection={<IconHeartStar size={14}/>}
+                                color="blue"
+                                component="a"
+                                href="/userfavs"
+                            >
+                                Favorites
+                            </Menu.Item>
                         </SignedIn>
 
                         <Menu.Divider/>
@@ -147,21 +180,6 @@ export default function HeaderMedium() {
                         </Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
-
-                <Group>
-                    <Button
-                        component="a"
-                        href="/admin"
-                        variant="outline"
-                        color="white"
-                        size="xs"
-                        style={{
-                            backgroundColor: "#ff7070"
-                        }}
-                    >
-                        Admin Panel
-                    </Button>
-                </Group>
             </Group>
         </Group>
     );
