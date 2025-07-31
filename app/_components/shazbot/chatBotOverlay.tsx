@@ -12,7 +12,9 @@ import {
     useMantineTheme, ActionIcon,
 } from '@mantine/core';
 import {Message} from "@/app/_types/interfaces";
-import {IconMessageCircle, IconX} from "@tabler/icons-react";
+import {IconArrowsMaximize, IconArrowsMinimize, IconMessageCircle, IconX} from "@tabler/icons-react";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // Main ChatbotOverlay
 const ChatbotOverlay: React.FC = () => {
@@ -30,7 +32,9 @@ const ChatbotOverlay: React.FC = () => {
     // State to indicate if the assistant is currently generating a response
     const [isLoading, setIsLoading] = useState<boolean>(false);
     // Ref for auto-scrolling to the bottom of the chat
-    const chatEndRef = useRef<HTMLDivElement>(null);
+    const scrollViewAreaRef = useRef<HTMLDivElement>(null);
+    // State for enlarging chat
+    const [isLarge, setIsLarge] = useState<boolean>(false);
 
     // Get Mantine theme for custom styling
     const theme = useMantineTheme();
@@ -111,8 +115,11 @@ const ChatbotOverlay: React.FC = () => {
 
     // Effect to scroll to the bottom of the chat whenever messages change
     useEffect(() => {
-        if(isChatReal) {
-            chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        if(isChatReal && scrollViewAreaRef.current) {
+            scrollViewAreaRef.current.scrollTo({
+                top: scrollViewAreaRef.current.scrollHeight,
+                behavior: 'smooth',
+            })
         }
     }, [messages, isChatReal]);
 
@@ -148,20 +155,58 @@ const ChatbotOverlay: React.FC = () => {
                 p="md"
                 style={{
                     position: 'fixed',
-                    bottom: '1rem',
-                    right: '1rem',
-                    width: '20rem',
-                    height: '35rem',
+                    width: isLarge ? '80vw' : '26rem',
+                    height: isLarge ? '80vh' : '35rem',
+                    top: isLarge ? '50%' : 'auto',
+                    left: isLarge ? '50%' : 'auto',
+                    bottom: isLarge ? 'auto' : '1rem',
+                    right: isLarge ? 'auto' : '1rem',
+                    transform: isLarge ? 'translate(-50%, -50%)' : 'none',
                     zIndex: 50,
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
+                    transition: 'width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease, transform 0.3s ease',
                 }}
             >
+                {/* Header with expand/minimize and close buttons */}
+                <Flex
+                    justify="flex-end"
+                    gap="xs"
+                    p="sm"
+                    style={{ position: 'absolute', top: 0, right: 0, zIndex: 52 }}
+                >
+                    {/* Expand/Minimize Button */}
+                    <ActionIcon
+                        variant="subtle"
+                        color="gray"
+                        size="md"
+                        radius="xl"
+                        onClick={() => setIsLarge((prev) => !prev)}
+                        aria-label={isLarge ? "Minimize chat window" : "Maximize chat window"}
+                    >
+                        {isLarge ? <IconArrowsMinimize size={18} /> : <IconArrowsMaximize size={18} />}
+                    </ActionIcon>
+
+                    {/* Close Button */}
+                    <ActionIcon
+                        variant="subtle"
+                        color="red"
+                        size="md"
+                        radius="xl"
+                        onClick={() => {
+                            setIsChatReal(false);
+                            setIsLarge(false);
+                        }}
+                        aria-label="Close chat window"
+                    >
+                        <IconX size={18} />
+                    </ActionIcon>
+                </Flex>
                 {/* Chat messages display area using Mantine ScrollArea */}
                 <ScrollArea
                     style={{ flexGrow: 1, padding: '1rem' }}
-                    viewportRef={chatEndRef}
+                    viewportRef={scrollViewAreaRef}
                 >
                     {messages.map((msg, index) => (
                         msg.role !== 'system' && (
@@ -170,7 +215,7 @@ const ChatbotOverlay: React.FC = () => {
                             mb="sm"
                             justify={msg.role === 'user' ? 'flex-end' : 'flex-start'}
                         >
-                            <Text
+                            <Box
                                 style={{
                                     display: 'inline-block',
                                     padding: theme.spacing.sm,
@@ -189,10 +234,19 @@ const ChatbotOverlay: React.FC = () => {
                                         paddingLeft: theme.spacing.md,
                                         paddingRight: theme.spacing.md,
                                     }),
+                                    '& p': {
+                                        margin: 0,
+                                    },
+                                    '& a': {
+                                        color: msg.role === 'user' ? theme.white : theme.colors.blue[6],
+                                        textDecoration: 'underline',
+                                    },
                                 }}
                             >
-                                {msg.content}
-                            </Text>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {msg.content}
+                                </ReactMarkdown>
+                            </Box>
                         </Flex>
                         )
                     ))}
