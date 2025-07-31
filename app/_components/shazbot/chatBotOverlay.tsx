@@ -124,9 +124,9 @@ const ChatbotOverlay: React.FC = () => {
     }, [messages, isChatReal]);
 
     // Handle Enter key press in the input field
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && !isLoading) {
-            sendMessage(input);
+            await sendMessage(input);
         }
     };
 
@@ -279,7 +279,7 @@ const ChatbotOverlay: React.FC = () => {
                         placeholder="Type your message..."
                         value={input}
                         onChange={(event) => setInput(event.currentTarget.value)}
-                        onKeyPress={handleKeyPress}
+                        onKeyDown={handleKeyPress}
                         disabled={isLoading}
                         size="md"
                         radius="md"
