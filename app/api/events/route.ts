@@ -12,12 +12,21 @@ export async function GET() {
 
     try {
         // Forward the request to your actual backend API
-        const backendResponse = await fetch(`${ANALYTICS_API_ENDPOINT}/events`);
+        const backendResponse = await fetch(`${ANALYTICS_API_ENDPOINT}/events`, {
+            method: 'GET',
+            headers: {
+                contentType: "application/json",
+            }
+        });
 
         if (!backendResponse.ok) {
-            // If backend responds with an error, forward that error
-            const errorData = await backendResponse.json();
-            return NextResponse.json(errorData, { status: backendResponse.status });
+            // Attempt to parse json error from backend
+            try{
+                const errorData = await backendResponse.json();
+                return NextResponse.json(errorData, { status: backendResponse.status });
+            } catch (jsonErr) {
+                return NextResponse.json({ message: `Backend Error: ${backendResponse.statusText}, ${jsonErr}` }, { status: backendResponse.status });
+            }
         }
 
         const data = await backendResponse.json();
@@ -47,15 +56,19 @@ export async function POST(request: NextRequest) {
         const backendResponse = await fetch(`${ANALYTICS_API_ENDPOINT}/events`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                contentType: 'application/json',
             },
             body: JSON.stringify(body), // Send the received body to the backend
         });
 
         if (!backendResponse.ok) {
-            // If backend responds with an error, forward that error
-            const errorData = await backendResponse.json();
-            return NextResponse.json(errorData, { status: backendResponse.status });
+            // Attempt to parse json error from backend
+            try{
+                const errorData = await backendResponse.json();
+                return NextResponse.json(errorData, { status: backendResponse.status });
+            } catch (jsonErr) {
+                return NextResponse.json({ message: `Backend Error: ${backendResponse.statusText}, ${jsonErr}` }, { status: backendResponse.status });
+            }
         }
 
         const data = await backendResponse.json();

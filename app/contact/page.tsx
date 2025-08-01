@@ -19,14 +19,13 @@ import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import NavMT from '@/app/_components/navcomps/navmt';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 export default function Page() {
   const [opened, { open, close }] = useDisclosure(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm({
-    mode: 'uncontrolled',
     initialValues: {
       name: '',
       email: '',
@@ -51,7 +50,7 @@ export default function Page() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: 'Failed to send message.' }));
-        setSubmitError(errorData);
+        setSubmitError(errorData?.message);
       }
 
       open();
