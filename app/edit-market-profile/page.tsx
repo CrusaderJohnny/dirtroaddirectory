@@ -6,7 +6,6 @@ import {
     AppShell,
     AppShellHeader,
     AppShellMain,
-    AppShellFooter,
     Title,
     Container,
     Center,
@@ -24,16 +23,15 @@ import { MarketsInterface } from '@/app/_types/interfaces';
 
 
 export default function TestMarketFetchPage() {
+    const [marketData, setMarketData] = useState<MarketsInterface | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     const { isLoaded, isSignedIn, user } = useUser();
 
     if (!isLoaded || !isSignedIn) {
         return null; // Handle loading or not signed in state
     }
-
-    const [marketData, setMarketData] = useState<MarketsInterface | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
 
     const UUID = user.id;
 
@@ -68,7 +66,7 @@ export default function TestMarketFetchPage() {
             <AppShellMain style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
                 <Container size="lg" py="xl">
                     <Title ta="center" order={2} mb="lg">
-                        Test Page for `getMarketByUuid`
+                        Edit Market Profile
                     </Title>
                     <Center>
                         <Paper shadow="xs" p="lg" withBorder style={{ width: '100%', maxWidth: '800px' }}>
@@ -84,13 +82,6 @@ export default function TestMarketFetchPage() {
                     </Center>
                 </Container>
             </AppShellMain>
-            <AppShellFooter style={{ backgroundColor: '#fff', padding: '1rem 0' }}>
-                <Center>
-                    <Text>
-                        Test
-                    </Text>
-                </Center>
-            </AppShellFooter>
         </AppShell>
     );
 }
