@@ -1,5 +1,5 @@
 'use client';
-
+import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from 'react';
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
@@ -13,7 +13,7 @@ import {
     Text,
     Loader,
     Paper,
-    Group
+    Button
 } from '@mantine/core';
 
 import marketsAPI from '../_components/apicomps/marketsCRUD';
@@ -24,21 +24,28 @@ import { MarketsInterface } from '@/app/_types/interfaces';
 
 
 export default function TestMarketFetchPage() {
+
+    const { isLoaded, isSignedIn, user } = useUser();
+
+    if (!isLoaded || !isSignedIn) {
+        return null; // Handle loading or not signed in state
+    }
+
     const [marketData, setMarketData] = useState<MarketsInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // !! IMPORTANT !! Need to change the interface (again) so make sure to fix everything as well
+    const UUID = user.id;
 
-    // Hardcode a UUID for testing. Replace this with a valid UUID
-    const TEST_UUID = '123e4567-e89b-12d3-a456-426614174000';
+
+    console.log("Current UUID: "+UUID);
 
     useEffect(() => {
         const fetchMarket = async () => {
             setLoading(true);
             setError(null);
             try {
-                const data = await marketsAPI.getMarketByUuid(TEST_UUID);
+                const data = await marketsAPI.getMarketByUuid(UUID);
                 setMarketData(data);
             } catch (err) {
                 console.error("Error fetching market by UUID:", err);
@@ -50,6 +57,8 @@ export default function TestMarketFetchPage() {
 
         fetchMarket();
     }, []);
+
+
 
     return (
         <AppShell>
@@ -78,7 +87,7 @@ export default function TestMarketFetchPage() {
             <AppShellFooter style={{ backgroundColor: '#fff', padding: '1rem 0' }}>
                 <Center>
                     <Text>
-                        Testing Footer
+                        Test
                     </Text>
                 </Center>
             </AppShellFooter>
