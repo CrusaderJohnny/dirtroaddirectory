@@ -1,18 +1,18 @@
 import Link from 'next/link';
-import {Avatar, Button, Group, Image, Modal, ScrollArea, Title} from '@mantine/core';
+import { Avatar, Button, Group, Image, Modal, ScrollArea, Title } from '@mantine/core';
 import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
-import {IconUser} from "@tabler/icons-react";
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import UserLoginModal from '@/app/_components/navcomps/UserLoginModal';
+import { IconUser } from '@tabler/icons-react';
 
 export default function HeaderLarge() {
     const [opened, { open, close }] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width: 20rem)');
-    const {  user } = useUser();
+    const { user } = useUser();
     const isAdmin = user?.publicMetadata?.role === 'admin';
+
     return (
         <Group justify="space-between" w="100%" style={{ flexWrap: 'nowrap' }}>
-            {/* Modal for login */}
             <Modal
                 opened={opened}
                 onClose={close}
@@ -21,19 +21,13 @@ export default function HeaderLarge() {
                 padding={0}
                 scrollAreaComponent={ScrollArea.Autosize}
                 fullScreen={isMobile}
-                style={{
-                    body: {
-                        backgroundColor: 'transparent'
-                    }
-                }}
+                style={{ body: { backgroundColor: 'transparent' } }}
                 size="20rem"
-                overlayProps={{
-                    backgroundOpacity: 0.55,
-                    blur: 3
-                }}
+                overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
             >
                 <UserLoginModal />
             </Modal>
+
             <Link href="/">
                 <Group>
                     <Image
@@ -68,49 +62,40 @@ export default function HeaderLarge() {
                 </Button>
             </Group>
 
-            {/*The Admin Panel*/}
-            {isAdmin && (
-            <Group>
+            {/* Admin Panel (always rendered for spacing) */}
+            <div style={{ visibility: isAdmin ? 'visible' : 'hidden' }}>
                 <Button
                     component="a"
                     href="/admin"
                     variant="outline"
                     color="white"
                     size="xs"
-                    style={{
-                        backgroundColor: "#ff7070",
-                    }}
+                    style={{ backgroundColor: '#ff7070' }}
                 >
                     Admin Panel
                 </Button>
-            </Group>
-            )}
+            </div>
 
+            {/* Auth Controls */}
             <Group>
+                <div style={{ visibility: 'hidden', height: 0, overflow: 'hidden' }}>
+                    <Button variant="outline" size="xs">
+                        Placeholder
+                    </Button>
+                </div>
                 <SignedOut>
-                <Button
-                    component="a"
-                    onClick={open}
-                    variant="outline"
-                    color="white"
-                    size="xs"
-                    style={{
-                        backgroundColor: "#2f9e44"
-                    }}
-                >
-                    <Avatar
-                        // onClick={open}
-                        radius="xl"
-                        size="xs"
+                    <Button
+                        onClick={open}
+                        variant="outline"
                         color="white"
-                        style={{
-                            backgroundColor: '#ffc2c2',
-                        }}
+                        size="xs"
+                        style={{ backgroundColor: '#2f9e44' }}
                     >
-                        <IconUser size={14} />
-                    </Avatar>
-                    <Title pl="sm" order={6}>Accounts</Title>
-                </Button>
+                        <Avatar radius="xl" size="xs" style={{ backgroundColor: '#ffc2c2' }}>
+                            <IconUser size={14} />
+                        </Avatar>
+                        <Title pl="sm" order={6}>Accounts</Title>
+                    </Button>
                 </SignedOut>
                 <SignedIn>
                     <Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">

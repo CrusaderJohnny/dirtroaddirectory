@@ -8,9 +8,9 @@ import {
     Avatar,
     ScrollArea,
     Tooltip,
-    Group
+    Group,
+    Button
 } from "@mantine/core";
-
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
 import Link from "next/link";
@@ -20,7 +20,6 @@ import {
     UserButton,
     useUser
 } from "@clerk/nextjs";
-
 import {
     IconApple,
     IconBuildingStore,
@@ -36,12 +35,10 @@ export default function HeaderSmall() {
     const [opened, { open, close }] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width: 20rem)');
     const { user } = useUser();
-
     const isAdmin = user?.publicMetadata?.role === 'admin';
 
     return (
         <>
-            {/* Modal for login */}
             <Modal
                 opened={opened}
                 onClose={close}
@@ -50,32 +47,24 @@ export default function HeaderSmall() {
                 padding={0}
                 scrollAreaComponent={ScrollArea.Autosize}
                 fullScreen={isMobile}
-                style={{
-                    body: {
-                        backgroundColor: 'transparent'
-                    }
-                }}
+                style={{ body: { backgroundColor: 'transparent' } }}
                 size="20rem"
-                overlayProps={{
-                    backgroundOpacity: 0.55,
-                    blur: 3
-                }}
+                overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
             >
                 <UserLoginModal />
             </Modal>
 
             <Flex w="100%" justify="space-between">
-                {/* Logo and Title */}
                 <Group>
                     <Link href="/">
                         <Flex align="center">
                             <Image
                                 src="https://media.istockphoto.com/id/1170724138/vector/farmers-market-hand-drawn-lettering.jpg?s=1024x1024&w=is&k=20&c=EI--kDMvBM9pvC9jFJcaoepQHcDbTxp-De6fgIVqy_8="
                                 h={40}
+                                w="auto"
                                 fit="contain"
                                 radius="md"
                                 alt="Farmers Market Logo"
-                                mr="sm"
                             />
                             <Title order={1} c="white">
                                 DRD
@@ -84,10 +73,9 @@ export default function HeaderSmall() {
                     </Link>
                 </Group>
 
-                {/* Right-side controls */}
                 <Group>
-                    {/* Admin Icon - Only show if user is admin */}
-                    {isAdmin && (
+                    {/* Admin Icon reserved */}
+                    <div style={{ visibility: isAdmin ? 'visible' : 'hidden' }}>
                         <Tooltip label="Admin Panel">
                             <Avatar
                                 component="a"
@@ -96,16 +84,13 @@ export default function HeaderSmall() {
                                 radius="xl"
                                 color="green"
                                 size="sm"
-                                style={{
-                                    backgroundColor: '#ffc2c2'
-                                }}
+                                style={{ backgroundColor: '#ffc2c2' }}
                             >
                                 <IconLockCode size={14} />
                             </Avatar>
                         </Tooltip>
-                    )}
+                    </div>
 
-                    {/* Signed-out Avatar */}
                     <SignedOut>
                         <Tooltip label="Accounts">
                             <Avatar
@@ -119,10 +104,11 @@ export default function HeaderSmall() {
                             </Avatar>
                         </Tooltip>
                     </SignedOut>
-                    {/* Clerk User Menu */}
-                    <UserButton />
 
-                    {/* Hamburger Menu */}
+                    <SignedIn>
+                        <UserButton />
+                    </SignedIn>
+
                     <Menu>
                         <Menu.Target>
                             <Burger color="white" />
@@ -148,42 +134,21 @@ export default function HeaderSmall() {
                                     Favorites
                                 </Menu.Item>
                             </SignedIn>
-
                             <Menu.Divider />
                             <Menu.Label>Pages</Menu.Label>
-                            <Menu.Item
-                                leftSection={<IconApple size={14} />}
-                                component="a"
-                                href="/markets"
-                            >
+                            <Menu.Item leftSection={<IconApple size={14} />} component="a" href="/markets">
                                 Markets
                             </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconBuildingStore size={14} />}
-                                component="a"
-                                href="/vendors"
-                            >
+                            <Menu.Item leftSection={<IconBuildingStore size={14} />} component="a" href="/vendors">
                                 Vendors
                             </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconMapRoute size={14} />}
-                                component="a"
-                                href="/map"
-                            >
+                            <Menu.Item leftSection={<IconMapRoute size={14} />} component="a" href="/map">
                                 Market Map
                             </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconHelpHexagon size={14} />}
-                                component="a"
-                                href="/aboutus"
-                            >
+                            <Menu.Item leftSection={<IconHelpHexagon size={14} />} component="a" href="/aboutus">
                                 About Us
                             </Menu.Item>
-                            <Menu.Item
-                                leftSection={<IconMailbox size={14} />}
-                                component="a"
-                                href="/contact"
-                            >
+                            <Menu.Item leftSection={<IconMailbox size={14} />} component="a" href="/contact">
                                 Contact
                             </Menu.Item>
                         </Menu.Dropdown>
