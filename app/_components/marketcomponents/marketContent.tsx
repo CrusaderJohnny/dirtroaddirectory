@@ -124,21 +124,36 @@ export default function MarketContent() {
         return (
             <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
-                    {/* Hero Image */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                        <Card withBorder shadow="lg" radius="md" p={0} mb="xl" style={{ overflow: 'hidden', textAlign: 'center' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                             <Image
                                 src={selectedMarket.image}
                                 alt={selectedMarket.label}
                                 height={300}
                                 fit="contain"
-                                style={{ backgroundColor: 'white', padding: '1rem', width: '100%' }}
+                                style={{
+                                    border: '4px solid #f0f0f0',
+                                    borderRadius: '12px',
+                                    padding: '1rem',
+                                    background: '#ffffff', 
+                                    maxWidth: '100%',
+                                    width: 'auto',
+                                    margin: '0 auto',
+                                }}
                             />
-                            <div style={{ padding: '1rem' }}>
-                                <Title order={2} style={{ fontFamily: 'Georgia, serif', color: '#1f4d2e', fontWeight: 700 }}>{selectedMarket.label}</Title>
-                                <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
-                            </div>
-                        </Card>
+                            <Title
+                            order={2}
+                            mt="md"
+                            style={{
+                                fontFamily: 'Georgia, serif',
+                                color: '#1f4d2e',
+                                fontWeight: 700,
+                            }}
+                            >
+                            {selectedMarket.label}
+                            </Title>
+                            <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
+                        </div>
                     </motion.div>
 
                     {/* Description */}

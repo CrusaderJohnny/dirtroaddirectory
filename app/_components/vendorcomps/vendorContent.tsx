@@ -168,15 +168,42 @@ export default function VendorsContent() {
     return (
       <AppShellMain style={{ minHeight: "100vh" }}>
         <Container size="lg" py="xl">
-          {/* Hero Image */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-            <Card withBorder shadow="lg" radius="md" p={0} mb="xl" style={{ overflow: "hidden", position: "relative" }}>
-              <Image src={selectedVendor.image} alt={selectedVendor.name} height={350} fit="cover" />
-              <div style={{ position: "absolute", bottom: 0, width: "100%", background: "rgba(0,0,0,0.6)", padding: "1rem", color: "white", textAlign: "center", backdropFilter: "blur(4px)" }}>
-                <Title order={2} fw={800}>{selectedVendor.name}</Title>
-                <Text size="lg">{selectedVendor.category}</Text>
-              </div>
-            </Card>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+              <Image
+                src={selectedVendor.image}
+                alt={selectedVendor.name}
+                height={350}
+                fit="cover"
+                style={{
+                  borderRadius: "12px",
+                  border: "4px solid #f0f0f0",
+                  objectFit: "cover",
+                  maxWidth: "100%",
+                  width: "auto",
+                  margin: "0 auto",
+                }}
+              />
+              <Title
+                order={2}
+                mt="md"
+                style={{
+                  fontFamily: "Georgia, serif",
+                  color: "#1f4d2e",
+                  fontWeight: 800,
+                }}
+              >
+                {selectedVendor.name}
+              </Title>
+              <Text size="lg" c="dimmed">
+                {selectedVendor.category}
+              </Text>
+            </div>
           </motion.div>
 
           {/* Description */}
