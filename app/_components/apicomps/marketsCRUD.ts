@@ -50,6 +50,26 @@ const marketsAPI = {
     },
 
     /**
+     * Fetches a single market based on its unique UUID.
+     * @param uuid The UUID of the market to fetch.
+     * @returns A Promise that resolves to the MarketsInterface object.
+     */
+    getMarketByUuid: async (uuid: string): Promise<MarketsInterface> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/markets/uuid/${uuid}`); // Adding uuid to api asap
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+            }
+            const responseData = await response.json();
+            return responseData; // Assuming the API returns the market object directly
+        } catch (err) {
+            console.error(`Error fetching market with UUID ${uuid}:`, err);
+            throw new Error(`Failed to fetch market data: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        }
+    },
+
+    /**
      * Creates a new market.
      */
     // Use Omit directly here
