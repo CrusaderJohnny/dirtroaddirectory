@@ -39,6 +39,7 @@ import { trackEvent } from "@/analytics";
 import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces'; // <--- Ensure MarketsInterface is imported
 import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
+import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -82,6 +83,16 @@ export default function VendorsContent() {
 
   const selectedVendor = vendors.find((v) => v.id === Number(vendorIdParam));
 
+  const handleVendorView = async (vendorName: string) => {
+    await AnalyticsTracker('vendor_view', vendorName);
+    trackEvent({
+      name: 'view_vendor_profile',
+      properties: {
+        vendor_name: vendorName,
+      },
+    });
+  };
+
   // <--- Added useEffect for fetching associated market details --->
   useEffect(() => {
     const fetchMarketDetailsForVendor = async () => {
@@ -118,6 +129,7 @@ export default function VendorsContent() {
     // Only run this effect if a vendor is selected and its market IDs array is available
     if (selectedVendor) {
       fetchMarketDetailsForVendor();
+      handleVendorView(selectedVendor.name)
     } else {
         setAssociatedMarkets([]); // Clear markets if no vendor is selected or removed
         setIsLoadingMarkets(false);
@@ -131,20 +143,12 @@ export default function VendorsContent() {
   });
   const allCategories = [...new Set(vendors.map((v) => v.category))];
 
-  const handleVendorView = (vendorId: string, vendorName: string) => {
-    trackEvent({
-      name: 'view_vendor_profile',
-      properties: {
-        vendor_id: vendorId,
-        vendor_name: vendorName,
-      },
-    });
-  };
+
 
   // Add loading and error states for initial render (all vendors list)
   if (loading) {
     return (
-      <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Text size="xl">Loading vendor data...</Text>
       </AppShellMain>
     );
@@ -152,7 +156,7 @@ export default function VendorsContent() {
 
   if (error) {
     return (
-      <AppShellMain style={{ backgroundColor: '#f9f5ec', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Text size="xl" c="red">Error loading data: {error}</Text>
       </AppShellMain>
     );
@@ -160,13 +164,9 @@ export default function VendorsContent() {
 
   // --- Vendor Detail View ---
   if (vendorIdParam && selectedVendor) {
-    // Note: The trackEvent will fire every time the component renders if selectedVendor is present and vendorIdParam is set.
-    // Consider moving this to useEffect with dependency on vendorIdParam if you want it to fire only once per unique vendor visit.
-    // For now, keeping as is per original code structure.
-    handleVendorView(selectedVendor.id.toString(), selectedVendor.name);
 
     return (
-      <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
+      <AppShellMain style={{ minHeight: "100vh" }}>
         <Container size="lg" py="xl">
           {/* Hero Image */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
@@ -226,7 +226,7 @@ export default function VendorsContent() {
                   <Loader /> <Text ml="sm">Loading market details...</Text>
                 </Center>
               ) : errorLoadingMarkets ? (
-                <Text color="red" ta="center">{errorLoadingMarkets}</Text>
+                <Text c="red" ta="center">{errorLoadingMarkets}</Text>
               ) : associatedMarkets.length > 0 ? (
                 <Grid gutter="lg">
                   {associatedMarkets.map((market) => ( // Changed 'market, idx' to just 'market'
@@ -295,7 +295,7 @@ export default function VendorsContent() {
 
   // --- All vendors list view (fallback) ---
   return (
-    <AppShellMain style={{ backgroundColor: "#fefbf6", minHeight: "100vh" }}>
+    <AppShellMain style={{ minHeight: "100vh" }}>
       <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
         <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
           Our Vendors

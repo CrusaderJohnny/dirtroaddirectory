@@ -4,7 +4,7 @@ import { MarketsInterface } from "@/app/_types/interfaces";
 const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 // check to ensure the environment variable is defined
 if (!API_BASE_URL) {
-  throw new Error('API_BASE_URL is not defined in your environment variables.');
+  throw new Error('NEXT_PUBLIC_EXPRESS_API_BASE_URL is not defined in your environment variables.');
 }
 
 

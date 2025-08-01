@@ -158,7 +158,13 @@ export default function App() {
         >
             <AppShell.Header component={NavMT}/>
             <AppShell.Navbar>
-                <MarketAccordion defaultOpenItemId={openMarketId}/>
+                <div
+                    style={{
+                        height: '100%',
+                        overflowY: 'auto', // Enable vertical scrolling when content exceeds height
+                    }}>
+                    <MarketAccordion defaultOpenItemId={openMarketId}/>
+                </div>
             </AppShell.Navbar>
             <AppShell.Main>
                 <Group align='center' p={'sm'}>

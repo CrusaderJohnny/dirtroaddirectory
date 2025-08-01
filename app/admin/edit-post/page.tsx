@@ -3,6 +3,8 @@ import NavMT from "@/app/_components/navcomps/navmt";
 import ArticlePutForm from "@/app/_components/postmanagement/articlePutForm";
 
 export default async function Page() {
+
+
     return (
         <AppShell>
             <AppShellHeader component={NavMT}/>

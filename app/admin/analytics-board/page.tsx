@@ -42,6 +42,12 @@ export default function Page() {
                 }
                 const data: EventData[] = await response.json();
 
+                if(!Array.isArray(data)) {
+                    console.error("API did not return array", data);
+                    setError("Failed to load analytics data: Unexpected data format from server");
+                    return;
+                }
+
                 const transformedData = data.map(item => ({
                     ...item,
                     label: `${item.event_type} - ${item.event_name}`

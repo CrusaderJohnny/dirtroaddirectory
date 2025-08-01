@@ -1,44 +1,33 @@
-// Daniel Asefa
-
 'use client';
 
 import { AppShell, BackgroundImage } from '@mantine/core';
 import HeaderLarge from '@/app/_components/navcomps/HeaderLarge';
+import HeaderMedium from '@/app/_components/navcomps/HeaderMedium';
 import HeaderSmall from '@/app/_components/navcomps/HeaderSmall';
-import { useState, useEffect, useRef } from 'react';
+import { useMediaQuery } from '@mantine/hooks';
+import { useEffect, useState } from 'react';
 
 export default function NavMT() {
-    // The default header is set to the large header
-    const [zoomedHeader, setZoomedHeader] = useState(false);
-    // Ensures the correct header is only loaded after HeaderLarge is measured
-    const [hasMeasured, setHasMeasured] = useState(false);
-    const headerMeasureRef = useRef<HTMLDivElement | null>(null);
+    const [hydrated, setHydrated] = useState(false);
+
+    // These breakpoints can be adjusted to match your actual breakpoints
+    const isSmall = useMediaQuery('(max-width: 598px)');
+    const isMedium = useMediaQuery('(min-width: 600px) and (max-width: 1500px)');
 
     useEffect(() => {
-        const ref = headerMeasureRef.current;
-        if (!ref) return;
-
-        const updateHeaderSize = () => {
-            const headerWidth = ref.offsetWidth;
-            const screenWidth = window.innerWidth;
-            const percentUsed = (headerWidth / screenWidth) * 100;
-
-            const shouldUseCompact = screenWidth < 1375 || percentUsed > 95;
-            setZoomedHeader(shouldUseCompact);
-            setHasMeasured(true);
-        };
-
-        const observer = new ResizeObserver(updateHeaderSize);
-        observer.observe(ref);
-
-        window.addEventListener('resize', updateHeaderSize);
-        updateHeaderSize();
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener('resize', updateHeaderSize);
-        };
+        // Wait until after hydration to avoid mismatch
+        setHydrated(true);
     }, []);
+
+    // Hide header completely until client is hydrated
+    if (!hydrated) return null;
+
+    let HeaderComponent = HeaderLarge;
+    if (isSmall) {
+        HeaderComponent = HeaderSmall;
+    } else if (isMedium) {
+        HeaderComponent = HeaderMedium;
+    }
 
     return (
         <AppShell header={{ height: 60 }}>
@@ -54,27 +43,9 @@ export default function NavMT() {
                         position: 'relative',
                     }}
                 >
-                    {/* Always measure, never show this to users */}
-                    <div
-                        ref={headerMeasureRef}
-                        style={{
-                            position: 'absolute',
-                            opacity: 0,
-                            pointerEvents: 'none',
-                            zIndex: -1,
-                            visibility: 'hidden',
-                        }}
-                    >
-                        <HeaderLarge />
-                    </div>
-
-                    {/* Show nothing until the measurement is complete */}
-                    {hasMeasured && (
-                        zoomedHeader ? <HeaderSmall /> : <HeaderLarge />
-                    )}
+                    <HeaderComponent />
                 </BackgroundImage>
             </AppShell.Header>
         </AppShell>
     );
 }
-

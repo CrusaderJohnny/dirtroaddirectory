@@ -19,7 +19,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import NavMT from '@/app/_components/navcomps/navmt';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_API_URL;
 
 export default function Page() {
   const [opened, { open, close }] = useDisclosure(false);

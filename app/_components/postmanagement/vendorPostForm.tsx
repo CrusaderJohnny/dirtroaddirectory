@@ -15,6 +15,8 @@ import {VendorPostFormProps} from "@/app/_types/interfaces";
 import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 import {useState} from "react";
 
+const apiUrl = process.env.NEXT_PUBLIC_EXPRESS_API_URL;
+
 export default function VendorPostForm({ vendorName, userId } : VendorPostFormProps) {
     const farmersVendorName = vendorName || "";
 
@@ -82,7 +84,7 @@ export default function VendorPostForm({ vendorName, userId } : VendorPostFormPr
                 image: values.image,
             };
             console.log('Market post data: ', postData);
-            const response = await fetch(`https://localhost:8080/articles`, {
+            const response = await fetch(`${apiUrl}/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),

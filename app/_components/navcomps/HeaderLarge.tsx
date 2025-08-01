@@ -39,6 +39,20 @@ export default function HeaderLarge() {
                     Contact
                 </Button>
             </Group>
+            <Group>
+                <Button
+                    component="a"
+                    href="/admin"
+                    variant="outline"
+                    color="white"
+                    size="xs"
+                    style={{
+                        backgroundColor: "#ff7070",
+                    }}
+                >
+                    Admin Panel
+                </Button>
+            </Group>
 
             <Group>
                 <SignedOut>
@@ -50,9 +64,9 @@ export default function HeaderLarge() {
                     </SignUpButton>
                 </SignedOut>
                 <SignedIn>
-                    <Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">
-                        Favs
-                    </Button>
+                    {/*<Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">*/}
+                    {/*    Favs*/}
+                    {/*</Button>*/}
                     <UserButton />
                 </SignedIn>
             </Group>

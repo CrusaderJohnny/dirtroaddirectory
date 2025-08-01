@@ -1,6 +1,6 @@
 import { ContactMessageInterface } from '@/app/_types/interfaces';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 /**
  * Fetch all contact messages
