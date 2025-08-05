@@ -11,8 +11,7 @@ import {
     Center,
     Text,
     Loader,
-    Paper,
-    Button
+    Paper
 } from '@mantine/core';
 
 import marketsAPI from '../_components/apicomps/marketsCRUD';
@@ -29,32 +28,47 @@ export default function TestMarketFetchPage() {
 
     const { isLoaded, isSignedIn, user } = useUser();
 
-    if (!isLoaded || !isSignedIn) {
-        return null; // Handle loading or not signed in state
-    }
-
-    const UUID = user.id;
-
-
+    const UUID = user?.id;
     console.log("Current UUID: "+UUID);
 
     useEffect(() => {
-        const fetchMarket = async () => {
+        if (isLoaded && isSignedIn && UUID) {
+            // If Clerk is loaded but the user is not signed in, stop loading and clear data.
+            const fetchMarket = async () => {
+                setLoading(true);
+                setError(null);
+                try {
+                    const data = await marketsAPI.getMarketByUuid(UUID);
+                    setMarketData(data);
+                } catch (err) {
+                    console.error("Error fetching market by UUID:", err);
+                    setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchMarket();
+        } else if (isLoaded && !isSignedIn) {
+            // If Clerk is loaded but the user is not signed in, stop loading and clear data.
+            setLoading(false);
+            setMarketData(null);
+            setError("Please sign in to view market data.");
+        } else {
+            // If Clerk is not yet loaded, keep loading state, no error
+            // This case handles the initial render before Clerk fully loads
             setLoading(true);
+            setMarketData(null);
             setError(null);
-            try {
-                const data = await marketsAPI.getMarketByUuid(UUID);
-                setMarketData(data);
-            } catch (err) {
-                console.error("Error fetching market by UUID:", err);
-                setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-            } finally {
-                setLoading(false);
-            }
-        };
+        }
+    }, [isLoaded, isSignedIn, UUID]);
 
-        fetchMarket();
-    }, []);
+
+        if (!isLoaded || !isSignedIn) {
+        return null; // Handle loading or not signed in state
+    }
+
+
+
 
 
 

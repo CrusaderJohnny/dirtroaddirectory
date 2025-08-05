@@ -13,7 +13,7 @@ import { useDisclosure,useScrollIntoView } from '@mantine/hooks';
 import { IconChevronLeft } from '@tabler/icons-react';
 import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import NavMT from '../_components/navcomps/navmt';
 import regions from '../_res/regions.json';
 import marketsAPI from '@/app/_components/apicomps/marketsCRUD';

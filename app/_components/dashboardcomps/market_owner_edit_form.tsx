@@ -27,7 +27,12 @@ export default function MarketOwnerEditForm({ initialMarket }: MarketOwnerEditFo
     // Initialize form with the specific market data passed from the server
     const form = useForm({
         mode: 'uncontrolled',
-        initialValues: initialMarket,
+        initialValues: {
+            ...initialMarket,
+            // user initialMarket as initialValues but convert lat and lng to numbers
+            lat: Number(initialMarket.lat),
+            lng: Number(initialMarket.lng),
+        },
         validate: {
             image: (value) => (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/.test(value) ? 'Invalid URL for website link' : null),
             label: isNotEmpty('Market Name is required'),
