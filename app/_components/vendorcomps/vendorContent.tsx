@@ -323,14 +323,15 @@ export default function VendorsContent() {
   // --- All vendors list view (fallback) ---
   return (
     <AppShellMain style={{ minHeight: "100vh" }}>
-      <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
-        <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
-          Our Vendors
-        </Title>
-        <Text size="sm" c="dimmed" mb="md">
-          Browse our trusted vendors by name or category
-        </Text>
-        <Group mb="lg" grow>
+      <Container size="xl" px="lg" style={{ maxWidth: "1400px", margin: "0 auto" }}>
+        <Paper shadow="md" p="lg" mt="xl" mb="lg" withBorder radius="md" bg="white">
+          <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
+            Our Vendors
+          </Title>
+          <Text size="sm" c="dimmed" mb="md">
+            Browse our trusted vendors by name or category
+          </Text>
+          <Group mb="lg" grow>
           <TextInput
             placeholder="Search by name"
             leftSection={<IconSearch size={16} />}
@@ -350,6 +351,7 @@ export default function VendorsContent() {
           />
         </Group>
       </Paper>
+
       <Grid gutter="xl">
         {filteredVendors.map((vendor) => (
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
@@ -357,6 +359,7 @@ export default function VendorsContent() {
           </Grid.Col>
         ))}
       </Grid>
+      </Container>
     </AppShellMain>
   );
 }

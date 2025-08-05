@@ -281,8 +281,13 @@ export default function MarketContent() {
 
     // Default view for all markets (when no marketId is in search params)
     return (
-        <AppShellMain style={{ minHeight: '100vh', paddingTop: 0 }}>
-            <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
+        <AppShellMain style={{ minHeight: '100vh'}}>
+            <Container 
+            size="xl"
+            px="lg"
+            style={{ maxWidth: '1400px', margin: '0 auto' }}
+            >
+            <Paper shadow="md" p="lg" mt="xl" mb="lg" withBorder radius="md" bg="white">
                 <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
                 <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
                 <Group mb="lg" grow>
@@ -298,6 +303,7 @@ export default function MarketContent() {
                     </Grid.Col>
                 ))}
             </Grid>
+            </Container>
         </AppShellMain>
     );
 }
