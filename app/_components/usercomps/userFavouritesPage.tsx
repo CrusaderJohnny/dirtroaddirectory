@@ -19,42 +19,51 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import favoritesAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
+import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
+import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
 import marketsAPI from "@/app/_components/apicomps/marketsCRUD";
-import { MarketsInterface } from "@/app/_types/interfaces";
+import vendorsAPI from "@/app/_components/apicomps/vendorsCRUD";
+import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
 import MarketCard from "@/app/_components/marketaccordian/marketcard";
+import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 
 export default function UserContentPage() {
     const { user } = useUser();
     const [activeSegment, setActiveSegment] = useState<'Markets' | 'Vendors'>('Markets');
 
     const [favoriteMarkets, setFavoriteMarkets] = useState<MarketsInterface[]>([]);
+    const [favoriteVendors, setFavoriteVendors] = useState<VendorsInterface[]>([]);
     const [loading, setLoading] = useState(false);
-    // const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const loadFavorites = async () => {
             if (!user) return;
             setLoading(true);
             try {
-                // Use Clerk ID mapping (temporary fallback — change as needed)
                 const userId = 1; // Replace this with real mapping when needed
 
-                const favIds = await favoritesAPI.getFavoriteMarketIds(userId);
-                const allMarkets = await marketsAPI.getMarkets();
-                const filtered = allMarkets.filter((m) => favIds.includes(m.id));
-                setFavoriteMarkets(filtered);
+                if (activeSegment === 'Markets') {
+                    const favIds = await favoritesMarketAPI.getFavoriteMarketIds(userId);
+                    const allMarkets = await marketsAPI.getMarkets();
+                    const filtered = allMarkets.filter((m) => favIds.includes(m.id));
+                    setFavoriteMarkets(filtered);
+                }
+
+                if (activeSegment === 'Vendors') {
+                    const favIds = await favoriteVendorsAPI.getFavoriteVendorIds(userId);
+                    const allVendors = await vendorsAPI.getVendors();
+                    const filtered = allVendors.filter((v) => favIds.includes(v.id));
+                    setFavoriteVendors(filtered);
+                }
+
             } catch (err) {
                 console.error("Failed to load favorites:", err);
-                // setError("Failed to load favorites.");
             } finally {
                 setLoading(false);
             }
         };
 
-        if (activeSegment === 'Markets') {
-            loadFavorites();
-        }
+        loadFavorites();
     }, [user, activeSegment]);
 
     const renderCards = () => {
@@ -81,16 +90,24 @@ export default function UserContentPage() {
             );
         }
 
-        return (
-            <Grid gutter="xl">
-                {/* Placeholder vendor favorites */}
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <GridCol key={index} span={{ base: 12, sm: 6, md: 4 }}>
-                        <Card withBorder p="md">Vendor placeholder #{index + 1}</Card>
-                    </GridCol>
-                ))}
-            </Grid>
-        );
+        if (activeSegment === 'Vendors') {
+            if (favoriteVendors.length === 0) {
+                return <Text size="sm" c="dimmed">No favorite vendors saved.</Text>;
+            }
+            return (
+                <Grid gutter="xl">
+                    {favoriteVendors.map((vendor) => (
+                        <GridCol key={vendor.id} span={{ base: 12, sm: 6, md: 4 }}>
+                            <VendorCard
+                                vendor={vendor}
+                                isFavorited={true}
+                                onToggleFavorite={() => {}}
+                            />
+                        </GridCol>
+                    ))}
+                </Grid>
+            );
+        }
     };
 
     return (
