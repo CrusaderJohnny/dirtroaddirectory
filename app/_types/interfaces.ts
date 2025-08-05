@@ -30,6 +30,7 @@ export interface MarketsInterface {
     name: string;
     category: string;
   }[];
+  uuid?: string;
 }
 
 export interface MarketGridProps {
