@@ -9,7 +9,6 @@ import {
     ScrollArea,
     Tooltip,
     Group,
-    Button
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";

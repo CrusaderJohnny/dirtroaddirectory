@@ -81,7 +81,13 @@ const articlesAPI = {
         updatedFields: Partial<ArticleInterface>
     ): Promise<void> => {
         try {
-            const payload: any = {
+            const payload: {
+                title?: string;
+                content?: string;
+                summary?: string;
+                image?: string;
+                is_featured?: number;
+            } = {
                 ...(updatedFields.title && { title: updatedFields.title }),
                 ...(updatedFields.content && { content: updatedFields.content }),
                 ...(updatedFields.summary && { summary: updatedFields.summary }),

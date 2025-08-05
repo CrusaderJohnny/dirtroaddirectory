@@ -33,7 +33,7 @@ export default function NavMT() {
                 });
 
                 // This works at 80 % on a
-                if (largeW / screenWidth < 0.95) {
+                if (largeW / screenWidth < 0.80) {
                     setSelectedHeader('large');
                 } else if (mediumW / screenWidth < 0.70) {
                     setSelectedHeader('medium');

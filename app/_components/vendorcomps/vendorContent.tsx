@@ -78,8 +78,13 @@ export default function VendorsContent() {
         setVendors(fetchedVendors);
 
         if (user) {
-          const favVendorIds = await favoriteVendorsAPI.getFavoriteVendorIds(user.id);
-          setFavoriteVendorIds(favVendorIds);
+          try {
+            const favVendorIds = await favoriteVendorsAPI.getFavoriteVendorIds(Number(user.id));
+            setFavoriteVendorIds(favVendorIds);
+          } catch (favErr) {
+            console.error("Failed to fetch vendor favorites:", favErr);
+            // Do not block page if no favorites exist or an error occurs
+          }
         }
       } catch (err) {
         console.error("Failed to load vendor data:", err);
@@ -97,10 +102,10 @@ export default function VendorsContent() {
     const isFav = favoriteVendorIds.includes(vendorId);
     try {
       if (isFav) {
-        await favoriteVendorsAPI.removeFavoriteVendor(user.id, vendorId);
+        await favoriteVendorsAPI.removeFavoriteVendor(Number(user.id), vendorId);
         setFavoriteVendorIds(prev => prev.filter(id => id !== vendorId));
       } else {
-        await favoriteVendorsAPI.addFavoriteVendor(user.id, vendorId);
+        await favoriteVendorsAPI.addFavoriteVendor(Number(user.id), vendorId);
         setFavoriteVendorIds(prev => [...prev, vendorId]);
       }
     } catch (err) {
