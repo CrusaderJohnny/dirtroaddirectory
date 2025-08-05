@@ -32,6 +32,7 @@ export default function NavMT() {
                     screen: window.innerWidth
                 });
 
+                // This works at 80 % on a
                 if (largeW / screenWidth < 0.95) {
                     setSelectedHeader('large');
                 } else if (mediumW / screenWidth < 0.70) {
