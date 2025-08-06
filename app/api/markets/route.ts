@@ -6,8 +6,7 @@ const BACKEND_API_BASE_URL = process.env.EXPRESS_BACKEND_URL;
 // Ensure the backend URL is set
 if (!BACKEND_API_BASE_URL) {
     console.error("Environment variable EXPRESS_BACKEND_URL is not set for markets API route.");
-    // In a production environment, you might want to throw an error or handle this more gracefully.
-    // For now, we'll return a server error.
+
     throw new Error("Backend API URL not configured.");
 }
 
@@ -34,12 +33,12 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json(); // Get the JSON body from the frontend request
+        const body = await request.json();
 
         const response = await fetch(`${BACKEND_API_BASE_URL}/markets`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body), // Forward the request body to your backend
+            body: JSON.stringify(body),
         });
 
         if (!response.ok) {
