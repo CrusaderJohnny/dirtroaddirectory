@@ -22,7 +22,25 @@ const vendorsAPI = {
         }
     },
 
-
+    /**
+     * Fetches a single vendor by its UUID.
+     * @param uuid The UUID of the vendor to fetch.
+     * @returns A Promise that resolves to the VendorsInterface object.
+     */
+    getVendorByUuid: async (uuid: string): Promise<VendorsInterface> => {
+        try {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors/uuid/${uuid}`); // Assumes API has an endpoint like /vendors/uuid/:uuid
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+            }
+            const responseData = await response.json();
+            return responseData;
+        } catch (err) {
+            console.error(`Error fetching vendor with UUID ${uuid}:`, err);
+            throw new Error(`Failed to fetch vendor data: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        }
+    },
 
     /**
      * Creates a new vendor.
