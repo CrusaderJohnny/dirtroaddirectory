@@ -1,11 +1,6 @@
 import { MarketsInterface } from "@/app/_types/interfaces";
 
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
-// check to ensure the environment variable is defined
-if (!API_BASE_URL) {
-    throw new Error('NEXT_PUBLIC_EXPRESS_API_BASE_URL is not defined in your environment variables.');
-}
+const NEXT_API_BASE_PATH = '/api';
 
 
 const marketsAPI = {
@@ -14,7 +9,7 @@ const marketsAPI = {
      */
     getMarkets: async (): Promise<MarketsInterface[]> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/markets`);
+            const response = await fetch(`${NEXT_API_BASE_PATH}/markets`);
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
@@ -33,7 +28,7 @@ const marketsAPI = {
      */
     getMarketById: async (id: number): Promise<MarketsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/markets/${id}`); // Assuming your API has /markets/:id endpoint
+            const response = await fetch(`${NEXT_API_BASE_PATH}/markets/${id}`); // Assuming your API has /markets/:id endpoint
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
@@ -56,7 +51,7 @@ const marketsAPI = {
      */
     getMarketByUuid: async (uuid: string): Promise<MarketsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/markets/uuid/${uuid}`); // Adding uuid to api asap
+            const response = await fetch(`${NEXT_API_BASE_PATH}/markets/uuid/${uuid}`); // Adding uuid to api asap
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
@@ -75,7 +70,7 @@ const marketsAPI = {
     // Use Omit directly here
     createMarket: async (marketData: Omit<MarketsInterface, 'id'>): Promise<MarketsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/markets`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/markets`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(marketData),
@@ -101,7 +96,7 @@ const marketsAPI = {
     // Use Partial<MarketsInterface> directly here, as not all fields might be updated
     updateMarket: async (id: number, marketData: Partial<MarketsInterface>): Promise<MarketsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/markets/${id}`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/markets/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(marketData),
@@ -126,7 +121,7 @@ const marketsAPI = {
      */
     deleteMarket: async (id: number): Promise<void> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/markets/${id}`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/markets/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {

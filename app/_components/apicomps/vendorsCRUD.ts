@@ -1,12 +1,6 @@
 import { VendorsInterface } from "@/app/_types/interfaces";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
-
-// check to ensure the environment variable is defined
-if (!API_BASE_URL) {
-    throw new Error('NEXT_PUBLIC_EXPRESS_API_BASE_URL is not defined in your environment variables.');
-}
-
+const NEXT_API_BASE_PATH = '/api';
 
 const vendorsAPI = {
     /**
@@ -15,7 +9,7 @@ const vendorsAPI = {
      */
     getVendors: async (): Promise<VendorsInterface[]> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors`);
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors`);
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
@@ -28,6 +22,8 @@ const vendorsAPI = {
         }
     },
 
+
+
     /**
      * Creates a new vendor.
      * @param vendorData The data for the new vendor, excluding the 'id'.
@@ -36,7 +32,7 @@ const vendorsAPI = {
     // Changed 'VendorDataForCreate' to 'Omit<VendorsInterface, 'id'>' directly
     createVendor: async (vendorData: Omit<VendorsInterface, 'id'>): Promise<VendorsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(vendorData), // vendorData will now correctly include 'markets' array
@@ -65,7 +61,7 @@ const vendorsAPI = {
     // Changed 'VendorDataForUpdate' to 'Partial<VendorsInterface>' directly
     updateVendor: async (id: number, vendorData: Partial<VendorsInterface>): Promise<VendorsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors/${id}`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(vendorData), // vendorData will now correctly include 'markets' array
@@ -92,7 +88,7 @@ const vendorsAPI = {
      */
     deleteVendor: async (id: number): Promise<void> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors/${id}`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
