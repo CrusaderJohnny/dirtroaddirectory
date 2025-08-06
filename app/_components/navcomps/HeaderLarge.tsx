@@ -1,11 +1,33 @@
 import Link from 'next/link';
-import { Button, Group, Image, Title } from '@mantine/core';
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { Avatar, Button, Group, Image, Modal, ScrollArea, Title } from '@mantine/core';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import UserLoginModal from '@/app/_components/navcomps/UserLoginModal';
+import { IconUser } from '@tabler/icons-react';
 
 export default function HeaderLarge() {
+    const [opened, { open, close }] = useDisclosure(false);
+    const isMobile = useMediaQuery('(max-width: 20rem)');
+    const { user } = useUser();
+    const isAdmin = user?.publicMetadata?.role === 'admin';
+
     return (
-        // Test one tried adding "style={{ flexWrap: 'nowrap' }}" to main-group to stop it from wrapping
         <Group justify="space-between" w="100%" style={{ flexWrap: 'nowrap' }}>
+            <Modal
+                opened={opened}
+                onClose={close}
+                withCloseButton={false}
+                centered
+                padding={0}
+                scrollAreaComponent={ScrollArea.Autosize}
+                fullScreen={isMobile}
+                style={{ body: { backgroundColor: 'transparent' } }}
+                size="20rem"
+                overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
+            >
+                <UserLoginModal />
+            </Modal>
+
             <Link href="/">
                 <Group>
                     <Image
@@ -39,34 +61,46 @@ export default function HeaderLarge() {
                     Contact
                 </Button>
             </Group>
-            <Group>
+
+            {/* Admin Panel (always rendered for spacing) */}
+            <div style={{ visibility: isAdmin ? 'visible' : 'hidden' }}>
                 <Button
                     component="a"
                     href="/admin"
                     variant="outline"
                     color="white"
                     size="xs"
-                    style={{
-                        backgroundColor: "#ff7070",
-                    }}
+                    style={{ backgroundColor: '#ff7070' }}
                 >
                     Admin Panel
                 </Button>
-            </Group>
+            </div>
 
+            {/* Auth Controls */}
             <Group>
+                <div style={{ visibility: 'hidden', height: 0, overflow: 'hidden' }}>
+                    <Button variant="outline" size="xs">
+                        Placeholder
+                    </Button>
+                </div>
                 <SignedOut>
-                    <SignInButton>
-                        <button className="signin-button">Sign In</button>
-                    </SignInButton>
-                    <SignUpButton>
-                        <button className="signup-button">Sign Up</button>
-                    </SignUpButton>
+                    <Button
+                        onClick={open}
+                        variant="outline"
+                        color="white"
+                        size="xs"
+                        style={{ backgroundColor: '#2f9e44' }}
+                    >
+                        <Avatar radius="xl" size="xs" style={{ backgroundColor: '#ffc2c2' }}>
+                            <IconUser size={14} />
+                        </Avatar>
+                        <Title pl="sm" order={6}>Accounts</Title>
+                    </Button>
                 </SignedOut>
                 <SignedIn>
-                    {/*<Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">*/}
-                    {/*    Favs*/}
-                    {/*</Button>*/}
+                    <Button component="a" href="/userfavs" variant="subtle" c="white" size="lg">
+                        Favs
+                    </Button>
                     <UserButton />
                 </SignedIn>
             </Group>
