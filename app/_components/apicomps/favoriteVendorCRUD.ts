@@ -5,8 +5,9 @@ const favoriteVendorsAPI = {
     // GET all favorite vendor IDs for a user
     getFavoriteVendorIds: async (userId: number): Promise<number[]> => {
         const res = await fetch(`${API_BASE_URL}/favorites/vendors/${userId}`);
-        if (!res.ok) throw new Error("Failed to fetch favorites");
-        return await res.json(); // should be an array of vendor IDs
+        if (!res.ok) throw new Error("Failed to fetch favorite vendors");
+        const data = await res.json();
+        return data.map((vendor: { id: number }) => vendor.id.toString());
     },
 
     // ADD a favorite vendor

@@ -39,6 +39,7 @@ import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 import {useUser} from "@clerk/nextjs";
+import usersAPI from "@/app/_components/apicomps/usersCRUD";
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -58,8 +59,10 @@ export default function MarketContent() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
-    const [favoriteMarketIds, setFavoriteMarketIds] = useState<number[]>([]);
+    const [favoriteMarketIds, setFavoriteMarketIds] = useState<string[]>([]);
     const { user } = useUser();
+    const [dbUserId, setDbUserId] = useState<string | null>(null);
+    const [favoritesLoaded, setFavoritesLoaded] = useState(false);
 
     // useEffect to fetch data when the component mounts
 
@@ -67,6 +70,7 @@ export default function MarketContent() {
         const loadData = async () => {
             setLoading(true);
             setError(null);
+
             try {
                 const fetchedMarkets = await marketsAPI.getMarkets();
                 setMarkets(fetchedMarkets);
@@ -75,18 +79,26 @@ export default function MarketContent() {
                 setVendors(fetchedVendors);
 
                 if (user) {
-                    try {
-                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(Number(user.id));
+                    const allUsers = await usersAPI.getAllUsers();
+                    const matchedUser = allUsers.find(
+                        (u) => u.email === user.emailAddresses[0].emailAddress
+                    );
+
+                    if (matchedUser) {
+                        const dbId = matchedUser.id.toString();
+                        setDbUserId(dbId);
+
+                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(dbId);
+                        console.log("Fetched favorite market IDs:", favs);
                         setFavoriteMarketIds(favs);
-                    } catch (favErr) {
-                        console.error("Failed to fetch favorites:", favErr);
-                        // Do not set the main error, just log it.
                     }
                 }
             } catch (err) {
                 console.error("Failed to load data:", err);
                 setError(err instanceof Error ? err.message : "Failed to load data.");
             } finally {
+                // ✅ Only set favoritesLoaded after markets and (if user exists) favorites are loaded
+                setFavoritesLoaded(true);
                 setLoading(false);
             }
         };
@@ -94,21 +106,33 @@ export default function MarketContent() {
         loadData();
     }, [user]);
 
+
+
     const toggleFavorite = async (marketId: number) => {
-        if (!user) return;
-        const isFav = favoriteMarketIds.includes(marketId);
+        if (!dbUserId) {
+            console.warn("DB user ID not available. Cannot toggle favorite.");
+            return;
+        }
+
+        const marketIdStr = marketId.toString();
+        const isFav = favoriteMarketIds.includes(marketIdStr);
+
+        console.log(`${isFav ? 'Removing' : 'Adding'} favorite for user ${dbUserId} and market ${marketId}`);
+
         try {
             if (isFav) {
-                await favoritesMarketAPI.removeFavoriteMarket(Number(user.id), marketId);
-                setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketId));
+                await favoritesMarketAPI.removeFavoriteMarket(dbUserId, marketIdStr);
+                setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketIdStr));
             } else {
-                await favoritesMarketAPI.addFavoriteMarket(Number(user.id), marketId);
-                setFavoriteMarketIds((prev) => [...prev, marketId]);
+                await favoritesMarketAPI.addFavoriteMarket(dbUserId, marketIdStr);
+                setFavoriteMarketIds((prev) => [...prev, marketIdStr]);
             }
         } catch (err) {
             console.error("Error updating favorite:", err);
         }
     };
+
+
 
 
     const selectedMarket = markets.find((v) => v.id === Number(marketId));
@@ -136,7 +160,7 @@ export default function MarketContent() {
     }, [selectedMarket]);
 
     // Add loading and error states for initial render
-    if (loading) {
+    if (loading || (user && !favoritesLoaded)) {
         return (
             <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Text size="xl">Loading market data...</Text>
@@ -144,10 +168,19 @@ export default function MarketContent() {
         );
     }
 
+
     if (error) {
         return (
             <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Text size="xl" c="red">Error loading data: {error}</Text>
+            </AppShellMain>
+        );
+    }
+
+    if (loading || !favoritesLoaded) {
+        return (
+            <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Text size="xl">Loading market data...</Text>
             </AppShellMain>
         );
     }
@@ -309,17 +342,24 @@ export default function MarketContent() {
                 </Group>
             </Paper>
             <Grid gutter="xl">
-                {filteredMarkets.map((market) => (
-                    <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
-                        {/* Ensure MarketCard can accept the MarketsInterface type */}
-                        <MarketCard
-                            market={market}
-                            isFavorited={favoriteMarketIds.includes(market.id)}
-                            onToggleFavorite={() => toggleFavorite(market.id)}
-                        />
-                    </Grid.Col>
-                ))}
+                {filteredMarkets.map((market) => {
+                    const isFav = favoriteMarketIds.includes(market.id.toString());
+                    console.log(`Market ID: ${market.id} - isFav: ${isFav}`);
+
+                    return (
+                        <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
+                            <MarketCard
+                                market={market}
+                                {...(user && {
+                                    isFavorited: isFav,
+                                    onToggleFavorite: () => toggleFavorite(market.id),
+                                })}
+                            />
+                        </Grid.Col>
+                    );
+                })}
             </Grid>
+
         </AppShellMain>
     );
 }

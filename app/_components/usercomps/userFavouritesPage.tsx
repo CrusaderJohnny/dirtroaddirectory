@@ -40,24 +40,36 @@ export default function UserContentPage() {
             if (!user) return;
             setLoading(true);
             try {
-                const userId = 1; // Replace this with real mapping when needed
+                const userId = user.id;
+                console.log("[Favorites Page] Clerk user.id:", user.id);
+                console.log("[Favorites Page] DB user_id:", userId);
 
                 if (activeSegment === 'Markets') {
                     const favIds = await favoritesMarketAPI.getFavoriteMarketIds(userId);
+                    console.log("[Favorites Page] Fetched favorite market IDs:", favIds);
+
                     const allMarkets = await marketsAPI.getMarkets();
-                    const filtered = allMarkets.filter((m) => favIds.includes(m.id));
+                    console.log("[Favorites Page] Fetched all markets:", allMarkets);
+
+                    const filtered = allMarkets.filter((market) => favIds.includes(market.id.toString()));
                     setFavoriteMarkets(filtered);
+                    console.log("[Favorites Page] Filtered favorite markets:", filtered);
                 }
 
                 if (activeSegment === 'Vendors') {
                     const favIds = await favoriteVendorsAPI.getFavoriteVendorIds(userId);
+                    console.log("[Favorites Page] Fetched favorite vendor IDs:", favIds);
+
                     const allVendors = await vendorsAPI.getVendors();
+                    console.log("[Favorites Page] Fetched all vendors:", allVendors);
+
                     const filtered = allVendors.filter((v) => favIds.includes(v.id));
                     setFavoriteVendors(filtered);
+                    console.log("[Favorites Page] Filtered favorite vendors:", filtered);
                 }
 
             } catch (err) {
-                console.error("Failed to load favorites:", err);
+                console.error("[Favorites Page] Failed to load favorites:", err);
             } finally {
                 setLoading(false);
             }

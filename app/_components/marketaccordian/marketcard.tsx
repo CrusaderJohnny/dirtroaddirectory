@@ -6,8 +6,8 @@ import { MarketsInterface } from "@/app/_types/interfaces";
 
 interface MarketCardProps {
     market: MarketsInterface;
-    isFavorited: boolean;
-    onToggleFavorite: () => void;
+    isFavorited?: boolean;
+    onToggleFavorite?: () => void;
 }
 
 export default function MarketCard({ market, isFavorited, onToggleFavorite }: MarketCardProps) {
@@ -25,17 +25,19 @@ export default function MarketCard({ market, isFavorited, onToggleFavorite }: Ma
                 border: `1px solid ${theme.colors.primaryGreen[2]}`,
             }}
         >
-            <ActionIcon
-                variant="light"
-                onClick={(e) => {
-                    e.preventDefault(); // prevent link navigation
-                    onToggleFavorite();
-                }}
-                style={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
-                color="yellow"
-            >
-                {isFavorited ? <IconStarFilled size={20} /> : <IconStar size={20} />}
-            </ActionIcon>
+            {onToggleFavorite && (
+                <ActionIcon
+                    variant="light"
+                    onClick={(e) => {
+                        e.preventDefault(); // prevent link navigation
+                        onToggleFavorite();
+                    }}
+                    style={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
+                    color="yellow"
+                >
+                    {isFavorited ? <IconStarFilled size={20} /> : <IconStar size={20} />}
+                </ActionIcon>
+            )}
 
             <Link href={`/markets?marketId=${market.id}`} passHref>
                 <div>
