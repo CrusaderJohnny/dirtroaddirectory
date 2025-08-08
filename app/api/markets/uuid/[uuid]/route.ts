@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params }: { params: { uuid: st
         }
         */
 
-        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/uuid/${marketUuid}`); // Call your backend's UUID endpoint
+        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/uuid/${marketUuid}`); // Call backend UUID endpoint
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend' }));
             return NextResponse.json(errorData, { status: response.status });
