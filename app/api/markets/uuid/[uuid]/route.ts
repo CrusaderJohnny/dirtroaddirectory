@@ -14,10 +14,10 @@ if (!BACKEND_API_BASE_URL) {
  */
 export async function GET(request: NextRequest, { params }: { params: { uuid: string } }) {
 
-    let marketUuid;
+    const marketUuid = params.uuid;
 
     try {
-        marketUuid = await params.uuid;
+        
 
         // Removed regex as this version is out of date and the api handles it now
 
