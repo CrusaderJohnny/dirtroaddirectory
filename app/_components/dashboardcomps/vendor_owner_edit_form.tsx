@@ -10,8 +10,7 @@ import {
     Divider,
     Box,
     Flex,
-    Loader,
-    Modal
+    Loader
 } from '@mantine/core';
 import { useForm, isNotEmpty, isEmail } from '@mantine/form';
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
@@ -26,7 +25,6 @@ interface VendorOwnerEditFormProps {
 
 export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFormProps) {
     const [isSaving, setIsSaving] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [loadingMarkets, setLoadingMarkets] = useState(true);
     const [allMarketsForSelection, setAllMarketsForSelection] = useState<MarketsInterface[]>([]);
 
@@ -119,28 +117,29 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
     };
 
     const handleDeleteClick = async () => {
-        setIsSaving(true);
-        try {
-            await vendorsAPI.deleteVendor(initialVendor.id);
-            notifications.show({
-                title: 'Deleted!',
-                message: `Your vendor "${initialVendor.name}" deleted successfully.`,
-                color: 'orange',
-                autoClose: 5000,
-            });
-            // Redirect the user after successful deletion
-            window.location.href = '/dashboard';
-        } catch (error) {
-            console.error('Error deleting vendor:', error);
-            notifications.show({
-                title: 'Error!',
-                message: `Failed to delete your vendor: ${error instanceof Error ? error.message : 'Unknown error'}`,
-                color: 'red',
-                autoClose: false,
-            });
-        } finally {
-            setIsSaving(false);
-            setIsModalOpen(false); // Close the modal
+        if (window.confirm(`Are you sure you want to delete your market "${initialVendor.name}"? This action cannot be undone.`)) {
+            setIsSaving(true);
+            try {
+                await vendorsAPI.deleteVendor(initialVendor.id);
+                notifications.show({
+                    title: 'Deleted!',
+                    message: `Your vendor "${initialVendor.name}" deleted successfully.`,
+                    color: 'orange',
+                    autoClose: 5000,
+                });
+                // Redirect the user after successful deletion
+                window.location.href = '/dashboard';
+            } catch (error) {
+                console.error('Error deleting vendor:', error);
+                notifications.show({
+                    title: 'Error!',
+                    message: `Failed to delete your vendor: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                    color: 'red',
+                    autoClose: false,
+                });
+            } finally {
+                setIsSaving(false);
+            }
         }
     };
 
@@ -261,7 +260,7 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
                     <Button
                         variant="filled"
                         color="red"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={handleDeleteClick}
                         leftSection={<IconTrash size={16} />}
                         disabled={isSaving}
                     >
@@ -272,27 +271,6 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
                     </Button>
                 </Group>
             </form>
-
-            {/* Modal for delete confirmation */}
-            <Modal
-                opened={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Confirm Deletion"
-                centered
-            >
-                <Text>
-                    Are you sure you want to delete your vendor "{initialVendor.name}"?
-                    This action cannot be undone.
-                </Text>
-                <Group justify="flex-end" mt="md">
-                    <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-                        Cancel
-                    </Button>
-                    <Button color="red" onClick={handleDeleteClick}>
-                        Delete
-                    </Button>
-                </Group>
-            </Modal>
         </Box>
     );
 }
