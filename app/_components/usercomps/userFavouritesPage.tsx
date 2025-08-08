@@ -23,6 +23,7 @@ import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
 import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
 import marketsAPI from "@/app/_components/apicomps/marketsCRUD";
 import vendorsAPI from "@/app/_components/apicomps/vendorsCRUD";
+import usersAPI from "@/app/_components/apicomps/usersCRUD";
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
 import MarketCard from "@/app/_components/marketaccordian/marketcard";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
@@ -34,40 +35,42 @@ export default function UserContentPage() {
     const [favoriteMarkets, setFavoriteMarkets] = useState<MarketsInterface[]>([]);
     const [favoriteVendors, setFavoriteVendors] = useState<VendorsInterface[]>([]);
     const [loading, setLoading] = useState(false);
+    const [dbUserId, setDbUserId] = useState<string | null>(null);
 
     useEffect(() => {
         const loadFavorites = async () => {
             if (!user) return;
+
             setLoading(true);
+
             try {
-                const userId = user.id;
-                console.log("[Favorites Page] Clerk user.id:", user.id);
-                console.log("[Favorites Page] DB user_id:", userId);
+                // Get DB user from email
+                const allUsers = await usersAPI.getAllUsers();
+                const matchedUser = allUsers.find(
+                    (u) => u.email === user.emailAddresses[0].emailAddress
+                );
+
+                if (!matchedUser) {
+                    console.warn("No DB user found for Clerk email");
+                    return;
+                }
+
+                const dbId = matchedUser.id.toString();
+                setDbUserId(dbId);
 
                 if (activeSegment === 'Markets') {
-                    const favIds = await favoritesMarketAPI.getFavoriteMarketIds(userId);
-                    console.log("[Favorites Page] Fetched favorite market IDs:", favIds);
-
+                    const favIds = await favoritesMarketAPI.getFavoriteMarketIds(dbId);
                     const allMarkets = await marketsAPI.getMarkets();
-                    console.log("[Favorites Page] Fetched all markets:", allMarkets);
-
                     const filtered = allMarkets.filter((market) => favIds.includes(market.id.toString()));
                     setFavoriteMarkets(filtered);
-                    console.log("[Favorites Page] Filtered favorite markets:", filtered);
                 }
 
                 if (activeSegment === 'Vendors') {
-                    const favIds = await favoriteVendorsAPI.getFavoriteVendorIds(userId);
-                    console.log("[Favorites Page] Fetched favorite vendor IDs:", favIds);
-
+                    const favIds = await favoriteVendorsAPI.getFavoriteVendorIds(dbId);
                     const allVendors = await vendorsAPI.getVendors();
-                    console.log("[Favorites Page] Fetched all vendors:", allVendors);
-
-                    const filtered = allVendors.filter((v) => favIds.includes(v.id));
+                    const filtered = allVendors.filter((v) => favIds.includes(v.id.toString()));
                     setFavoriteVendors(filtered);
-                    console.log("[Favorites Page] Filtered favorite vendors:", filtered);
                 }
-
             } catch (err) {
                 console.error("[Favorites Page] Failed to load favorites:", err);
             } finally {
@@ -94,7 +97,15 @@ export default function UserContentPage() {
                             <MarketCard
                                 market={market}
                                 isFavorited={true}
-                                onToggleFavorite={() => {}}
+                                onToggleFavorite={async () => {
+                                    if (!dbUserId) return;
+                                    try {
+                                        await favoritesMarketAPI.removeFavoriteMarket(dbUserId, market.id.toString());
+                                        setFavoriteMarkets(prev => prev.filter(m => m.id !== market.id));
+                                    } catch (err) {
+                                        console.error("Error removing favorite market:", err);
+                                    }
+                                }}
                             />
                         </GridCol>
                     ))}
@@ -113,7 +124,15 @@ export default function UserContentPage() {
                             <VendorCard
                                 vendor={vendor}
                                 isFavorited={true}
-                                onToggleFavorite={() => {}}
+                                onToggleFavorite={async () => {
+                                    if (!dbUserId) return;
+                                    try {
+                                        await favoriteVendorsAPI.removeFavoriteVendor(dbUserId, vendor.id);
+                                        setFavoriteVendors(prev => prev.filter(v => v.id !== vendor.id));
+                                    } catch (err) {
+                                        console.error("Error removing favorite vendor:", err);
+                                    }
+                                }}
                             />
                         </GridCol>
                     ))}

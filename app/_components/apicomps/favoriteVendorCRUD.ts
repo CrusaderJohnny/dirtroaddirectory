@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 const favoriteVendorsAPI = {
     // GET all favorite vendor IDs for a user
     getFavoriteVendorIds: async (userId: string): Promise<string[]> => {
-        const res = await fetch(`${API_BASE_URL}/users/${userId}/favourite-vendor`);
+        const res = await fetch(`${API_BASE_URL}/users/${userId}/favourite-vendors`);
         if (!res.ok) throw new Error("Failed to fetch favorite vendors");
         const data = await res.json();
         return data.map((vendor: { id: string }) => vendor.id.toString());
