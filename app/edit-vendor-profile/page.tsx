@@ -14,63 +14,55 @@ import {
     Paper
 } from '@mantine/core';
 
-import marketsAPI from '../_components/apicomps/marketsCRUD';
+import vendorsAPI from '../_components/apicomps/vendorsCRUD';
 
 
-import MarketOwnerEditForm from '../_components/dashboardcomps/market_owner_edit_form';
-import { MarketsInterface } from '@/app/_types/interfaces';
+import VendorOwnerEditForm from '../_components/dashboardcomps/vendor_owner_edit_form';
+import { VendorsInterface } from '@/app/_types/interfaces';
 
 
-export default function TestMarketFetchPage() {
-    const [marketData, setMarketData] = useState<MarketsInterface | null>(null);
+export default function EditVendorProfilePage() {
+    const [vendorData, setVendorData] = useState<VendorsInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const { isLoaded, isSignedIn, user } = useUser();
 
+    // Use the Clerk user's ID as the UUID to fetch the vendor
     const UUID = user?.id;
-    //console.log("Current UUID: "+UUID);
 
     useEffect(() => {
         if (isLoaded && isSignedIn && UUID) {
             // If Clerk is loaded but the user is not signed in, stop loading and clear data.
-            const fetchMarket = async () => {
+            const fetchVendor = async () => {
                 setLoading(true);
                 setError(null);
                 try {
-                    const data = await marketsAPI.getMarketByUuid(UUID);
-                    setMarketData(data);
+                    const data = await vendorsAPI.getVendorByUuid(UUID);
+                    setVendorData(data);
                 } catch (err) {
-                    console.error("Error fetching market by UUID:", err);
+                    console.error("Error fetching vendor by UUID:", err);
                     setError(err instanceof Error ? err.message : 'An unknown error occurred.');
                 } finally {
                     setLoading(false);
                 }
             };
-            fetchMarket();
+            fetchVendor();
         } else if (isLoaded && !isSignedIn) {
-            // If Clerk is loaded but the user is not signed in, stop loading and clear data.
             setLoading(false);
-            setMarketData(null);
-            setError("Please sign in to view market data.");
+            setVendorData(null);
+            setError("Please sign in to view vendor data.");
         } else {
-            // If Clerk is not yet loaded, keep loading state, no error
-            // This case handles the initial render before Clerk fully loads
+            // This handles the initial render before Clerk fully loads
             setLoading(true);
-            setMarketData(null);
+            setVendorData(null);
             setError(null);
         }
     }, [isLoaded, isSignedIn, UUID]);
 
-
-        if (!isLoaded || !isSignedIn) {
+    if (!isLoaded || !isSignedIn) {
         return null; // Handle loading or not signed in state
     }
-
-
-
-
-
 
     return (
         <AppShell>
@@ -80,17 +72,18 @@ export default function TestMarketFetchPage() {
             <AppShellMain style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
                 <Container size="lg" py="xl">
                     <Title ta="center" order={2} mb="lg">
-                        Edit Market Profile
+                        Edit Vendor Profile
                     </Title>
                     <Center>
                         <Paper shadow="xs" p="lg" withBorder style={{ width: '100%', maxWidth: '800px' }}>
                             {loading && <Loader />}
                             {error && <Text color="red">Error: {error}</Text>}
-                            {marketData && (
-                                <MarketOwnerEditForm initialMarket={marketData} />
+                            {vendorData && (
+                                // COMPONENT AND PROP CHANGED TO VENDOR VERSIONS
+                                <VendorOwnerEditForm initialVendor={vendorData} />
                             )}
-                            {!loading && !marketData && !error && (
-                                <Text>No market found for the provided UUID.</Text>
+                            {!loading && !vendorData && !error && (
+                                <Text>No vendor found for the provided UUID.</Text>
                             )}
                         </Paper>
                     </Center>
