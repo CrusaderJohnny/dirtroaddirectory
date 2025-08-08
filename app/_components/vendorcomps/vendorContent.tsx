@@ -41,6 +41,9 @@ import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 
+import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
+import { useUser } from "@clerk/nextjs";
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -62,6 +65,9 @@ export default function VendorsContent() {
   const [isLoadingMarkets, setIsLoadingMarkets] = useState(false);
   const [errorLoadingMarkets, setErrorLoadingMarkets] = useState<string | null>(null);
 
+  const { user } = useUser(); // Clerk user
+  const [favoriteVendorIds, setFavoriteVendorIds] = useState<number[]>([]);
+
   // useEffect to fetch all vendor data when the component mounts
   useEffect(() => {
     const loadData = async () => {
@@ -70,6 +76,16 @@ export default function VendorsContent() {
       try {
         const fetchedVendors = await vendorsAPI.getVendors();
         setVendors(fetchedVendors);
+
+        if (user) {
+          try {
+            const favVendorIds = await favoriteVendorsAPI.getFavoriteVendorIds(Number(user.id));
+            setFavoriteVendorIds(favVendorIds);
+          } catch (favErr) {
+            console.error("Failed to fetch vendor favorites:", favErr);
+            // Do not block page if no favorites exist or an error occurs
+          }
+        }
       } catch (err) {
         console.error("Failed to load vendor data:", err);
         setError(err instanceof Error ? err.message : "Failed to load vendor data.");
@@ -79,7 +95,23 @@ export default function VendorsContent() {
     };
 
     loadData();
-  }, []); // Empty dependency array means this runs once on mount
+  }, [user]); // ← added user here to refetch when it becomes available
+
+  const toggleFavoriteVendor = async (vendorId: number) => {
+    if (!user) return;
+    const isFav = favoriteVendorIds.includes(vendorId);
+    try {
+      if (isFav) {
+        await favoriteVendorsAPI.removeFavoriteVendor(Number(user.id), vendorId);
+        setFavoriteVendorIds(prev => prev.filter(id => id !== vendorId));
+      } else {
+        await favoriteVendorsAPI.addFavoriteVendor(Number(user.id), vendorId);
+        setFavoriteVendorIds(prev => [...prev, vendorId]);
+      }
+    } catch (err) {
+      console.error("Error updating favorite vendor:", err);
+    }
+  };
 
   const selectedVendor = vendors.find((v) => v.id === Number(vendorIdParam));
 
@@ -326,7 +358,11 @@ export default function VendorsContent() {
       <Grid gutter="xl">
         {filteredVendors.map((vendor) => (
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
-            <VendorCard vendor={vendor} />
+            <VendorCard
+                vendor={vendor}
+                isFavorited={favoriteVendorIds.includes(vendor.id)}
+                onToggleFavorite={() => toggleFavoriteVendor(vendor.id)}
+            />
           </Grid.Col>
         ))}
       </Grid>

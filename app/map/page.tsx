@@ -8,8 +8,8 @@ Used Mantine component library
 
 "use client"
 import React from 'react';
-import { AppShell, Button, Center, Select, Autocomplete, Group, LoadingOverlay } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { AppShell, Button, Center, Select, Autocomplete, Group, LoadingOverlay, ScrollArea } from '@mantine/core';
+import { useDisclosure,useScrollIntoView } from '@mantine/hooks';
 import { IconChevronLeft } from '@tabler/icons-react';
 import MarketAccordion from "@/app/_components/marketaccordian/marketcomp";
 import MapComponent from "@/app/_components/mapcomps/map";
@@ -46,6 +46,10 @@ export default function App() {
     const [allMarkets, setAllMarkets] = useState<MarketsInterface[]>([]); // State to store all fetched markets
     const [autocompleteData, setAutocompleteData] = useState<string[]>([]); // Data for Autocomplete
     const [searchInputValue, setSearchInputValue] = useState<string>(''); // State for search input value
+
+    const { scrollIntoView, targetRef, scrollableRef } = useScrollIntoView<HTMLElement>({ // Hook for changing scroll position
+        duration: 500
+    });
 
 
     // Effect to fetch all markets on component mount
@@ -88,9 +92,29 @@ export default function App() {
         }
         else{
             setOpenMarketId(marketId);
+            //scrollIntoView({alignment: 'center',});
         }
 
         
+    };
+
+    // handler for jumping to card when it is opened
+    const handleCardSelect = (node: HTMLElement | null, marketId: number | null) => {
+        // 1. Update targetRef.current with the received node
+        targetRef.current = node;
+
+        if (marketId === null) {
+            setOpenMarketId(null);
+        } else {
+             // Only scroll if there's a node
+            if (node) {
+                console.log("Scrolling to card:"+targetRef)
+                // Now call scrollIntoView *without* a 'target' property
+                // It will automatically scroll to whatever is in targetRef.current
+                // Pass the offset here if it's dynamic, otherwise set it in useScrollIntoView options
+                scrollIntoView({ alignment: 'center'});
+            }
+        }
     };
 
     // handler for when a region is selected from the dropdown
@@ -158,13 +182,17 @@ export default function App() {
         >
             <AppShell.Header component={NavMT}/>
             <AppShell.Navbar>
-                <div
+                <ScrollArea
+                    type='auto'
+                    viewportRef={scrollableRef}
                     style={{
-                        height: '100%',
-                        overflowY: 'auto', // Enable vertical scrolling when content exceeds height
+                        height: '100%'
                     }}>
-                    <MarketAccordion defaultOpenItemId={openMarketId}/>
-                </div>
+                    <MarketAccordion
+                        defaultOpenItemId={openMarketId}
+                        onCardSelect={handleCardSelect}
+                    />
+                </ScrollArea>
             </AppShell.Navbar>
             <AppShell.Main>
                 <Group align='center' p={'sm'}>
