@@ -12,7 +12,7 @@ if (!BACKEND_API_BASE_URL) {
  * @param request The NextRequest object.
  * @param params Contains the dynamic 'id' from the URL.
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) { // Promise here???
     const marketId = params.id;
 
     // Number validation for ID
