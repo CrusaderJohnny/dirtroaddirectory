@@ -35,7 +35,7 @@ const vendorsAPI = {
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
             }
             const responseData = await response.json();
-            return responseData;
+            return responseData; // RETURN DIFFERENT MESSAGE IF NOTHING TO RETURN
         } catch (err) {
             console.error(`Error fetching vendor with UUID ${uuid}:`, err);
             throw new Error(`Failed to fetch vendor data: ${err instanceof Error ? err.message : 'Unknown error'}`);

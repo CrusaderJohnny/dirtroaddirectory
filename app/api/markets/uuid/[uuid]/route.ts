@@ -13,19 +13,22 @@ if (!BACKEND_API_BASE_URL) {
  * @param params Contains the dynamic 'uuid' from the URL.
  */
 export async function GET(request: NextRequest, { params }: { params: { uuid: string } }) {
-    const marketUuid = params.uuid;
 
-    // Removed regex as this version is out of date and the api handles it now
-
-    // Validate UUID format using a regex
-    /*
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(marketUuid)) {
-        return NextResponse.json({ message: 'Invalid UUID format.' }, { status: 400 });
-    }
-    */
+    let marketUuid;
 
     try {
+        marketUuid = await params.uuid;
+
+        // Removed regex as this version is out of date and the api handles it now
+
+        // Validate UUID format using a regex
+        /*
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(marketUuid)) {
+            return NextResponse.json({ message: 'Invalid UUID format.' }, { status: 400 });
+        }
+        */
+
         const response = await fetch(`${BACKEND_API_BASE_URL}/markets/uuid/${marketUuid}`); // Call your backend's UUID endpoint
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend' }));
