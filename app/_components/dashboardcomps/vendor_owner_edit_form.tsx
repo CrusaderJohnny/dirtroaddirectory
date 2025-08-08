@@ -94,6 +94,7 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
             products: values.products ? values.products.split(',').map(s => s.trim()).filter(Boolean) : [],
             description: values.description,
             markets: values.markets,
+            uuid: values.uuid,
         };
 
         try {
