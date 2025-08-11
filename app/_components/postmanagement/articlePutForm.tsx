@@ -7,9 +7,7 @@ import {
     Select, Notification, useMantineTheme
 } from "@mantine/core";
 import {ArticleInterface} from "@/app/_types/interfaces";
-import {fetchArticlesAsJson} from "@/app/_components/apicomps/articlefetch";
 
-const apiUrl = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 export default function ArticlePutForm() {
     const theme = useMantineTheme();
@@ -32,7 +30,8 @@ export default function ArticlePutForm() {
     useEffect(() => {
         const loadArticles = async () => {
             try {
-                const data = await fetchArticlesAsJson();
+                const response= await fetch('/api/articles');
+                const data: ArticleInterface[] = await response.json();
                 setArticles(data);
             } catch (error: unknown) {
                 if (error instanceof Error) {
@@ -43,7 +42,9 @@ export default function ArticlePutForm() {
             }
         };
 
+
         loadArticles();
+        console.log(articles);
     }, []);
 
     // Update form when article is selected
@@ -51,13 +52,13 @@ export default function ArticlePutForm() {
         if (!id) return;
 
         setSelectedId(id);
-        const selected = articles.find(a => a.id === Number(id));
+        const selected = articles.find(a => a.post_id === Number(id));
         if (selected) {
             form.setValues({
                 title: selected.title,
                 content: selected.content,
-                imgLink: selected.imgLink,
-                featured: selected.featured,
+                imgLink: selected.image,
+                featured: selected.isFeatured,
                 summary: selected.summary
             });
         }
@@ -68,7 +69,7 @@ export default function ArticlePutForm() {
         if (!selectedId) return;
 
         try {
-            const res = await fetch(`${apiUrl}/articles/${selectedId}`, {
+            const res = await fetch(`api/articles/${selectedId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -133,8 +134,8 @@ export default function ArticlePutForm() {
                     label="Select an Article"
                     placeholder="Choose article"
                     data={articles.map(article => ({
-                        value: article.id.toString(),
-                        label: `${article.title} (ID: ${article.id})`
+                        value: article.post_id.toString(),
+                        label: `${article.title} (ID: ${article.post_id})`
                     }))}
                     value={selectedId}
                     onChange={handleSelect}
