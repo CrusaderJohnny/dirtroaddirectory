@@ -44,7 +44,6 @@ export default function ArticlePutForm() {
 
 
         loadArticles();
-        console.log(articles);
     }, []);
 
     // Update form when article is selected
@@ -58,7 +57,7 @@ export default function ArticlePutForm() {
                 title: selected.title,
                 content: selected.content,
                 imgLink: selected.image,
-                featured: selected.isFeatured,
+                featured: selected.isFeatured === "1",
                 summary: selected.summary
             });
         }
@@ -69,7 +68,7 @@ export default function ArticlePutForm() {
         if (!selectedId) return;
 
         try {
-            const res = await fetch(`api/articles/${selectedId}`, {
+            const res = await fetch(`/api/articles/${selectedId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

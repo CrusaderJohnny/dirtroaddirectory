@@ -115,7 +115,7 @@ export interface ArticleInterface {
     content: string;
     created_at: Date;
     image: string;
-    isFeatured: boolean;
+    isFeatured: string;
     summary:  string;
 }
 

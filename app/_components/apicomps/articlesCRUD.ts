@@ -22,13 +22,13 @@ const articlesAPI = {
             const raw: RawArticle[] = await response.json();
 
             return raw.map((article) => ({
-                id: article.post_id,
+                post_id: article.post_id,
                 title: article.title,
-                date: article.created_at,
+                created_at: article.created_at,
                 content: article.content,
-                imgLink: article.image,
+                image: article.image,
                 summary: article.summary,
-                featured: article.is_featured === "1",
+                is_featured: article.is_featured === "1",
             }));
         } catch (err) {
             console.error("Error in getArticles:", err);
