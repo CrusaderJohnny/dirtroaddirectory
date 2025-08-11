@@ -49,9 +49,9 @@ export default function MarketContent() {
 
     // States for holding fetched data
     const [markets, setMarkets] = useState<MarketsInterface[]>([]);
-    const [vendors, setVendors] = useState<VendorsInterface[]>([]); // State for vendor data
-    const [loading, setLoading] = useState<boolean>(true); // Loading state
-    const [error, setError] = useState<string | null>(null); // Error state
+    const [vendors, setVendors] = useState<VendorsInterface[]>([]);
+    const [loading, setLoading] = useState<boolean>(true); 
+    const [error, setError] = useState<string | null>(null);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -298,7 +298,6 @@ export default function MarketContent() {
             <Grid gutter="xl">
                 {filteredMarkets.map((market) => (
                     <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
-                        {/* Ensure MarketCard can accept the MarketsInterface type */}
                         <MarketCard market={market} />
                     </Grid.Col>
                 ))}
