@@ -1,10 +1,11 @@
-import {AppShell, AppShellHeader, AppShellMain, Container, Title} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
-import UserFavs from "@/app/_components/usercomps/userfavs";
-import rawData from "../_res/usermarkets.json";
+// import UserFavs from "@/app/_components/usercomps/other/userfavs";
+// import rawData from "../_res/usermarkets.json";
 import {currentUser} from "@clerk/nextjs/server";
-import {MarketsInterface} from "@/app/_types/interfaces";
+// import {MarketsInterface} from "@/app/_types/interfaces";
 import {redirect} from "next/navigation";
+import UserFavouritePage from "@/app/_components/usercomps/userFavouritesPage";
 
 export default async function Page() {
     const user = await currentUser();
@@ -12,7 +13,7 @@ export default async function Page() {
         redirect('/');
     }
 
-    const data: MarketsInterface[] = rawData as MarketsInterface[];
+    // const data: MarketsInterface[] = rawData as MarketsInterface[];
 
     //fetching markets from DB and assigning type to them implicitly
     // const fetchMarkets = async () => {
@@ -37,10 +38,13 @@ export default async function Page() {
         >
             <AppShellHeader component={NavMT}/>
             <AppShellMain>
-                <Container size="xl" py="xl">
-                    <Title order={1} className="text-3xl font-bold mb-6 text-center">{user?.firstName}&apos;s Favourites</Title>
-                    <UserFavs data={data}/>
-                </Container>
+                <UserFavouritePage />
+
+                {/*<Container size="xl" py="xl">*/}
+                {/*    <Title order={1} className="text-3xl font-bold mb-6 text-center">{user?.firstName}&apos;s Favourites</Title>*/}
+                {/*    <UserFavs data={data}/>*/}
+                {/*</Container>*/}
+
             </AppShellMain>
         </AppShell>
     )

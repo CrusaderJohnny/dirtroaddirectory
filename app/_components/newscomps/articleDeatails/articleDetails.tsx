@@ -3,12 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, Container, Text } from "@mantine/core";
-// import { fetchArticlesAsJson } from "@/app/_components/apicomps/articlefetch";
+import articlesAPI from "@/app/_components/apicomps/articlesCRUD";
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardFullPage from '@/app/_components/newscomps/cards/newsCardFullPage';
-
-// Hardcoded data fro demo & testing
-import articleData from "@/app/_res/articles.json";
 
 export default function ArticleDetailsContent() {
     const searchParams = useSearchParams();
@@ -28,12 +25,7 @@ export default function ArticleDetailsContent() {
             }
 
             try {
-                // OPTION A: Use API
-                // const data = await fetchArticlesAsJson();
-
-                // OPTION B: Use HARDCODED DATA
-                const data = articleData[0];
-
+                const data = await articlesAPI.getArticles();
                 const matchedArticle = data.find((item: ArticleInterface) => item.id === articleId);
 
                 if (!matchedArticle) {
@@ -60,7 +52,6 @@ export default function ArticleDetailsContent() {
         );
     }
 
-    // Handle case where article is not found or ID is invalid
     if (error || !article) {
         return (
             <Container size="md" py="xl">
@@ -72,7 +63,6 @@ export default function ArticleDetailsContent() {
         );
     }
 
-    // If the article is found, render NewsCardLarge
     return (
         <Container size="lg" py="xl">
             <NewsCardFullPage article={article} />

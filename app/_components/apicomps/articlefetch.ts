@@ -1,7 +1,7 @@
 import {ArticleInterface} from "@/app/_types/interfaces";
 
 // Define your backend API base URL
-const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_API_URL;
+// const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_API_URL;
 
 /**
  * Fetches article data from the API and returns it as a JSON array.
@@ -10,12 +10,12 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_API_URL;
  */
 export async function fetchArticlesAsJson(): Promise<ArticleInterface[]> {
     try {
-        const response = await fetch(`${API_BASE_URL}/articles`);
+        const response = await fetch(`/api/articles`);
 
         // Manually check if the HTTP response was successful (status 2xx)
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(`HTTP error! Status: ${errorData}`);
+            throw new Error(`HTTP error! Status: ${JSON.stringify(errorData)}`);
         }
 
         // Parse the JSON response body
