@@ -7,9 +7,7 @@ import {
     Select, Notification, useMantineTheme
 } from "@mantine/core";
 import {ArticleInterface} from "@/app/_types/interfaces";
-import {fetchArticlesAsJson} from "@/app/_components/apicomps/articlefetch";
 
-const apiUrl = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 export default function ArticlePutForm() {
     const theme = useMantineTheme();
@@ -32,7 +30,8 @@ export default function ArticlePutForm() {
     useEffect(() => {
         const loadArticles = async () => {
             try {
-                const data = await fetchArticlesAsJson();
+                const response= await fetch('/api/articles');
+                const data: ArticleInterface[] = await response.json();
                 setArticles(data);
             } catch (error: unknown) {
                 if (error instanceof Error) {
@@ -68,7 +67,7 @@ export default function ArticlePutForm() {
         if (!selectedId) return;
 
         try {
-            const res = await fetch(`${apiUrl}/articles/${selectedId}`, {
+            const res = await fetch(`api/articles/${selectedId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
