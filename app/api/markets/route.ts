@@ -1,5 +1,11 @@
 // app/api/markets/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+
+type RouteContext = {
+    params: {
+        id: string; // The dynamic segment from the file name, e.g., [id]
+    };
+};
 
 const BACKEND_API_BASE_URL = process.env.EXPRESS_BACKEND_URL;
 
@@ -31,9 +37,9 @@ export async function GET() {
 /**
  * Handles POST requests to /api/markets (creates a new market).
  */
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
     try {
-        const body = await request.json();
+        const body = await req.json();
 
         const response = await fetch(`${BACKEND_API_BASE_URL}/markets`, {
             method: 'POST',
