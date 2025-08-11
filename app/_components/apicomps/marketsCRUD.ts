@@ -4,7 +4,7 @@ import { MarketsInterface } from "@/app/_types/interfaces";
 const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 // check to ensure the environment variable is defined
 if (!API_BASE_URL) {
-  throw new Error('NEXT_PUBLIC_EXPRESS_API_BASE_URL is not defined in your environment variables.');
+    throw new Error('NEXT_PUBLIC_EXPRESS_API_BASE_URL is not defined in your environment variables.');
 }
 
 
@@ -45,6 +45,26 @@ const marketsAPI = {
             return responseData; // If API returns the market object directly
         } catch (err) {
             console.error(`Error fetching market with ID ${id}:`, err);
+            throw new Error(`Failed to fetch market data: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        }
+    },
+
+    /**
+     * Fetches a single market based on its unique UUID.
+     * @param uuid The UUID of the market to fetch.
+     * @returns A Promise that resolves to the MarketsInterface object.
+     */
+    getMarketByUuid: async (uuid: string): Promise<MarketsInterface> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/markets/uuid/${uuid}`); // Adding uuid to api asap
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+            }
+            const responseData = await response.json();
+            return responseData; // Assuming the API returns the market object directly
+        } catch (err) {
+            console.error(`Error fetching market with UUID ${uuid}:`, err);
             throw new Error(`Failed to fetch market data: ${err instanceof Error ? err.message : 'Unknown error'}`);
         }
     },
