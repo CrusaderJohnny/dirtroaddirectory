@@ -5,7 +5,6 @@ const BACKEND_URL = process.env.BACKEND_URL;
 export async function GET() {
     try {
         const backendUrl = `${BACKEND_URL}/contact`;
-        console.log(`Proxying GET request to ${backendUrl}`);
         const response = await fetch(backendUrl, {
             method: 'GET',
             headers: { 'content-type': 'application/json' },

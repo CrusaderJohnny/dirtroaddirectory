@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 const BACKEND_URL = process.env.BACKEND_URL;
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
+    const { id } = await params;
     try {
         const response = await fetch(`${BACKEND_URL}/contact/${id}/read`, {
             method: 'PUT',
@@ -21,7 +21,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
+    const { id } = await params;
     try {
         const response = await fetch(`${BACKEND_URL}/contact/${id}/read`, {
             method: 'DELETE',
