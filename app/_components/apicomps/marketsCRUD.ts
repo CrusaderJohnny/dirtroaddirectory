@@ -85,7 +85,7 @@ const marketsAPI = {
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
             }
             // Assuming the API returns the created market object directly
-            const responseData = await response.json(); 
+            const responseData = await response.json();
             // If your API returns { message: "...", market: {...} }
             // return responseData.market; 
             return responseData; // If API returns the market object directly

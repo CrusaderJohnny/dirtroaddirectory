@@ -18,11 +18,11 @@ export default function ArticleCarousel({
     const autoplay = useRef(Autoplay({ delay: 4500 }));
 
     // Filter out featured article(s)
-    const nonFeaturedArticles = articles.filter(article => !article.featured);
+    const nonFeaturedArticles = articles.filter(article => !article.isFeatured);
 
     // Create slides from remaining articles
     const slides = nonFeaturedArticles.map(article => (
-        <Carousel.Slide key={article.id}>
+        <Carousel.Slide key={article.post_id}>
             <NewsCardSmall article={article} />
         </Carousel.Slide>
     ));

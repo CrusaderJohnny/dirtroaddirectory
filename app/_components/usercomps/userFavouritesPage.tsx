@@ -40,7 +40,6 @@ export default function UserContentPage() {
     useEffect(() => {
         const loadFavorites = async () => {
             if (!user) return;
-
             setLoading(true);
 
             try {

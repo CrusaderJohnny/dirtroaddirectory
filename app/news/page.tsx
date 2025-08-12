@@ -31,25 +31,30 @@ export default function Page() {
                 setArticles(() => {
                     if (data.length === 0) return [];
 
-                    const hasFeatured = data.some(article => article.featured);
+                    const hasFeatured = data.some(article => article.isFeatured);
 
-                    // If none are marked as featured, mark the first one
-                    return data.map((article, index) => ({
-                        ...article,
-                        featured: hasFeatured ? article.featured : index === 0,
-                    }));
+                    // This is the updated logic
+                    // If none are marked as featured, mark the first one by setting its isFeatured property to true.
+                    return data.map((article, index) => {
+                        return {
+                            ...article,
+                            isFeatured: hasFeatured ? article.isFeatured : index === 0,
+                        };
+                    });
                 });
-
             } catch (err) {
                 console.error('Failed to load articles:', err);
+                // Optionally handle the error state, e.g., set articles to an empty array
+                setArticles([]);
             }
         };
 
         loadArticles();
     }, []);
 
-    const featuredArticle = articles.find(article => article.featured);
-    const hasNonFeaturedArticles = articles.some(article => !article.featured);
+    // The rest of the component is fine because it relies on the now-correct `isFeatured` flag.
+    const featuredArticle = articles.find(article => article.isFeatured);
+    const hasNonFeaturedArticles = articles.some(article => !article.isFeatured);
 
     function FeaturedGrid({
                               featuredArticle,
@@ -65,15 +70,16 @@ export default function Page() {
                         {featuredArticle ? (
                             <FeaturedCard article={featuredArticle} />
                         ) : (
+                            // This error message is now a fallback for a true error state, not a logic bug
                             <Text>Error: No featured article exists</Text>
                         )}
                     </GridCol>
 
                     <GridCol span={5} mah="80vh">
                         {hasNonFeaturedArticles ? (
-                            <ArticleCarousel articles={articles} />
+                            <ArticleCarousel articles={articles.filter(article => !article.isFeatured)} />
                         ) : (
-                            <Text>Error: No articles exist</Text>
+                            <Text>Error: No non-featured articles exist</Text>
                         )}
                     </GridCol>
                 </Grid>
@@ -100,9 +106,9 @@ export default function Page() {
 
                 <Box>
                     {hasNonFeaturedArticles ? (
-                        <ArticleCarousel articles={articles} height={260} />
+                        <ArticleCarousel articles={articles.filter(article => !article.isFeatured)} height={260} />
                     ) : (
-                        <Text>Error: No articles exist</Text>
+                        <Text>Error: No non-featured articles exist</Text>
                     )}
                 </Box>
             </Container>
