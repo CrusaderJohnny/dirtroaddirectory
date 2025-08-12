@@ -18,7 +18,6 @@ export async function GET(
 
         // Construct the full backend URL for a single article.
         const backendUrl = `${EXPRESS_BACKEND_URL}/articles/${id}`;
-        console.log(`Proxying GET request to ${backendUrl}`);
 
         const response = await fetch(backendUrl, {
             method: "GET",
