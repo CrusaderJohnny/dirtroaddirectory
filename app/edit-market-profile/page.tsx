@@ -36,6 +36,7 @@ export default function TestMarketFetchPage() {
                 setLoading(true);
                 setError(null);
                 try {
+                    // NEW FETCH USING ROUTES
                     const response = await fetch(`/api/markets/uuid/${UUID}`)
                     const data = await response.json();
                     setMarketData(data);
