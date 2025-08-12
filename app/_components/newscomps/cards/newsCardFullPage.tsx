@@ -45,7 +45,7 @@ export default function NewsCardFullPage({ article }: { article: ArticleInterfac
                     backgroundColor: '#ebfbee',
                 }}
             >
-                <Title order={4} c="dimmed">{article.created_at.toDateString()}</Title>
+                <Title order={4} c="dimmed">{article.created_at.toString()}</Title>
                 <Divider/>
 
                 <Spoiler

@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, Container, Text } from "@mantine/core";
-import articlesAPI from "@/app/_components/apicomps/articlesCRUD";
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardFullPage from '@/app/_components/newscomps/cards/newsCardFullPage';
 
@@ -25,13 +24,13 @@ export default function ArticleDetailsContent() {
             }
 
             try {
-                const data = await articlesAPI.getArticles();
-                const matchedArticle = data.find((item: ArticleInterface) => item.post_id === articleId);
+                const response = await fetch('/api/articles/' + articleId);
+                const data: ArticleInterface = await response.json();
 
-                if (!matchedArticle) {
+                if (!data || data.post_id !== articleId) {
                     setError("Article not found");
                 } else {
-                    setArticle(matchedArticle);
+                    setArticle(data);
                 }
             } catch (err) {
                 console.error("Error fetching article:", err);

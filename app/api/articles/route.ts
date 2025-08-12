@@ -7,7 +7,6 @@ const EXPRESS_BACKEND_URL = process.env.BACKEND_URL;
 export async function GET(req: Request) {
     try {
         const backendUrl = `${EXPRESS_BACKEND_URL}/articles`;
-        console.log(`Proxying GET request to ${backendUrl}`);
 
         const response = await fetch(backendUrl, {
             method: "GET",
@@ -47,7 +46,6 @@ export async function POST(req: Request) {
             );
         }
         const backendUrl = `${EXPRESS_BACKEND_URL}/articles`;
-        console.log(`Proxying POST request to ${backendUrl} with body: `, requestBody);
 
         const response = await fetch(backendUrl, {
             method: "POST",

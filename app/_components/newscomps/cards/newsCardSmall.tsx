@@ -12,7 +12,7 @@ export default function NewsCardSmall( { article }: { article: ArticleInterface 
                 <Box h='75%'>
                     <Image src={article.image} alt={article.title} h='100%' w='100%' radius="md" />
                 </Box>
-                <Text size="sm" c="dimmed">{article.created_at.toDateString()}</Text>
+                <Text size="sm" c="dimmed">{article.created_at.toString()}</Text>
             </Card>
         </Link>
     );

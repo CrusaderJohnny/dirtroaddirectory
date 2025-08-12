@@ -10,7 +10,7 @@ export default function FeaturedCard( { article }: { article: ArticleInterface }
                 <Title order={3} >{article.title}</Title>
 
                 <Image src={article.image} alt={article.title} h='60%' radius="md" />
-                <Text size="sm" c="dimmed">{article.created_at.toDateString()}</Text>
+                <Text size="sm" c="dimmed">{article.created_at.toString()}</Text>
 
                 <Text p='sm'>{article.summary}</Text>
             </Card>

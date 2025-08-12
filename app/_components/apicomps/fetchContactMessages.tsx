@@ -1,13 +1,11 @@
 import { ContactMessageInterface } from '@/app/_types/interfaces';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
-
 /**
  * Fetch all contact messages
  */
 export async function fetchContactMessages(): Promise<ContactMessageInterface[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/contact`);
+    const response = await fetch(`/api/contact`);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
       throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
@@ -27,7 +25,7 @@ export async function fetchContactMessages(): Promise<ContactMessageInterface[]>
  */
 export async function deleteContactMessage(id: number): Promise<void> {
   try {
-    const res = await fetch(`${API_BASE_URL}/contact/${id}`, {
+    const res = await fetch(`/api/contact/${id}`, {
       method: "DELETE",
     });
 
@@ -48,7 +46,7 @@ export async function deleteContactMessage(id: number): Promise<void> {
  */
 export async function fetchStarredMessageIds(): Promise<number[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/contact/starred`);
+    const response = await fetch(`/api/contact/starred`);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
       throw new Error(errorData.message || `Failed to fetch starred message IDs: HTTP error! Status: ${response.status}`);
@@ -68,7 +66,7 @@ export async function fetchStarredMessageIds(): Promise<number[]> {
  */
 export async function starMessage(id: number): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/contact/${id}/star`, {
+    const response = await fetch(`/api/contact/${id}/star`, {
       method: 'PUT',
     });
     if (!response.ok) {
@@ -88,7 +86,7 @@ export async function starMessage(id: number): Promise<void> {
  */
 export async function unstarMessage(id: number): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/contact/${id}/star`, {
+    const response = await fetch(`/api/contact/${id}/star`, {
       method: 'DELETE',
     });
     if (!response.ok) {
@@ -111,7 +109,7 @@ export async function unstarMessage(id: number): Promise<void> {
  */
 export async function fetchReadMessageIds(): Promise<number[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/contact/read`);
+    const response = await fetch(`/api/contact/read`);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
       throw new Error(errorData.message || `Failed to fetch read message IDs: HTTP error! Status: ${response.status}`);
@@ -131,7 +129,7 @@ export async function fetchReadMessageIds(): Promise<number[]> {
  */
 export async function markMessageAsRead(id: number): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/contact/${id}/read`, {
+    const response = await fetch(`/api/contact/${id}/read`, {
       method: 'PUT',
     });
     if (!response.ok) {
@@ -151,7 +149,7 @@ export async function markMessageAsRead(id: number): Promise<void> {
  */
 export async function markMessageAsUnread(id: number): Promise<void> {
   try {
-    const response = await fetch(`${API_BASE_URL}/contact/${id}/read`, {
+    const response = await fetch(`/api/contact/${id}/read`, {
       method: 'DELETE',
     });
     if (!response.ok) {
