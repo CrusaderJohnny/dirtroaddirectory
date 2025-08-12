@@ -51,9 +51,9 @@ export default function MarketContent() {
 
     // States for holding fetched data
     const [markets, setMarkets] = useState<MarketsInterface[]>([]);
-    const [vendors, setVendors] = useState<VendorsInterface[]>([]); // State for vendor data
-    const [loading, setLoading] = useState<boolean>(true); // Loading state
-    const [error, setError] = useState<string | null>(null); // Error state
+    const [vendors, setVendors] = useState<VendorsInterface[]>([]);
+    const [loading, setLoading] = useState<boolean>(true); 
+    const [error, setError] = useState<string | null>(null);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
@@ -157,21 +157,36 @@ export default function MarketContent() {
         return (
             <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
-                    {/* Hero Image */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                        <Card withBorder shadow="lg" radius="md" p={0} mb="xl" style={{ overflow: 'hidden', textAlign: 'center' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                             <Image
                                 src={selectedMarket.image}
                                 alt={selectedMarket.label}
                                 height={300}
                                 fit="contain"
-                                style={{ backgroundColor: 'white', padding: '1rem', width: '100%' }}
+                                style={{
+                                    border: '4px solid #f0f0f0',
+                                    borderRadius: '12px',
+                                    padding: '1rem',
+                                    background: '#ffffff', 
+                                    maxWidth: '100%',
+                                    width: 'auto',
+                                    margin: '0 auto',
+                                }}
                             />
-                            <div style={{ padding: '1rem' }}>
-                                <Title order={2} style={{ fontFamily: 'Georgia, serif', color: '#1f4d2e', fontWeight: 700 }}>{selectedMarket.label}</Title>
-                                <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
-                            </div>
-                        </Card>
+                            <Title
+                            order={2}
+                            mt="md"
+                            style={{
+                                fontFamily: 'Georgia, serif',
+                                color: '#1f4d2e',
+                                fontWeight: 700,
+                            }}
+                            >
+                            {selectedMarket.label}
+                            </Title>
+                            <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
+                        </div>
                     </motion.div>
 
                     {/* Description */}
@@ -300,6 +315,11 @@ export default function MarketContent() {
     // Default view for all markets (when no marketId is in search params)
     return (
         <AppShellMain style={{ minHeight: '100vh', paddingTop: 0}}>
+                      <Container 
+            size="xl"
+            px="lg"
+            style={{ maxWidth: '1400px', margin: '0 auto' }}
+            >
             <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
                 <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
                 <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
@@ -320,6 +340,7 @@ export default function MarketContent() {
                     </Grid.Col>
                 ))}
             </Grid>
+            </Container>
         </AppShellMain>
     );
 }
