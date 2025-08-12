@@ -14,7 +14,6 @@ import {
     Paper
 } from '@mantine/core';
 
-import vendorsAPI from '../_components/apicomps/vendorsCRUD';
 
 
 import VendorOwnerEditForm from '../_components/dashboardcomps/vendor_owner_edit_form';
@@ -38,7 +37,8 @@ export default function EditVendorProfilePage() {
                 setLoading(true);
                 setError(null);
                 try {
-                    const data = await vendorsAPI.getVendorByUuid(UUID);
+                    const response = await fetch(`/api/vendors/uuid/${UUID}`)
+                    const data = await response.json();
                     setVendorData(data);
                 } catch (err) {
                     console.error("Error fetching vendor by UUID:", err);
