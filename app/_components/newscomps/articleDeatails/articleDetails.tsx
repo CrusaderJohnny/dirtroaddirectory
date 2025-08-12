@@ -26,7 +26,7 @@ export default function ArticleDetailsContent() {
 
             try {
                 const data = await articlesAPI.getArticles();
-                const matchedArticle = data.find((item: ArticleInterface) => item.id === articleId);
+                const matchedArticle = data.find((item: ArticleInterface) => item.post_id === articleId);
 
                 if (!matchedArticle) {
                     setError("Article not found");

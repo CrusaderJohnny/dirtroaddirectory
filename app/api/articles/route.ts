@@ -1,11 +1,6 @@
 import {NextResponse} from "next/server";
 
-const EXPRESS_BACKEND_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
-
-if (!process.env.EXPRESS_BACKEND_URL) {
-    console.warn(`EXPRESS_BACKEND_URL is not set, defaulting to http://localhost:8080`);
-    console.warn(`Ensure this variable is set in your .env.local for production deployments.`);
-}
+const EXPRESS_BACKEND_URL = process.env.BACKEND_URL;
 
 //Get request
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

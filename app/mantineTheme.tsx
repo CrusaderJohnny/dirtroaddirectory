@@ -43,7 +43,7 @@ const myTheme = createTheme({
             defaultProps: {
                 radius: 'md',
             },
-            styles: (theme: MantineTheme) => ({ // This function is fine in a client component context
+            styles: (theme: MantineTheme) => ({
                 root: {
                     transition: 'all 0.2s ease-in-out',
                     '&:hover': {
@@ -57,7 +57,7 @@ const myTheme = createTheme({
             defaultProps: {
                 radius: 'sm',
             },
-            styles: (theme: MantineTheme) => ({ // This function is fine in a client component context
+            styles: (theme: MantineTheme) => ({
                 input: {
                     borderColor: theme.colors.neutralGray[3],
                     '&focusWithin': {
@@ -71,7 +71,7 @@ const myTheme = createTheme({
             defaultProps: {
                 radius: 'sm',
             },
-            styles: (theme: MantineTheme) => ({ // This function is fine in a client component context
+            styles: (theme: MantineTheme) => ({
                 input: {
                     borderColor: theme.colors.neutralGray[3],
                     '&focusWithin': {
@@ -85,7 +85,7 @@ const myTheme = createTheme({
             defaultProps: {
                 radius: 'sm',
             },
-            styles: (theme: MantineTheme) => ({ // This function is fine in a client component context
+            styles: (theme: MantineTheme) => ({
                 input: {
                     borderColor: theme.colors.neutralGray[3],
                     '&focusWithin': {
@@ -99,7 +99,7 @@ const myTheme = createTheme({
             defaultProps: {
                 radius: 'sm',
             },
-            styles: (theme: MantineTheme) => ({ // This function is fine in a client component context
+            styles: (theme: MantineTheme) => ({
                 input: {
                     borderColor: theme.colors.neutralGray[3],
                     '&focusWithin': {
@@ -116,7 +116,6 @@ const myTheme = createTheme({
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
-                    backgroundBlendMode: 'overlay',
                 },
             }),
         },
