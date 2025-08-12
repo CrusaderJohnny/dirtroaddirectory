@@ -1,18 +1,10 @@
-// app/api/markets/route.ts
 import { NextResponse } from 'next/server';
 
-type RouteContext = {
-    params: {
-        id: string; // The dynamic segment from the file name, e.g., [id]
-    };
-};
-
-const BACKEND_API_BASE_URL = process.env.EXPRESS_BACKEND_URL;
+const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
 // Ensure the backend URL is set
 if (!BACKEND_API_BASE_URL) {
-    console.error("Environment variable EXPRESS_BACKEND_URL is not set for markets API route.");
-
+    console.error("Environment variable BACKEND_URL is not set for markets API route.");
     throw new Error("Backend API URL not configured.");
 }
 

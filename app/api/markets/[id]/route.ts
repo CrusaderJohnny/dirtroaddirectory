@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-const BACKEND_API_BASE_URL = process.env.EXPRESS_BACKEND_URL;
+const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
 if (!BACKEND_API_BASE_URL) {
-    console.error("Environment variable EXPRESS_BACKEND_URL is not set for markets API route.");
+    console.error("Environment variable BACKEND_URL is not set for markets API route.");
     throw new Error("Backend API URL not configured.");
 }
 
@@ -12,16 +12,16 @@ if (!BACKEND_API_BASE_URL) {
  * @param request The NextRequest object.
  * @param params Contains the dynamic 'id' from the URL.
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) { // Promise here???
-    const marketId = params.id;
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) { // Promise here???
+    const { id } = await params;
 
     // Number validation for ID
-    if (isNaN(parseInt(marketId))) {
+    if (isNaN(parseInt(id))) {
         return NextResponse.json({ message: 'Invalid market ID format.' }, { status: 400 });
     }
 
     try {
-        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/${marketId}`);
+        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/${id}`);
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend' }));
             return NextResponse.json(errorData, { status: response.status });
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {
-        console.error(`Error in Next.js API route (GET /api/markets/${marketId}):`, error);
+        console.error(`Error in Next.js API route (GET /api/markets/${id}):`, error);
         return NextResponse.json({ message: "Internal Server Error while fetching market by ID." }, { status: 500 });
     }
 }
@@ -39,17 +39,17 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * @param request The NextRequest object.
  * @param params Contains the dynamic 'id' from the URL.
  */
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-    const marketId = params.id;
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
-    if (isNaN(parseInt(marketId))) {
+    if (isNaN(parseInt(id))) {
         return NextResponse.json({ message: 'Invalid market ID format.' }, { status: 400 });
     }
 
     try {
         const body = await request.json();
 
-        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/${marketId}`, {
+        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
@@ -62,7 +62,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         const data = await response.json();
         return NextResponse.json(data, { status: response.status });
     } catch (error) {
-        console.error(`Error in Next.js API route (PUT /api/markets/${marketId}):`, error);
+        console.error(`Error in Next.js API route (PUT /api/markets/${id}):`, error);
         return NextResponse.json({ message: "Internal Server Error while updating market." }, { status: 500 });
     }
 }
@@ -72,15 +72,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
  * @param request The NextRequest object.
  * @param params Contains the dynamic 'id' from the URL.
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-    const marketId = params.id;
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
-    if (isNaN(parseInt(marketId))) {
+    if (isNaN(parseInt(id))) {
         return NextResponse.json({ message: 'Invalid market ID format.' }, { status: 400 });
     }
 
     try {
-        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/${marketId}`, {
+        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/${id}`, {
             method: 'DELETE',
         });
 
@@ -92,7 +92,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         // If backend returns a message, forward it.
         return new NextResponse(null, { status: response.status }); // Or NextResponse.json({ message: 'Deleted' }, { status: 200 });
     } catch (error) {
-        console.error(`Error in Next.js API route (DELETE /api/markets/${marketId}):`, error);
+        console.error(`Error in Next.js API route (DELETE /api/markets/${id}):`, error);
         return NextResponse.json({ message: "Internal Server Error while deleting market." }, { status: 500 });
     }
 }

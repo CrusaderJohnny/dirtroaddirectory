@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_API_BASE_URL = process.env.EXPRESS_BACKEND_URL;
+const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
 if (!BACKEND_API_BASE_URL) {
-    console.error("Environment variable EXPRESS_BACKEND_URL is not set for markets API route.");
+    console.error("Environment variable BACKEND_URL is not set for markets API route.");
     throw new Error("Backend API URL not configured.");
 }
 
@@ -12,9 +12,9 @@ if (!BACKEND_API_BASE_URL) {
  * @param request The NextRequest object.
  * @param params Contains the dynamic 'uuid' from the URL.
  */
-export async function GET(request: NextRequest, { params }: { params: { uuid: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ uuid: string }> }) {
 
-    const marketUuid = params.uuid;
+    const { uuid } = await params;
 
     try {
         
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params }: { params: { uuid: st
         }
         */
 
-        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/uuid/${marketUuid}`); // Call backend UUID endpoint
+        const response = await fetch(`${BACKEND_API_BASE_URL}/markets/uuid/${uuid}`); // Call backend UUID endpoint
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend' }));
             return NextResponse.json(errorData, { status: response.status });
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest, { params }: { params: { uuid: st
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {
-        console.error(`Error in Next.js API route (GET /api/markets/uuid/${marketUuid}):`, error);
+        console.error(`Error in Next.js API route (GET /api/markets/uuid/${uuid}):`, error);
         return NextResponse.json({ message: "Internal Server Error while fetching market by UUID." }, { status: 500 });
     }
 }

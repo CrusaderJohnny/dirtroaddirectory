@@ -1,11 +1,10 @@
-// app/api/vendors/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_API_BASE_URL = process.env.EXPRESS_BACKEND_URL;
+const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
 // Ensure the backend URL is set
 if (!BACKEND_API_BASE_URL) {
-    console.error("Environment variable EXPRESS_BACKEND_URL is not set for vendors API route.");
+    console.error("Environment variable BACKEND_URL is not set for vendors API route.");
     throw new Error("Backend API URL not configured.");
 }
 
