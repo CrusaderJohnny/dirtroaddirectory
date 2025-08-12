@@ -126,10 +126,8 @@ export default function Page() {
     return (
         <AppShell>
             <AppShellSection>
-                <Box pt="md">
-                    <SiteIntroCard />
-                </Box>
                 <Container size="xl" pt="lg">
+                    <SiteIntroCard />
                     <Button component="a" href="/aboutus" mt="sm" fullWidth>
                         Learn More About Us
                     </Button>
