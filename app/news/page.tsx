@@ -31,12 +31,12 @@ export default function Page() {
                 setArticles(() => {
                     if (data.length === 0) return [];
 
-                    const hasFeatured = data.some(article => article.featured);
+                    const hasFeatured = data.some(article => article.isFeatured);
 
                     // If none are marked as featured, mark the first one
                     return data.map((article, index) => ({
                         ...article,
-                        featured: hasFeatured ? article.featured : index === 0,
+                        featured: hasFeatured ? article.isFeatured : index === 0,
                     }));
                 });
 
@@ -48,8 +48,8 @@ export default function Page() {
         loadArticles();
     }, []);
 
-    const featuredArticle = articles.find(article => article.featured);
-    const hasNonFeaturedArticles = articles.some(article => !article.featured);
+    const featuredArticle = articles.find(article => article.isFeatured);
+    const hasNonFeaturedArticles = articles.some(article => !article.isFeatured);
 
     function FeaturedGrid({
                               featuredArticle,

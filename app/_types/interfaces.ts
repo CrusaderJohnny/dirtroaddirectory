@@ -107,15 +107,15 @@ export interface MarketItem {
 
 export interface ArticleInterface {
     post_id: number;
-    user_id: number;
-    username: string;
+    user_id?: number;
+    username?: string;
     market_id?: number;
     market_label?: string;
     title: string;
     content: string;
     created_at: Date;
     image: string;
-    isFeatured: string;
+    isFeatured?: string;
     summary:  string;
 }
 

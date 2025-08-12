@@ -1,14 +1,5 @@
 import { ArticleInterface } from "@/app/_types/interfaces";
 
-type RawArticle = {
-    post_id: number;
-    title: string;
-    created_at: string;
-    content: string;
-    image: string;
-    summary: string;
-    is_featured: string;
-};
 
 const articlesAPI = {
     getArticles: async (): Promise<ArticleInterface[]> => {
@@ -19,7 +10,7 @@ const articlesAPI = {
                 throw new Error(errorData.message || "Failed to load articles");
             }
 
-            const raw: RawArticle[] = await response.json();
+            const raw: ArticleInterface[] = await response.json();
 
             return raw.map((article) => ({
                 post_id: article.post_id,
@@ -28,7 +19,7 @@ const articlesAPI = {
                 content: article.content,
                 image: article.image,
                 summary: article.summary,
-                is_featured: article.is_featured === "1",
+                is_featured: article.isFeatured === "1",
             }));
         } catch (err) {
             console.error("Error in getArticles:", err);
@@ -48,8 +39,8 @@ const articlesAPI = {
                     title: newArticle.title,
                     content: newArticle.content,
                     summary: newArticle.summary,
-                    image: newArticle.imgLink,
-                    is_featured: newArticle.featured ? 1 : 0,
+                    image: newArticle.image,
+                    is_featured: newArticle.isFeatured ? 1 : 0,
                 }),
             });
 
@@ -62,13 +53,13 @@ const articlesAPI = {
             const article = created.article;
 
             return {
-                id: article.post_id,
+                post_id: article.post_id,
                 title: article.title,
-                date: article.created_at,
+                created_at: article.created_at,
                 content: article.content,
-                imgLink: article.image,
+                image: article.image,
                 summary: article.summary,
-                featured: article.is_featured === "1",
+                isFeatured: article.is_featured,
             };
         } catch (err) {
             console.error("Error in createArticle:", err);
@@ -91,9 +82,9 @@ const articlesAPI = {
                 ...(updatedFields.title && { title: updatedFields.title }),
                 ...(updatedFields.content && { content: updatedFields.content }),
                 ...(updatedFields.summary && { summary: updatedFields.summary }),
-                ...(updatedFields.imgLink && { image: updatedFields.imgLink }),
-                ...(updatedFields.featured !== undefined && {
-                    is_featured: updatedFields.featured ? 1 : 0,
+                ...(updatedFields.image && { image: updatedFields.image }),
+                ...(updatedFields.isFeatured !== undefined && {
+                    is_featured: updatedFields.isFeatured ? 1 : 0,
                 }),
             };
 

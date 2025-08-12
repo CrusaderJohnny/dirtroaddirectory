@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 
 const EXPRESS_BACKEND_URL = process.env.BACKEND_URL;
-interface RouteContext {
-    params: {
-        id: string;
-    };
-}
+
 /**
  * Handles GET requests for a single article by its ID.
  * The URL will be in the format: /api/articles/123
@@ -14,11 +10,11 @@ interface RouteContext {
  */
 export async function GET(
     req: Request,
-    context: RouteContext
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         // Extract the article ID from the context object.
-        const { id } = context.params;
+        const { id } = await params;
 
         // Construct the full backend URL for a single article.
         const backendUrl = `${EXPRESS_BACKEND_URL}/articles/${id}`;
@@ -57,10 +53,10 @@ export async function GET(
  */
 export async function PUT(
     req: Request,
-    context: RouteContext
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = context.params;
+        const { id } = await params;
         const requestBody = await req.json();
 
         // Validate the request body here if necessary
