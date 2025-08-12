@@ -9,13 +9,8 @@ export default function FeaturedCard( { article }: { article: ArticleInterface }
             <Card withBorder radius="md" shadow='sm' p="md" w='100%' h='100%' bg='gray.1' className="cursor-pointer">
                 <Title order={3} >{article.title}</Title>
 
-                <Image
-                    src={article.image}
-                    alt={article.title}
-                    h={350}
-                    w="auto"
-                    fit="contain"
-                />
+                <Image src={article.image} alt={article.title} h='60%' radius="md" />
+                <Text size="sm" c="dimmed">{article.created_at.toString()}</Text>
 
                 <Text p='sm'>{article.summary}</Text>
             </Card>

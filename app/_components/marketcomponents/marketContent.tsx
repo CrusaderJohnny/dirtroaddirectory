@@ -39,7 +39,6 @@ import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 import {useUser} from "@clerk/nextjs";
-import usersAPI from "@/app/_components/apicomps/usersCRUD";
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -52,17 +51,15 @@ export default function MarketContent() {
 
     // States for holding fetched data
     const [markets, setMarkets] = useState<MarketsInterface[]>([]);
-    const [vendors, setVendors] = useState<VendorsInterface[]>([]); // State for vendor data
-    const [loading, setLoading] = useState<boolean>(true); // Loading state
-    const [error, setError] = useState<string | null>(null); // Error state
+    const [vendors, setVendors] = useState<VendorsInterface[]>([]);
+    const [loading, setLoading] = useState<boolean>(true); 
+    const [error, setError] = useState<string | null>(null);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
-    const [favoriteMarketIds, setFavoriteMarketIds] = useState<string[]>([]);
+    const [favoriteMarketIds, setFavoriteMarketIds] = useState<number[]>([]);
     const { user } = useUser();
-    const [dbUserId, setDbUserId] = useState<string | null>(null);
-    const [favoritesLoaded, setFavoritesLoaded] = useState(false);
 
     // useEffect to fetch data when the component mounts
 
@@ -70,7 +67,6 @@ export default function MarketContent() {
         const loadData = async () => {
             setLoading(true);
             setError(null);
-
             try {
                 const fetchedMarkets = await marketsAPI.getMarkets();
                 setMarkets(fetchedMarkets);
@@ -79,26 +75,18 @@ export default function MarketContent() {
                 setVendors(fetchedVendors);
 
                 if (user) {
-                    const allUsers = await usersAPI.getAllUsers();
-                    const matchedUser = allUsers.find(
-                        (u) => u.email === user.emailAddresses[0].emailAddress
-                    );
-
-                    if (matchedUser) {
-                        const dbId = matchedUser.id.toString();
-                        setDbUserId(dbId);
-
-                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(dbId);
-                        console.log("Fetched favorite market IDs:", favs);
+                    try {
+                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(Number(user.id));
                         setFavoriteMarketIds(favs);
+                    } catch (favErr) {
+                        console.error("Failed to fetch favorites:", favErr);
+                        // Do not set the main error, just log it.
                     }
                 }
             } catch (err) {
                 console.error("Failed to load data:", err);
                 setError(err instanceof Error ? err.message : "Failed to load data.");
             } finally {
-                // ✅ Only set favoritesLoaded after markets and (if user exists) favorites are loaded
-                setFavoritesLoaded(true);
                 setLoading(false);
             }
         };
@@ -106,33 +94,21 @@ export default function MarketContent() {
         loadData();
     }, [user]);
 
-
-
     const toggleFavorite = async (marketId: number) => {
-        if (!dbUserId) {
-            console.warn("DB user ID not available. Cannot toggle favorite.");
-            return;
-        }
-
-        const marketIdStr = marketId.toString();
-        const isFav = favoriteMarketIds.includes(marketIdStr);
-
-        console.log(`${isFav ? 'Removing' : 'Adding'} favorite for user ${dbUserId} and market ${marketId}`);
-
+        if (!user) return;
+        const isFav = favoriteMarketIds.includes(marketId);
         try {
             if (isFav) {
-                await favoritesMarketAPI.removeFavoriteMarket(dbUserId, marketIdStr);
-                setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketIdStr));
+                await favoritesMarketAPI.removeFavoriteMarket(Number(user.id), marketId);
+                setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketId));
             } else {
-                await favoritesMarketAPI.addFavoriteMarket(dbUserId, marketIdStr);
-                setFavoriteMarketIds((prev) => [...prev, marketIdStr]);
+                await favoritesMarketAPI.addFavoriteMarket(Number(user.id), marketId);
+                setFavoriteMarketIds((prev) => [...prev, marketId]);
             }
         } catch (err) {
             console.error("Error updating favorite:", err);
         }
     };
-
-
 
 
     const selectedMarket = markets.find((v) => v.id === Number(marketId));
@@ -160,14 +136,13 @@ export default function MarketContent() {
     }, [selectedMarket]);
 
     // Add loading and error states for initial render
-    if (loading || (user && !favoritesLoaded)) {
+    if (loading) {
         return (
             <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Text size="xl">Loading market data...</Text>
             </AppShellMain>
         );
     }
-
 
     if (error) {
         return (
@@ -177,34 +152,41 @@ export default function MarketContent() {
         );
     }
 
-    if (loading || !favoritesLoaded) {
-        return (
-            <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Text size="xl">Loading market data...</Text>
-            </AppShellMain>
-        );
-    }
-
     // Conditional rendering for a specific market profile
     if (marketId && selectedMarket) { // Check if marketId is present and selectedMarket is found
         return (
             <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
-                    {/* Hero Image */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                        <Card withBorder shadow="lg" radius="md" p={0} mb="xl" style={{ overflow: 'hidden', textAlign: 'center' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                             <Image
                                 src={selectedMarket.image}
                                 alt={selectedMarket.label}
                                 height={300}
                                 fit="contain"
-                                style={{ backgroundColor: 'white', padding: '1rem', width: '100%' }}
+                                style={{
+                                    border: '4px solid #f0f0f0',
+                                    borderRadius: '12px',
+                                    padding: '1rem',
+                                    background: '#ffffff', 
+                                    maxWidth: '100%',
+                                    width: 'auto',
+                                    margin: '0 auto',
+                                }}
                             />
-                            <div style={{ padding: '1rem' }}>
-                                <Title order={2} style={{ fontFamily: 'Georgia, serif', color: '#1f4d2e', fontWeight: 700 }}>{selectedMarket.label}</Title>
-                                <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
-                            </div>
-                        </Card>
+                            <Title
+                            order={2}
+                            mt="md"
+                            style={{
+                                fontFamily: 'Georgia, serif',
+                                color: '#1f4d2e',
+                                fontWeight: 700,
+                            }}
+                            >
+                            {selectedMarket.label}
+                            </Title>
+                            <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
+                        </div>
                     </motion.div>
 
                     {/* Description */}
@@ -333,6 +315,11 @@ export default function MarketContent() {
     // Default view for all markets (when no marketId is in search params)
     return (
         <AppShellMain style={{ minHeight: '100vh', paddingTop: 0}}>
+                      <Container 
+            size="xl"
+            px="lg"
+            style={{ maxWidth: '1400px', margin: '0 auto' }}
+            >
             <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
                 <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
                 <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
@@ -342,24 +329,18 @@ export default function MarketContent() {
                 </Group>
             </Paper>
             <Grid gutter="xl">
-                {filteredMarkets.map((market) => {
-                    const isFav = favoriteMarketIds.includes(market.id.toString());
-                    console.log(`Market ID: ${market.id} - isFav: ${isFav}`);
-
-                    return (
-                        <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
-                            <MarketCard
-                                market={market}
-                                {...(user && {
-                                    isFavorited: isFav,
-                                    onToggleFavorite: () => toggleFavorite(market.id),
-                                })}
-                            />
-                        </Grid.Col>
-                    );
-                })}
+                {filteredMarkets.map((market) => (
+                    <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
+                        {/* Ensure MarketCard can accept the MarketsInterface type */}
+                        <MarketCard
+                            market={market}
+                            isFavorited={favoriteMarketIds.includes(market.id)}
+                            onToggleFavorite={() => toggleFavorite(market.id)}
+                        />
+                    </Grid.Col>
+                ))}
             </Grid>
-
+            </Container>
         </AppShellMain>
     );
 }

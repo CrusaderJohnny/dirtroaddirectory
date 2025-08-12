@@ -34,6 +34,12 @@ import NavMT from "@/app/_components/navcomps/navmt";
 import {
   fetchContactMessages,
   deleteContactMessage,
+  fetchStarredMessageIds,
+  starMessage,
+  unstarMessage,
+  fetchReadMessageIds,
+  markMessageAsRead,
+  markMessageAsUnread,
 } from "@/app/_components/apicomps/fetchContactMessages";
 
 export default function ContactMessagesPage() {
@@ -48,29 +54,25 @@ export default function ContactMessagesPage() {
   const [filter, setFilter] = useState<"all" | "starred">("all");
 
   useEffect(() => {
-    loadMessages();
-
-    const storedRead = localStorage.getItem("readMessages");
-    if (storedRead) {
-      setReadMessages(new Set(JSON.parse(storedRead)));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("readMessages", JSON.stringify(Array.from(readMessages)));
-  }, [readMessages]);
-
-  const loadMessages = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchContactMessages();
-      setMessages(data);
-    } catch (e) {
-      setError((e as Error).message || "Failed to fetch contact messages.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    const loadInitialData = async () => {
+        try {
+            setLoading(true);
+            const [messagesData, starredIds, readIds] = await Promise.all([
+                fetchContactMessages(),
+                fetchStarredMessageIds(),
+                fetchReadMessageIds(), 
+            ]);
+            setMessages(messagesData);
+            setStarredMessages(new Set(starredIds));
+            setReadMessages(new Set(readIds)); 
+        } catch (e) {
+            setError((e as Error).message || "Failed to fetch messages.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    loadInitialData();
+  }, []); // The empty dependency array means this runs only once on mount
 
   const filteredMessages = messages
     .filter((msg) =>
@@ -80,10 +82,17 @@ export default function ContactMessagesPage() {
     )
     .filter((msg) => (filter === "starred" ? starredMessages.has(msg.id) : true));
 
-  const handleViewDetails = (message: ContactMessageInterface) => {
+  const handleViewDetails = async (message: ContactMessageInterface) => {
     setSelectedMessage(message);
-    setReadMessages((prev) => new Set(prev).add(message.id));
     open();
+    if (!readMessages.has(message.id)) {
+      try {
+        await markMessageAsRead(message.id);
+        setReadMessages((prev) => new Set(prev).add(message.id));
+      } catch (e) {
+        console.error("Failed to mark message as read:", e);
+      }
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -105,6 +114,46 @@ export default function ContactMessagesPage() {
       });
     } catch (err) {
       alert((err as Error).message || "An error occurred while deleting.");
+    }
+  };
+  
+  const handleStarToggle = async (id: number, isStarred: boolean) => {
+    try {
+      if (isStarred) {
+        await unstarMessage(id);
+      } else {
+        await starMessage(id);
+      }
+      setStarredMessages((prev) => {
+        const updated = new Set(prev);
+        if (isStarred) updated.delete(id);
+        else updated.add(id);
+        return updated;
+      });
+    } catch (error) {
+      alert(`Failed to update star status: ${error instanceof Error ? error.message : "An error occurred."}`);
+    }
+  };
+  
+  const handleReadToggle = async (id: number, isRead: boolean) => {
+    try {
+      if (isRead) {
+        await markMessageAsUnread(id);
+        setReadMessages((prev) => {
+          const updated = new Set(prev);
+          updated.delete(id);
+          return updated;
+        });
+      } else {
+        await markMessageAsRead(id);
+        setReadMessages((prev) => {
+          const updated = new Set(prev);
+          updated.add(id);
+          return updated;
+        });
+      }
+    } catch (error) {
+      alert(`Failed to update read status: ${error instanceof Error ? error.message : "An error occurred."}`);
     }
   };
 
@@ -175,7 +224,7 @@ export default function ContactMessagesPage() {
                       }}
                       onClick={() => handleViewDetails(msg)}
                     >
-
+                      
                       <Box
                         style={{
                           flex: 1,
@@ -190,14 +239,7 @@ export default function ContactMessagesPage() {
                           variant="light"
                           color="yellow"
                           title={isStarred ? "Unstar" : "Star"}
-                          onClick={() => {
-                            setStarredMessages((prev) => {
-                              const updated = new Set(prev);
-                              if (isStarred) updated.delete(msg.id);
-                              else updated.add(msg.id);
-                              return updated;
-                            });
-                          }}
+                          onClick={() => handleStarToggle(msg.id, isStarred)}
                         >
                           {isStarred ? <IconStarFilled size={18} /> : <IconStar size={18} />}
                         </ActionIcon>
@@ -219,14 +261,18 @@ export default function ContactMessagesPage() {
                           <ActionIcon
                             variant="light"
                             color="gray"
-                            onClick={() => {
-                              setReadMessages((prev) => {
-                                const updated = new Set(prev);
-                                updated.delete(msg.id);
-                                return updated;
-                              });
-                            }}
+                            onClick={() => handleReadToggle(msg.id, isRead)}
                             title="Mark as Unread"
+                          >
+                            <IconMail size={18} />
+                          </ActionIcon>
+                        )}
+                        {!isRead && (
+                          <ActionIcon
+                            variant="light"
+                            color="gray"
+                            onClick={() => handleReadToggle(msg.id, isRead)}
+                            title="Mark as Read"
                           >
                             <IconMail size={18} />
                           </ActionIcon>
