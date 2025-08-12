@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 
-const EXPRESS_BACKEND_URL = process.env.BACKEND_URL;
+const EXPRESS_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 //Get request
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

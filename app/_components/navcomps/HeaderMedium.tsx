@@ -139,7 +139,7 @@ export default function HeaderMedium() {
                 </Group>
 
                 <Group>
-                    <Group gap="md" w={"50%"} justify="space-between" style={{flexWrap: 'nowrap'}}>
+                    <Group gap="md" w={"80%"} justify="space-between" style={{flexWrap: 'nowrap'}}>
                         <Button component="a" href="/markets" variant="subtle" color="white" size="sm">
                             Markets
                         </Button>

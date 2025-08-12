@@ -75,7 +75,7 @@ export default function Page() {
     }
 
     if (error) {
-        return <Text color="red">{error}</Text>;
+        return <Text >{error}</Text>;
     }
 
     // Components for rendering the different grid layouts
