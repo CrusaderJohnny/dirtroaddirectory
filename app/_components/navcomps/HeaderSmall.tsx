@@ -10,7 +10,7 @@ import {
     Tooltip,
     Group,
 } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import {useDisclosure, useMediaQuery} from "@mantine/hooks";
 import UserLoginModal from "@/app/_components/navcomps/UserLoginModal";
 import Link from "next/link";
 import {
@@ -31,9 +31,9 @@ import {
 } from '@tabler/icons-react';
 
 export default function HeaderSmall() {
-    const [opened, { open, close }] = useDisclosure(false);
+    const [opened, {open, close}] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width: 20rem)');
-    const { user } = useUser();
+    const {user} = useUser();
     const isAdmin = user?.publicMetadata?.role === 'admin';
 
     return (
@@ -46,11 +46,11 @@ export default function HeaderSmall() {
                 padding={0}
                 scrollAreaComponent={ScrollArea.Autosize}
                 fullScreen={isMobile}
-                style={{ body: { backgroundColor: 'transparent' } }}
+                style={{body: {backgroundColor: 'transparent'}}}
                 size="20rem"
-                overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
+                overlayProps={{backgroundOpacity: 0.55, blur: 3}}
             >
-                <UserLoginModal />
+                <UserLoginModal/>
             </Modal>
 
             <Flex w="100%" justify="space-between">
@@ -73,23 +73,6 @@ export default function HeaderSmall() {
                 </Group>
 
                 <Group>
-                    {/* Admin Icon reserved */}
-                    <div style={{ visibility: isAdmin ? 'visible' : 'hidden' }}>
-                        <Tooltip label="Admin Panel">
-                            <Avatar
-                                component="a"
-                                href="/admin"
-                                variant="subtle"
-                                radius="xl"
-                                color="green"
-                                size="sm"
-                                style={{ backgroundColor: '#ffc2c2' }}
-                            >
-                                <IconLockCode size={14} />
-                            </Avatar>
-                        </Tooltip>
-                    </div>
-
                     <SignedOut>
                         <Tooltip label="Accounts">
                             <Avatar
@@ -99,55 +82,68 @@ export default function HeaderSmall() {
                                 size="sm"
                                 color="green"
                             >
-                                <IconUser size={14} />
+                                <IconUser size={14}/>
                             </Avatar>
                         </Tooltip>
                     </SignedOut>
 
                     <SignedIn>
-                        <UserButton />
-                    </SignedIn>
-
-                    <Menu>
-                        <Menu.Target>
-                            <Burger color="white" />
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                            <SignedOut>
-                                <Menu.Item
-                                    component="button"
-                                    onClick={open}
-                                    leftSection={<IconUser size={14} />}
-                                    color="blue"
-                                >
-                                    User Account
-                                </Menu.Item>
-                            </SignedOut>
-                            <SignedIn>
-                                <Menu.Item
-                                    leftSection={<IconHeartStar size={14} />}
-                                    color="blue"
+                        {/*Basic user favs section*/}
+                        {!isAdmin && (
+                            <Tooltip label="Favorites">
+                                <Avatar
                                     component="a"
                                     href="/userfavs"
+                                    variant="subtle"
+                                    radius="xl"
+                                    color="green"
+                                    size="sm"
+                                    style={{backgroundColor: '#ffc2c2'}}
                                 >
-                                    Favorites
-                                </Menu.Item>
-                            </SignedIn>
-                            <Menu.Divider />
+                                    <IconHeartStar size={14}/>
+                                </Avatar>
+                            </Tooltip>
+                        )}
+
+                        {/*Admin Panel Section*/}
+                        {isAdmin && (
+                            <Tooltip label="Admin Panel">
+                                <Avatar
+                                    component="a"
+                                    href="/admin"
+                                    variant="subtle"
+                                    radius="xl"
+                                    color="green"
+                                    size="sm"
+                                    style={{backgroundColor: '#ffc2c2'}}
+                                >
+                                    <IconLockCode size={14}/>
+                                </Avatar>
+                            </Tooltip>
+                        )}
+                        <UserButton/>
+                    </SignedIn>
+
+                    {/*Hamburger Menu*/}
+                    <Menu>
+                        <Menu.Target>
+                            <Burger color="white"/>
+                        </Menu.Target>
+                        <Menu.Dropdown>
                             <Menu.Label>Pages</Menu.Label>
-                            <Menu.Item leftSection={<IconApple size={14} />} component="a" href="/markets">
+                            <Menu.Item leftSection={<IconApple size={14}/>} component="a" href="/markets">
                                 Markets
                             </Menu.Item>
-                            <Menu.Item leftSection={<IconBuildingStore size={14} />} component="a" href="/vendors">
+                            <Menu.Item leftSection={<IconBuildingStore size={14}/>} component="a" href="/vendors">
                                 Vendors
                             </Menu.Item>
-                            <Menu.Item leftSection={<IconMapRoute size={14} />} component="a" href="/map">
+                            <Menu.Item leftSection={<IconMapRoute size={14}/>} component="a" href="/map">
                                 Market Map
                             </Menu.Item>
-                            <Menu.Item leftSection={<IconHelpHexagon size={14} />} component="a" href="/aboutus">
+                            <Menu.Item leftSection={<IconHelpHexagon size={14}/>} component="a" href="/aboutus">
                                 About Us
                             </Menu.Item>
-                            <Menu.Item leftSection={<IconMailbox size={14} />} component="a" href="/contact">
+                            <Menu.Item leftSection={<IconMailbox size={14}/>} component="a" href="/contact">
                                 Contact
                             </Menu.Item>
                         </Menu.Dropdown>
