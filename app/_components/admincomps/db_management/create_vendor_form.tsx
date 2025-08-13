@@ -17,8 +17,6 @@ import { useForm } from '@mantine/form';
 import { isNotEmpty, isEmail } from '@mantine/form';
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces"; // Import both interfaces
 import { notifications } from '@mantine/notifications';
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD'; // Import marketsAPI to fetch market list
-import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD'; // Import vendorsAPI for CRUD operations
 import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 
 export default function CreateVendorForm() {
@@ -73,10 +71,11 @@ export default function CreateVendorForm() {
     const fetchVendorsAndMarkets = async () => {
         setLoading(true);
         try {
-            const [vendorsData, marketsData] = await Promise.all([
-                vendorsAPI.getVendors(),
-                marketsAPI.getMarkets()
-            ]);
+            const vendorResponse = await fetch(`/api/vendors/`);
+            const marketResponse = await fetch(`/api/markets/`);
+            const vendorsData = await vendorResponse.json();
+            const marketsData = await marketResponse.json();
+
             setAllVendors(vendorsData);
             setAllMarketsForSelection(marketsData);
         } catch (err) {
@@ -137,7 +136,15 @@ export default function CreateVendorForm() {
         try {
             if (vendorToEdit && vendorToEdit.id) {
                 // UPDATE existing vendor
-                const updatedVendor = await vendorsAPI.updateVendor(vendorToEdit.id, { id: vendorToEdit.id, ...vendorData } as VendorsInterface);
+                const response = await fetch(`/api/vendors/${vendorToEdit.id}`, {
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(vendorData),
+                });
+                const updatedVendor = await response.json();
+                //const updatedVendor = await vendorsAPI.updateVendor(vendorToEdit.id, { id: vendorToEdit.id, ...vendorData } as VendorsInterface);
                 notifications.show({
                     title: 'Success!',
                     message: `Vendor "${updatedVendor.name}" updated successfully!`,
@@ -146,7 +153,15 @@ export default function CreateVendorForm() {
                 });
             } else {
                 // CREATE new vendor
-                const newVendor = await vendorsAPI.createVendor(vendorData);
+                const response = await fetch(`/api/vendors/`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(vendorData),
+                });
+                const newVendor = await response.json();
+                //const newVendor = await vendorsAPI.createVendor(vendorData);
 
                 //console.log('DEBUG: Object passed to notification for NEW vendor:', newVendor); //-------------------------------------------------- DEBUG --------------------
 
@@ -178,7 +193,9 @@ export default function CreateVendorForm() {
             if (window.confirm(`Are you sure you want to delete "${vendorToEdit.name}"? This action cannot be undone.`)) {
                 setIsSaving(true);
                 try {
-                    await vendorsAPI.deleteVendor(vendorToEdit.id);
+                    await fetch(`/api/vendors/${vendorToEdit.id}`, {
+                        method: "DELETE",
+                    });
                     notifications.show({
                         title: 'Deleted!',
                         message: `Vendor "${vendorToEdit.name}" deleted successfully.`,
