@@ -28,11 +28,7 @@ import {
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
-// import data from '../../_res/markets.json';
-// import vendorList from '../../_res/vendors.json';
 import { trackEvent } from "@/analytics";
-
-// Import the API fetching functions and interfaces
 import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
 import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
@@ -52,7 +48,7 @@ export default function MarketContent() {
     // States for holding fetched data
     const [markets, setMarkets] = useState<MarketsInterface[]>([]);
     const [vendors, setVendors] = useState<VendorsInterface[]>([]);
-    const [loading, setLoading] = useState<boolean>(true); 
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -76,11 +72,13 @@ export default function MarketContent() {
 
                 if (user) {
                     try {
-                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(Number(user.id));
-                        setFavoriteMarketIds(favs);
+                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(user.id);
+                        const numericFavs = favs
+                            .map((id) => Number(id))
+                            .filter((n) => Number.isFinite(n));
+                        setFavoriteMarketIds(numericFavs);
                     } catch (favErr) {
                         console.error("Failed to fetch favorites:", favErr);
-                        // Do not set the main error, just log it.
                     }
                 }
             } catch (err) {
@@ -99,10 +97,10 @@ export default function MarketContent() {
         const isFav = favoriteMarketIds.includes(marketId);
         try {
             if (isFav) {
-                await favoritesMarketAPI.removeFavoriteMarket(Number(user.id), marketId);
+                await favoritesMarketAPI.removeFavoriteMarket(user.id, marketId.toString());
                 setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketId));
             } else {
-                await favoritesMarketAPI.addFavoriteMarket(Number(user.id), marketId);
+                await favoritesMarketAPI.addFavoriteMarket(user.id, marketId.toString());
                 setFavoriteMarketIds((prev) => [...prev, marketId]);
             }
         } catch (err) {
@@ -168,22 +166,22 @@ export default function MarketContent() {
                                     border: '4px solid #f0f0f0',
                                     borderRadius: '12px',
                                     padding: '1rem',
-                                    background: '#ffffff', 
+                                    background: '#ffffff',
                                     maxWidth: '100%',
                                     width: 'auto',
                                     margin: '0 auto',
                                 }}
                             />
                             <Title
-                            order={2}
-                            mt="md"
-                            style={{
-                                fontFamily: 'Georgia, serif',
-                                color: '#1f4d2e',
-                                fontWeight: 700,
-                            }}
+                                order={2}
+                                mt="md"
+                                style={{
+                                    fontFamily: 'Georgia, serif',
+                                    color: '#1f4d2e',
+                                    fontWeight: 700,
+                                }}
                             >
-                            {selectedMarket.label}
+                                {selectedMarket.label}
                             </Title>
                             <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
                         </div>
@@ -315,31 +313,31 @@ export default function MarketContent() {
     // Default view for all markets (when no marketId is in search params)
     return (
         <AppShellMain style={{ minHeight: '100vh', paddingTop: 0}}>
-                      <Container 
-            size="xl"
-            px="lg"
-            style={{ maxWidth: '1400px', margin: '0 auto' }}
+            <Container
+                size="xl"
+                px="lg"
+                style={{ maxWidth: '1400px', margin: '0 auto' }}
             >
-            <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
-                <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
-                <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
-                <Group mb="lg" grow>
-                    <TextInput placeholder="Search by market name" leftSection={<IconSearch size={16} />} value={searchTerm} onChange={(e) => setSearchTerm(e.currentTarget.value)} radius="md" size="md" />
-                    <Select data={allRegions} placeholder="Filter by region" clearable value={selectedRegion} onChange={setSelectedRegion} radius="md" size="md" />
-                </Group>
-            </Paper>
-            <Grid gutter="xl">
-                {filteredMarkets.map((market) => (
-                    <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
-                        {/* Ensure MarketCard can accept the MarketsInterface type */}
-                        <MarketCard
-                            market={market}
-                            isFavorited={favoriteMarketIds.includes(market.id)}
-                            onToggleFavorite={() => toggleFavorite(market.id)}
-                        />
-                    </Grid.Col>
-                ))}
-            </Grid>
+                <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
+                    <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
+                    <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
+                    <Group mb="lg" grow>
+                        <TextInput placeholder="Search by market name" leftSection={<IconSearch size={16} />} value={searchTerm} onChange={(e) => setSearchTerm(e.currentTarget.value)} radius="md" size="md" />
+                        <Select data={allRegions} placeholder="Filter by region" clearable value={selectedRegion} onChange={setSelectedRegion} radius="md" size="md" />
+                    </Group>
+                </Paper>
+                <Grid gutter="xl">
+                    {filteredMarkets.map((market) => (
+                        <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
+                            {/* Ensure MarketCard can accept the MarketsInterface type */}
+                            <MarketCard
+                                market={market}
+                                isFavorited={favoriteMarketIds.includes(market.id)}
+                                onToggleFavorite={() => toggleFavorite(market.id)}
+                            />
+                        </Grid.Col>
+                    ))}
+                </Grid>
             </Container>
         </AppShellMain>
     );

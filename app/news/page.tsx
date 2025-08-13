@@ -75,7 +75,7 @@ export default function Page() {
     }
 
     if (error) {
-        return <Text color="red">{error}</Text>;
+        return <Text >{error}</Text>;
     }
 
     // Components for rendering the different grid layouts
@@ -126,10 +126,8 @@ export default function Page() {
     return (
         <AppShell>
             <AppShellSection>
-                <Box pt="md">
-                    <SiteIntroCard />
-                </Box>
                 <Container size="xl" pt="lg">
+                    <SiteIntroCard />
                     <Button component="a" href="/aboutus" mt="sm" fullWidth>
                         Learn More About Us
                     </Button>

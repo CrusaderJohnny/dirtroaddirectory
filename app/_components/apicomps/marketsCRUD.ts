@@ -1,7 +1,7 @@
 import { MarketsInterface } from "@/app/_types/interfaces";
 
 
-const API_BASE_URL = process.env.BACKEND_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 // check to ensure the environment variable is defined
 if (!API_BASE_URL) {
     throw new Error('API_BASE_URL is not defined in your environment variables.');
@@ -85,7 +85,7 @@ const marketsAPI = {
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
             }
             // Assuming the API returns the created market object directly
-            const responseData = await response.json(); 
+            const responseData = await response.json();
             // If your API returns { message: "...", market: {...} }
             // return responseData.market; 
             return responseData; // If API returns the market object directly

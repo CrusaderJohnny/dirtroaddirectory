@@ -14,8 +14,8 @@ import { VendorsInterface } from '@/app/_types/interfaces';
 
 interface VendorCardProps {
     vendor: VendorsInterface;
-    isFavorited: boolean;
-    onToggleFavorite: () => void;
+    isFavorited?: boolean;
+    onToggleFavorite?: () => void;
 }
 
 export default function VendorCard({ vendor, isFavorited, onToggleFavorite }: VendorCardProps) {
@@ -33,18 +33,19 @@ export default function VendorCard({ vendor, isFavorited, onToggleFavorite }: Ve
                 border: `1px solid ${theme.colors.primaryGreen[2]}`,
             }}
         >
-            <ActionIcon
-                variant="light"
-                onClick={(e) => {
-                    e.preventDefault();
-                    onToggleFavorite();
-                }}
-                style={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
-                color="red"
-            >
-                {isFavorited ? <IconHeartFilled size={20} /> : <IconHeart size={20} />}
-            </ActionIcon>
-
+            {onToggleFavorite && (
+                <ActionIcon
+                    variant="light"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onToggleFavorite();
+                    }}
+                    style={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
+                    color="red"
+                >
+                    {isFavorited ? <IconHeartFilled size={20} /> : <IconHeart size={20} />}
+                </ActionIcon>
+            )}
             <Link href={`/vendors?vendorId=${vendor.id}`} passHref>
                 <div>
                     <Image
