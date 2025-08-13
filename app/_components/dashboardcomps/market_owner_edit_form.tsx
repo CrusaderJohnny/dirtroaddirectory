@@ -14,7 +14,6 @@ import {
 import { useForm, isNotEmpty } from '@mantine/form';
 import { MarketsInterface } from "@/app/_types/interfaces";
 import { notifications } from '@mantine/notifications';
-//import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 interface MarketOwnerEditFormProps {

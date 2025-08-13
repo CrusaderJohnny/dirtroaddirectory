@@ -5,7 +5,6 @@ Maps the markets from markets.json to the POIs array for the google maps api
 */
 import { MarketsInterface, Poi} from "@/app/_types/interfaces";
 // import data from "../../_res/markets.json"; // Not used in this revised version if fetching
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import { useEffect, useState, useMemo } from "react";
 
 /**
@@ -22,8 +21,11 @@ export const useMapLocations = (): Poi[] => {
     const loadMarkets = async () => {
       try {
         setIsLoading(true);
-        const fetchedData = await marketsAPI.getMarkets();
-        setMarketList(fetchedData);
+        const response = await fetch(`/api/markets/`)
+        const data = await response.json();
+        setMarketList(data);
+        //const fetchedData = await marketsAPI.getMarkets();
+        //setMarketList(fetchedData);
       } catch (err) {
         console.error("Failed to load markets:", err);
         setError("Failed to load market data.");
