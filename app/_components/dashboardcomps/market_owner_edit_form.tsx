@@ -14,7 +14,7 @@ import {
 import { useForm, isNotEmpty } from '@mantine/form';
 import { MarketsInterface } from "@/app/_types/interfaces";
 import { notifications } from '@mantine/notifications';
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
+//import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 interface MarketOwnerEditFormProps {
@@ -55,7 +55,15 @@ export default function MarketOwnerEditForm({ initialMarket }: MarketOwnerEditFo
     const handleSubmit = async (values: typeof form.values) => {
         setIsSaving(true);
         try {
-            await marketsAPI.updateMarket(initialMarket.id, values as MarketsInterface);
+            const response = await fetch(`/api/markets/${initialMarket.id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values as MarketsInterface),
+            });
+            const updatedMarket = await response.json();
+            //await marketsAPI.updateMarket(initialMarket.id, values as MarketsInterface);
             notifications.show({
                 title: 'Success!',
                 message: `Your market "${values.label}" has been updated.`,
@@ -79,7 +87,10 @@ export default function MarketOwnerEditForm({ initialMarket }: MarketOwnerEditFo
         if (window.confirm(`Are you sure you want to delete your market "${initialMarket.label}"? This action cannot be undone.`)) {
             setIsSaving(true);
             try {
-                await marketsAPI.deleteMarket(initialMarket.id);
+                await fetch(`/api/markets/${initialMarket.id}`, {
+                    method: "DELETE",
+                });
+                //await marketsAPI.deleteMarket(initialMarket.id);
                 notifications.show({
                     title: 'Deleted!',
                     message: `Your market "${initialMarket.label}" deleted successfully.`,
