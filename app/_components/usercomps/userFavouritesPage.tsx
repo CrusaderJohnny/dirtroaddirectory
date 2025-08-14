@@ -18,14 +18,16 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
-import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
-import marketsAPI from "@/app/_components/apicomps/marketsCRUD";
-import vendorsAPI from "@/app/_components/apicomps/vendorsCRUD";
-import usersAPI from "@/app/_components/apicomps/usersCRUD";
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
 import MarketCard from "@/app/_components/marketaccordian/marketcard";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
+
+// Need to delete and replace with routes
+import favoritesMarketAPI from "@/app/userfavs/toBeDeleted/favoritesMarketCRUD";
+import favoriteVendorsAPI from "@/app/userfavs/toBeDeleted/favoriteVendorCRUD";
+import marketsAPI from "@/app/userfavs/toBeDeleted/marketsCRUD";
+import vendorsAPI from "@/app/userfavs/toBeDeleted/vendorsCRUD";
+import usersAPI from "@/app/userfavs/toBeDeleted/usersCRUD";
 
 export default function UserContentPage() {
     const { user } = useUser();
