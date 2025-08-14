@@ -1,11 +1,7 @@
 import { VendorsInterface } from "@/app/_types/interfaces";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-// check to ensure the environment variable is defined
-if (!API_BASE_URL) {
-    throw new Error('BASE_URL is not defined in your environment variables.');
-}
+const NEXT_API_BASE_PATH = '/api';
 
 
 const vendorsAPI = {
@@ -15,7 +11,7 @@ const vendorsAPI = {
      */
     getVendors: async (): Promise<VendorsInterface[]> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors`);
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors`);
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
                 throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
@@ -29,6 +25,26 @@ const vendorsAPI = {
     },
 
     /**
+     * Fetches a single vendor by its UUID.
+     * @param uuid The UUID of the vendor to fetch.
+     * @returns A Promise that resolves to the VendorsInterface object.
+     */
+    getVendorByUuid: async (uuid: string): Promise<VendorsInterface> => {
+        try {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors/uuid/${uuid}`); // Assumes API has an endpoint like /vendors/uuid/:uuid
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+            }
+            const responseData = await response.json();
+            return responseData; // RETURN DIFFERENT MESSAGE IF NOTHING TO RETURN
+        } catch (err) {
+            console.error(`Error fetching vendor with UUID ${uuid}:`, err);
+            throw new Error(`Failed to fetch vendor data: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        }
+    },
+
+    /**
      * Creates a new vendor.
      * @param vendorData The data for the new vendor, excluding the 'id'.
      * @returns A Promise that resolves to the newly created VendorsInterface object (including its generated id).
@@ -36,7 +52,7 @@ const vendorsAPI = {
     // Changed 'VendorDataForCreate' to 'Omit<VendorsInterface, 'id'>' directly
     createVendor: async (vendorData: Omit<VendorsInterface, 'id'>): Promise<VendorsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(vendorData), // vendorData will now correctly include 'markets' array
@@ -65,7 +81,7 @@ const vendorsAPI = {
     // Changed 'VendorDataForUpdate' to 'Partial<VendorsInterface>' directly
     updateVendor: async (id: number, vendorData: Partial<VendorsInterface>): Promise<VendorsInterface> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors/${id}`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(vendorData), // vendorData will now correctly include 'markets' array
@@ -92,7 +108,7 @@ const vendorsAPI = {
      */
     deleteVendor: async (id: number): Promise<void> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/vendors/${id}`, {
+            const response = await fetch(`${NEXT_API_BASE_PATH}/vendors/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
