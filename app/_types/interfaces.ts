@@ -68,6 +68,7 @@ export interface VendorsInterface {
   markets: number[];
   products?: string[];
   description: string;
+  uuid?: string;
 }
 
 export interface UserInfoInterface {
