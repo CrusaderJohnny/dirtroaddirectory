@@ -10,69 +10,91 @@ import {
     Grid,
     AppShellSection,
     GridCol,
-    AppShell
+    AppShell,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
-import ArticleCarousel from "@/app/_components/newscomps/articleCarousel";
-// import { fetchArticlesAsJson } from '@/app/_components/apicomps/articlefetch';
-import { ArticleInterface } from "@/app/_types/interfaces";
-import articleData from "@/app/_res/articles.json";
+import ArticleCarousel from '@/app/_components/newscomps/articleCarousel';
+import { ArticleInterface } from '@/app/_types/interfaces';
 
 export default function Page() {
     const [articles, setArticles] = useState<ArticleInterface[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const isMobile = useMediaQuery('(max-width: 768px)');
 
     useEffect(() => {
-        const getArticles = async () => {
+        const loadArticles = async () => {
             try {
-                // OPTION A: API
-                // const data = await fetchArticlesAsJson();
+                const response = await fetch('/api/articles');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
 
-                // OPTION B: Hardcoded
-                const data = articleData[0];
-
-                setArticles(data.map((article, index) => ({
+                const normalizedData = data.map((article: ArticleInterface) => ({
                     ...article,
-                    featured: index === 0,
-                })));
+                    isFeatured: article.isFeatured === '1',
+                }));
+
+                const featuredArticleExists = normalizedData.some(
+                    (article: ArticleInterface) => article.isFeatured
+                );
+
+                // If no articles are explicitly marked as featured, set the first one as featured
+                const finalArticles = normalizedData.map(
+                    (article: ArticleInterface, index: number) => {
+                        if (!featuredArticleExists && index === 0) {
+                            return { ...article, isFeatured: true };
+                        }
+                        return article;
+                    }
+                );
+
+                setArticles(finalArticles);
             } catch (err) {
-                console.error("Failed to load articles:", err);
+                console.error('Failed to load articles:', err);
+                setError('Failed to load articles. Please try again later.');
+            } finally {
+                setLoading(false);
             }
         };
-        void getArticles();
+
+        loadArticles();
     }, []);
 
-    const featuredArticle = articles.find(article => article.featured);
-    const articleId2 = articles.find(article => article.id === 3);
+    const featuredArticle = articles.find(article => article.isFeatured);
+    const nonFeaturedArticles = articles.filter(article => !article.isFeatured);
+    const hasNonFeaturedArticles = nonFeaturedArticles.length > 0;
 
-    function FeaturedGrid({
-                              featuredArticle,
-                              articleId2,
-                              articles,
-                          }: {
-        featuredArticle: ArticleInterface | undefined;
-        articleId2: ArticleInterface | undefined;
-        articles: ArticleInterface[];
-    }) {
+    if (loading) {
+        return <Text>Loading articles...</Text>;
+    }
+
+    if (error) {
+        return <Text >{error}</Text>;
+    }
+
+    // Components for rendering the different grid layouts
+    function FeaturedGrid() {
         return (
-            <Container size='xl' p='sm'>
-                <Grid mt='sm'>
-                    <GridCol span={7} mah={'80vh'}>
+            <Container size="xl" p="sm">
+                <Grid mt="sm">
+                    <GridCol span={7} mah="80vh">
                         {featuredArticle ? (
                             <FeaturedCard article={featuredArticle} />
                         ) : (
-                            <Text>Error: No featured article exists</Text>
+                            <Text>No featured article available.</Text>
                         )}
                     </GridCol>
-
-                    <GridCol span={5} mah={'80vh'}>
-                        {articleId2 ? (
-                            <ArticleCarousel articles={articles} />
+                    <GridCol span={5} mah="80vh">
+                        {hasNonFeaturedArticles ? (
+                            <ArticleCarousel articles={nonFeaturedArticles} />
                         ) : (
-                            <Text>Error: No articles exists</Text>
+                            <Text>No other articles available.</Text>
                         )}
                     </GridCol>
                 </Grid>
@@ -80,30 +102,21 @@ export default function Page() {
         );
     }
 
-    function SmallFeaturedGrid({
-                                   featuredArticle,
-                                   articleId2,
-                                   articles,
-                               }: {
-        featuredArticle: ArticleInterface | undefined;
-        articleId2: ArticleInterface | undefined;
-        articles: ArticleInterface[];
-    }) {
+    function SmallFeaturedGrid() {
         return (
-            <Container size='xl' p='sm'>
+            <Container size="xl" p="sm">
                 <Box mb="lg">
                     {featuredArticle ? (
                         <FeaturedCard article={featuredArticle} />
                     ) : (
-                        <Text>Error: No featured article exists</Text>
+                        <Text>No featured article available.</Text>
                     )}
                 </Box>
-
                 <Box>
-                    {articleId2 ? (
-                        <ArticleCarousel articles={articles} height={260} />
+                    {hasNonFeaturedArticles ? (
+                        <ArticleCarousel articles={nonFeaturedArticles} height={260} />
                     ) : (
-                        <Text>Error: No articles exist</Text>
+                        <Text>No other articles available.</Text>
                     )}
                 </Box>
             </Container>
@@ -113,30 +126,14 @@ export default function Page() {
     return (
         <AppShell>
             <AppShellSection>
-                <Box pt='md'>
+                <Container size="xl" pt="lg">
                     <SiteIntroCard />
-                </Box>
-
-                <Container size='xl' pt='lg'>
-                    <Button component="a" href="/aboutus" mt='sm' fullWidth>
+                    <Button component="a" href="/aboutus" mt="sm" fullWidth>
                         Learn More About Us
                     </Button>
-                    <Divider my='md' />
+                    <Divider my="md" />
                 </Container>
-
-                {isMobile ? (
-                    <SmallFeaturedGrid
-                        featuredArticle={featuredArticle}
-                        articleId2={articleId2}
-                        articles={articles}
-                    />
-                ) : (
-                    <FeaturedGrid
-                        featuredArticle={featuredArticle}
-                        articleId2={articleId2}
-                        articles={articles}
-                    />
-                )}
+                {isMobile ? <SmallFeaturedGrid /> : <FeaturedGrid />}
             </AppShellSection>
         </AppShell>
     );

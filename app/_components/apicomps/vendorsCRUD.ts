@@ -1,6 +1,8 @@
 import { VendorsInterface } from "@/app/_types/interfaces";
 
+
 const NEXT_API_BASE_PATH = '/api';
+
 
 const vendorsAPI = {
     /**

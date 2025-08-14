@@ -1,14 +1,10 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, Container, Text } from "@mantine/core";
-// import { fetchArticlesAsJson } from "@/app/_components/apicomps/articlefetch";
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardFullPage from '@/app/_components/newscomps/cards/newsCardFullPage';
-
-// Hardcoded data fro demo & testing
-import articleData from "@/app/_res/articles.json";
 
 export default function ArticleDetailsContent() {
     const searchParams = useSearchParams();
@@ -28,18 +24,13 @@ export default function ArticleDetailsContent() {
             }
 
             try {
-                // OPTION A: Use API
-                // const data = await fetchArticlesAsJson();
+                const response = await fetch('/api/articles/' + articleId);
+                const data: ArticleInterface = await response.json();
 
-                // OPTION B: Use HARDCODED DATA
-                const data = articleData[0];
-
-                const matchedArticle = data.find((item: ArticleInterface) => item.id === articleId);
-
-                if (!matchedArticle) {
+                if (!data || data.post_id !== articleId) {
                     setError("Article not found");
                 } else {
-                    setArticle(matchedArticle);
+                    setArticle(data);
                 }
             } catch (err) {
                 console.error("Error fetching article:", err);
@@ -60,7 +51,6 @@ export default function ArticleDetailsContent() {
         );
     }
 
-    // Handle case where article is not found or ID is invalid
     if (error || !article) {
         return (
             <Container size="md" py="xl">
@@ -72,7 +62,6 @@ export default function ArticleDetailsContent() {
         );
     }
 
-    // If the article is found, render NewsCardLarge
     return (
         <Container size="lg" py="xl">
             <NewsCardFullPage article={article} />

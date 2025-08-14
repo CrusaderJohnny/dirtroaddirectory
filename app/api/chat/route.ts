@@ -35,11 +35,7 @@ export async function POST(req: NextRequest) {
         const response = await client.chat.completions.create({
             messages: messages,
             stream: true, // Keep streaming enabled for real-time updates to the client
-            max_tokens: 8192,
-            temperature: 0.7,
-            top_p: 0.95,
-            frequency_penalty: 0,
-            presence_penalty: 0,
+            max_completion_tokens: 40000,
             model: AZURE_OPENAI_MODEL_NAME,
         });
 

@@ -17,22 +17,24 @@ export default function ArticleCarousel({
 }) {
     const autoplay = useRef(Autoplay({ delay: 4500 }));
 
-    const slides = articles
-        .filter(article => !article.featured)
-        .map(article => (
-            <Carousel.Slide key={article.id}>
-                <NewsCardSmall article={article} />
-            </Carousel.Slide>
-        ));
+    // Filter out featured article(s)
+    const nonFeaturedArticles = articles.filter(article => !article.isFeatured);
+
+    // Create slides from remaining articles
+    const slides = nonFeaturedArticles.map(article => (
+        <Carousel.Slide key={article.post_id}>
+            <NewsCardSmall article={article} />
+        </Carousel.Slide>
+    ));
 
     return (
         <Card
-            bg='gray.1'
+            bg="gray.1"
             withBorder
             radius="md"
-            shadow='sm'
+            shadow="sm"
             p="md"
-            w='100%'
+            w="100%"
             style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -44,19 +46,23 @@ export default function ArticleCarousel({
 
             {/* Carousel Section */}
             <Box style={{ width: '100%' }}>
-                <Carousel
-                    withIndicators
-                    height={height ?? 400}
-                    slideSize="100%"
-                    slideGap="md"
-                    controlsOffset="md"
-                    plugins={[autoplay.current]}
-                    onMouseEnter={autoplay.current.stop}
-                    onMouseLeave={() => autoplay.current.play()}
-                    emblaOptions={{ dragFree: false }}
-                >
-                    {slides}
-                </Carousel>
+                {slides.length > 0 ? (
+                    <Carousel
+                        withIndicators
+                        height={height ?? 400}
+                        slideSize="100%"
+                        slideGap="md"
+                        controlsOffset="md"
+                        plugins={[autoplay.current]}
+                        onMouseEnter={autoplay.current.stop}
+                        onMouseLeave={() => autoplay.current.play()}
+                        emblaOptions={{ dragFree: false }}
+                    >
+                        {slides}
+                    </Carousel>
+                ) : (
+                    <Text size="sm" c="dimmed">No additional articles available.</Text>
+                )}
             </Box>
 
             {/* Call-to-action Section */}
