@@ -36,8 +36,11 @@ import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 import { trackEvent } from "@/analytics";
 
 // Import the API fetching functions and interfaces
-import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces';
+import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces'; // <--- Ensure MarketsInterface is imported
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
+
+import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
+import { useUser } from "@clerk/nextjs";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -60,6 +63,9 @@ export default function VendorsContent() {
   const [isLoadingMarkets, setIsLoadingMarkets] = useState(false);
   const [errorLoadingMarkets, setErrorLoadingMarkets] = useState<string | null>(null);
 
+  const { user } = useUser(); // Clerk user
+  const [favoriteVendorIds, setFavoriteVendorIds] = useState<number[]>([]);
+
   // useEffect to fetch all vendor data when the component mounts
   useEffect(() => {
     const loadData = async () => {
@@ -69,6 +75,19 @@ export default function VendorsContent() {
         const vendorResponse = await fetch(`/api/vendors/`);
         const vendorsData = await vendorResponse.json();
         setVendors(vendorsData);
+
+        if (user) {
+          try {
+            const favVendorIds = await favoriteVendorsAPI.getFavoriteVendorIds(user.id);
+            const numericFavs = favVendorIds
+                .map((id)=> Number(id))
+                .filter((n) => Number.isFinite(n))
+            setFavoriteVendorIds(numericFavs);
+          } catch (favErr) {
+            console.error("Failed to fetch vendor favorites:", favErr);
+            // Do not block page if no favorites exist or an error occurs
+          }
+        }
       } catch (err) {
         console.error("Failed to load vendor data:", err);
         setError(err instanceof Error ? err.message : "Failed to load vendor data.");
@@ -78,7 +97,23 @@ export default function VendorsContent() {
     };
 
     loadData();
-  }, []); // Empty dependency array means this runs once on mount
+  }, [user]); // ← added user here to refetch when it becomes available
+
+  const toggleFavoriteVendor = async (vendorId: number) => {
+    if (!user) return;
+    const isFav = favoriteVendorIds.includes(vendorId);
+    try {
+      if (isFav) {
+        await favoriteVendorsAPI.removeFavoriteVendor(user.id, vendorId.toString());
+        setFavoriteVendorIds(prev => prev.filter(id => id !== vendorId));
+      } else {
+        await favoriteVendorsAPI.addFavoriteVendor(user.id, vendorId.toString());
+        setFavoriteVendorIds(prev => [...prev, vendorId]);
+      }
+    } catch (err) {
+      console.error("Error updating favorite vendor:", err);
+    }
+  };
 
   const selectedVendor = vendors.find((v) => v.id === Number(vendorIdParam));
 
@@ -167,15 +202,42 @@ export default function VendorsContent() {
     return (
       <AppShellMain style={{ minHeight: "100vh" }}>
         <Container size="lg" py="xl">
-          {/* Hero Image */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-            <Card withBorder shadow="lg" radius="md" p={0} mb="xl" style={{ overflow: "hidden", position: "relative" }}>
-              <Image src={selectedVendor.image} alt={selectedVendor.name} height={350} fit="cover" />
-              <div style={{ position: "absolute", bottom: 0, width: "100%", background: "rgba(0,0,0,0.6)", padding: "1rem", color: "white", textAlign: "center", backdropFilter: "blur(4px)" }}>
-                <Title order={2} fw={800}>{selectedVendor.name}</Title>
-                <Text size="lg">{selectedVendor.category}</Text>
-              </div>
-            </Card>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+              <Image
+                src={selectedVendor.image}
+                alt={selectedVendor.name}
+                height={350}
+                fit="cover"
+                style={{
+                  borderRadius: "12px",
+                  border: "4px solid #f0f0f0",
+                  objectFit: "cover",
+                  maxWidth: "100%",
+                  width: "auto",
+                  margin: "0 auto",
+                }}
+              />
+              <Title
+                order={2}
+                mt="md"
+                style={{
+                  fontFamily: "Georgia, serif",
+                  color: "#1f4d2e",
+                  fontWeight: 800,
+                }}
+              >
+                {selectedVendor.name}
+              </Title>
+              <Text size="lg" c="dimmed">
+                {selectedVendor.category}
+              </Text>
+            </div>
           </motion.div>
 
           {/* Description */}
@@ -295,14 +357,15 @@ export default function VendorsContent() {
   // --- All vendors list view (fallback) ---
   return (
     <AppShellMain style={{ minHeight: "100vh" }}>
-      <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
-        <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
-          Our Vendors
-        </Title>
-        <Text size="sm" c="dimmed" mb="md">
-          Browse our trusted vendors by name or category
-        </Text>
-        <Group mb="lg" grow>
+      <Container size="xl" px="lg" style={{ maxWidth: "1400px", margin: "0 auto" }}>
+        <Paper shadow="md" p="lg" mt="xl" mb="lg" withBorder radius="md" bg="white">
+          <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
+            Our Vendors
+          </Title>
+          <Text size="sm" c="dimmed" mb="md">
+            Browse our trusted vendors by name or category
+          </Text>
+          <Group mb="lg" grow>
           <TextInput
             placeholder="Search by name"
             leftSection={<IconSearch size={16} />}
@@ -322,13 +385,19 @@ export default function VendorsContent() {
           />
         </Group>
       </Paper>
+
       <Grid gutter="xl">
         {filteredVendors.map((vendor) => (
           <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
-            <VendorCard vendor={vendor} />
+            <VendorCard
+                vendor={vendor}
+                isFavorited={favoriteVendorIds.includes(vendor.id)}
+                onToggleFavorite={() => toggleFavoriteVendor(vendor.id)}
+            />
           </Grid.Col>
         ))}
       </Grid>
+      </Container>
     </AppShellMain>
   );
 }

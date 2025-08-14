@@ -28,13 +28,11 @@ import {
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
-// import data from '../../_res/markets.json';
-// import vendorList from '../../_res/vendors.json';
 import { trackEvent } from "@/analytics";
-
-// Import the API fetching functions and interfaces
+import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
+import {useUser} from "@clerk/nextjs";
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -47,14 +45,18 @@ export default function MarketContent() {
 
     // States for holding fetched data
     const [markets, setMarkets] = useState<MarketsInterface[]>([]);
-    const [vendors, setVendors] = useState<VendorsInterface[]>([]); // State for vendor data
-    const [loading, setLoading] = useState<boolean>(true); // Loading state
-    const [error, setError] = useState<string | null>(null); // Error state
+    const [vendors, setVendors] = useState<VendorsInterface[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
+    const [favoriteMarketIds, setFavoriteMarketIds] = useState<number[]>([]);
+    const { user } = useUser();
+
     // useEffect to fetch data when the component mounts
+
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
@@ -67,6 +69,18 @@ export default function MarketContent() {
 
                 setVendors(vendorsData);
                 setMarkets(marketsData);
+
+                if (user) {
+                    try {
+                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(user.id);
+                        const numericFavs = favs
+                            .map((id) => Number(id))
+                            .filter((n) => Number.isFinite(n));
+                        setFavoriteMarketIds(numericFavs);
+                    } catch (favErr) {
+                        console.error("Failed to fetch favorites:", favErr);
+                    }
+                }
             } catch (err) {
                 console.error("Failed to load data:", err);
                 setError(err instanceof Error ? err.message : "Failed to load data.");
@@ -76,7 +90,24 @@ export default function MarketContent() {
         };
 
         loadData();
-    }, []); // Empty dependency array means this runs once on mount
+    }, [user]);
+
+    const toggleFavorite = async (marketId: number) => {
+        if (!user) return;
+        const isFav = favoriteMarketIds.includes(marketId);
+        try {
+            if (isFav) {
+                await favoritesMarketAPI.removeFavoriteMarket(user.id, marketId.toString());
+                setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketId));
+            } else {
+                await favoritesMarketAPI.addFavoriteMarket(user.id, marketId.toString());
+                setFavoriteMarketIds((prev) => [...prev, marketId]);
+            }
+        } catch (err) {
+            console.error("Error updating favorite:", err);
+        }
+    };
+
 
     const selectedMarket = markets.find((v) => v.id === Number(marketId));
 
@@ -124,21 +155,36 @@ export default function MarketContent() {
         return (
             <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
-                    {/* Hero Image */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-                        <Card withBorder shadow="lg" radius="md" p={0} mb="xl" style={{ overflow: 'hidden', textAlign: 'center' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                             <Image
                                 src={selectedMarket.image}
                                 alt={selectedMarket.label}
                                 height={300}
                                 fit="contain"
-                                style={{ backgroundColor: 'white', padding: '1rem', width: '100%' }}
+                                style={{
+                                    border: '4px solid #f0f0f0',
+                                    borderRadius: '12px',
+                                    padding: '1rem',
+                                    background: '#ffffff',
+                                    maxWidth: '100%',
+                                    width: 'auto',
+                                    margin: '0 auto',
+                                }}
                             />
-                            <div style={{ padding: '1rem' }}>
-                                <Title order={2} style={{ fontFamily: 'Georgia, serif', color: '#1f4d2e', fontWeight: 700 }}>{selectedMarket.label}</Title>
-                                <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
-                            </div>
-                        </Card>
+                            <Title
+                                order={2}
+                                mt="md"
+                                style={{
+                                    fontFamily: 'Georgia, serif',
+                                    color: '#1f4d2e',
+                                    fontWeight: 700,
+                                }}
+                            >
+                                {selectedMarket.label}
+                            </Title>
+                            <Text size="lg" c="dimmed">{selectedMarket.region}</Text>
+                        </div>
                     </motion.div>
 
                     {/* Description */}
@@ -267,22 +313,32 @@ export default function MarketContent() {
     // Default view for all markets (when no marketId is in search params)
     return (
         <AppShellMain style={{ minHeight: '100vh', paddingTop: 0}}>
-            <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
-                <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
-                <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
-                <Group mb="lg" grow>
-                    <TextInput placeholder="Search by market name" leftSection={<IconSearch size={16} />} value={searchTerm} onChange={(e) => setSearchTerm(e.currentTarget.value)} radius="md" size="md" />
-                    <Select data={allRegions} placeholder="Filter by region" clearable value={selectedRegion} onChange={setSelectedRegion} radius="md" size="md" />
-                </Group>
-            </Paper>
-            <Grid gutter="xl">
-                {filteredMarkets.map((market) => (
-                    <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
-                        {/* Ensure MarketCard can accept the MarketsInterface type */}
-                        <MarketCard market={market} />
-                    </Grid.Col>
-                ))}
-            </Grid>
+            <Container
+                size="xl"
+                px="lg"
+                style={{ maxWidth: '1400px', margin: '0 auto' }}
+            >
+                <Paper shadow="md" p="lg" mb="xl" mt="xl" withBorder radius="md" bg="white">
+                    <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
+                    <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
+                    <Group mb="lg" grow>
+                        <TextInput placeholder="Search by market name" leftSection={<IconSearch size={16} />} value={searchTerm} onChange={(e) => setSearchTerm(e.currentTarget.value)} radius="md" size="md" />
+                        <Select data={allRegions} placeholder="Filter by region" clearable value={selectedRegion} onChange={setSelectedRegion} radius="md" size="md" />
+                    </Group>
+                </Paper>
+                <Grid gutter="xl">
+                    {filteredMarkets.map((market) => (
+                        <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
+                            {/* Ensure MarketCard can accept the MarketsInterface type */}
+                            <MarketCard
+                                market={market}
+                                isFavorited={favoriteMarketIds.includes(market.id)}
+                                onToggleFavorite={() => toggleFavorite(market.id)}
+                            />
+                        </Grid.Col>
+                    ))}
+                </Grid>
+            </Container>
         </AppShellMain>
     );
 }
