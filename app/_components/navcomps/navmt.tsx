@@ -76,7 +76,7 @@ export default function NavMT() {
 
     return (
         <AppShell header={{ height: 60 }}>
-            <AppShell.Header>
+            <AppShell.Header withBorder={false} >
                 <BackgroundImage
                     src="https://d27p2a3djqwgnt.cloudfront.net/wp-content/uploads/2024/05/15165226/dirt-road.jpeg"
                     style={{

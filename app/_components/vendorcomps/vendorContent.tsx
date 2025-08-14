@@ -79,8 +79,11 @@ export default function VendorsContent() {
 
         if (user) {
           try {
-            const favVendorIds = await favoriteVendorsAPI.getFavoriteVendorIds(Number(user.id));
-            setFavoriteVendorIds(favVendorIds);
+            const favVendorIds = await favoriteVendorsAPI.getFavoriteVendorIds(user.id);
+            const numericFavs = favVendorIds
+                .map((id)=> Number(id))
+                .filter((n) => Number.isFinite(n))
+            setFavoriteVendorIds(numericFavs);
           } catch (favErr) {
             console.error("Failed to fetch vendor favorites:", favErr);
             // Do not block page if no favorites exist or an error occurs
@@ -102,10 +105,10 @@ export default function VendorsContent() {
     const isFav = favoriteVendorIds.includes(vendorId);
     try {
       if (isFav) {
-        await favoriteVendorsAPI.removeFavoriteVendor(Number(user.id), vendorId);
+        await favoriteVendorsAPI.removeFavoriteVendor(user.id, vendorId.toString());
         setFavoriteVendorIds(prev => prev.filter(id => id !== vendorId));
       } else {
-        await favoriteVendorsAPI.addFavoriteVendor(Number(user.id), vendorId);
+        await favoriteVendorsAPI.addFavoriteVendor(user.id, vendorId.toString());
         setFavoriteVendorIds(prev => [...prev, vendorId]);
       }
     } catch (err) {

@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 
 const BACKEND_URL = process.env.BACKEND_URL;
 
-export async function GET() {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+
     try {
-        const backendUrl = `${BACKEND_URL}/contact`;
-        const response = await fetch(backendUrl, {
-            method: 'GET',
+        const response = await fetch(`${BACKEND_URL}/contact/${id}`, {
+            method: 'DELETE',
             headers: { 'content-type': 'application/json' },
-            cache: 'no-store'
         });
 
         if (!response.ok) {
@@ -16,8 +16,7 @@ export async function GET() {
             return NextResponse.json(errorData, { status: response.status });
         }
 
-        const data = await response.json();
-        return NextResponse.json(data);
+        return NextResponse.json({ message: 'Message deleted successfully.' });
     } catch (error) {
         console.error('Proxy Error:', error);
         return NextResponse.json(

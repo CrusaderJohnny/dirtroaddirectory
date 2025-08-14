@@ -1,75 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-const BACKEND =
-  process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL ?? "http://localhost:8080";
+const BACKEND_URL = process.env.BACKEND_URL;
 
-function json(res: Response) {
-  return res.text().then((t) =>
-    new NextResponse(t, {
-      status: res.status,
-      headers: { "Content-Type": "application/json" },
-    })
-  );
-}
-
-// GET 
 export async function GET() {
-  try {
-    const res = await fetch(`${BACKEND}/contact/starred`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
-    return await json(res);
-  } catch (err) {
-    console.error("Proxy GET /contact/starred failed:", err);
-    return NextResponse.json(
-      { message: "Proxy error: failed to fetch starred IDs." },
-      { status: 500 }
-    );
-  }
-}
-
-// PUT 
-export async function PUT(req: Request) {
-  try {
-    const { id } = await req.json().catch(() => ({}));
-    if (!id) {
-      return NextResponse.json({ message: "ID required" }, { status: 400 });
+    try {
+        const response = await fetch(`${BACKEND_URL}/contact/starred`, {
+            method: 'GET',
+            headers: { 'content-type': 'application/json' },
+            cache: 'no-store'
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return NextResponse.json(errorData, { status: response.status });
+        }
+        const data = await response.json();
+        return NextResponse.json(data);
+    } catch (error) {
+        console.error('Proxy Error:', error);
+        return NextResponse.json({ message: 'Failed to connect to the external API.' }, { status: 500 });
     }
-    const res = await fetch(`${BACKEND}/contact/${id}/star`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
-    return await json(res);
-  } catch (err) {
-    console.error("Proxy PUT /contact/starred failed:", err);
-    return NextResponse.json(
-      { message: "Proxy error: failed to star message." },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE
-export async function DELETE(req: Request) {
-  try {
-    const { id } = await req.json().catch(() => ({}));
-    if (!id) {
-      return NextResponse.json({ message: "ID required" }, { status: 400 });
-    }
-    const res = await fetch(`${BACKEND}/contact/${id}/star`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
-    return await json(res);
-  } catch (err) {
-    console.error("Proxy DELETE /contact/starred failed:", err);
-    return NextResponse.json(
-      { message: "Proxy error: failed to unstar message." },
-      { status: 500 }
-    );
-  }
 }

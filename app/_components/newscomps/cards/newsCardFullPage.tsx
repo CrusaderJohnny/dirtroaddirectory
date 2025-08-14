@@ -10,7 +10,7 @@ export default function NewsCardFullPage({ article }: { article: ArticleInterfac
     return(
         <Box>
             <BackgroundImage
-                src={article.imgLink}
+                src={article.image}
                 radius="md"
                 h="20rem"
                 w='auto'
@@ -45,7 +45,7 @@ export default function NewsCardFullPage({ article }: { article: ArticleInterfac
                     backgroundColor: '#ebfbee',
                 }}
             >
-                <Title order={4} c="dimmed">{article.date}</Title>
+                <Title order={4} c="dimmed">{article.created_at.toString()}</Title>
                 <Divider/>
 
                 <Spoiler
