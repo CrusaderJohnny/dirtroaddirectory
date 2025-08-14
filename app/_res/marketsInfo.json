@@ -1,5 +1,7 @@
-[
-    {
+{
+  "name": "indexMarkets",
+  "fields": [
+      {
         "id": 15,
         "image": "http://nebula.wsimg.com/a871dfcd486e9de24aaad5fda4b27f45?AccessKeyId=859CFF5680107053E085&disposition=0&alloworigin=1",
         "label": "Airdrie Farmers Market",
@@ -8,8 +10,8 @@
         "lat": "51.291952",
         "lng": "-114.007202",
         "link": ""
-    },
-    {
+      },
+      {
         "id": 12,
         "image": "https://calgary-farmers-market-v1747430046.websitepro-cdn.com/wp-content/uploads/2024/01/CFM-logo@2x.png",
         "label": "Calgary Farmers Market South",
@@ -18,8 +20,8 @@
         "lat": "50.986330",
         "lng": "-114.051610",
         "link": ""
-    },
-    {
+      },
+      {
         "id": 4,
         "image": "https://calgary-farmers-market-v1747430046.websitepro-cdn.com/wp-content/uploads/2024/01/CFM-logo@2x.png",
         "label": "Calgary Farmers Market West",
@@ -28,8 +30,8 @@
         "lat": "51.065611",
         "lng": "-114.223663",
         "link": "https://www.google.com/maps/dir//Calgary+Farmers'+Market+West,+25+Greenbriar+Dr+NW,+Calgary,+AB+T3B+6M3/@51.093017,-114.2498271,12.82z/data=!4m18!1m8!3m7!1s0x53716fc09a90ffcd:0x3d321029b6cc51b8!2sCalgary+Farmers'+Market+West!8m2!3d51.0881162!4d-114.2227269!15sChZjYWxnYXJ5IGZhcm1lcnMgbWFya2V0WhgiFmNhbGdhcnkgZmFybWVycyBtYXJrZXSSAQ5mYXJtZXJzX21hcmtldJoBJENoZERTVWhOTUc5blMwVkpRMEZuVFVOQloxQnhWWHBuUlJBQqoBYgoNL2cvMTF5ODM1Mm4zdhABKhIiDmZhcm1lcnMgbWFya2V0KAAyHxABIhuK-AhaCkJAMahUEoZIzqGE3bQv4owqyZPOgz0yGhACIhZjYWxnYXJ5IGZhcm1lcnMgbWFya2V04AEA-gEECAAQSQ!16s%2Fg%2F11q1tc__9w!4m8!1m0!1m5!1m1!1s0x53716fc09a90ffcd:0x3d321029b6cc51b8!2m2!1d-114.2227269!2d51.0881162!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D"
-    },
-    {
+      },
+      {
         "id": 17,
         "image": "https://www.canmore.ca/public/uploads/images/toc_whitelogowithclearbackgroundpngforwebordigital3/1753290901-toc_whitelogowithclearbackgroundpngforwebordigital3.png",
         "label": "Canmore Mountain Market",
@@ -38,8 +40,8 @@
         "lat": "51.089697",
         "lng": "-115.351521",
         "link": ""
-    },
-    {
+      },
+      {
         "id": 6,
         "image": "https://cochranefarmersmarket.ca/wp-content/uploads/2021/03/cropped-CFM-logo-final-300x300.png",
         "label": "Cochrane Farmers' Market",
@@ -48,8 +50,8 @@
         "lat": "51.176569",
         "lng": "-114.455160",
         "link": "https://www.google.com/maps/dir//Cochrane+Farmers+Market,+parking+lot+Spray+Lake+Sawmills+Family+Sports+Centre,+Griffin+Road+East,+Cochrane,+AB/@51.1766119,-114.4938705,13z/data=!3m2!4b1!5s0x5371407e95a8f6df:0x5fc8cafd47c8bf67!4m9!4m8!1m0!1m5!1m1!1s0x53713f5fda992313:0x4b100c656f014150!2m2!1d-114.4525855!2d51.1765654!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D"
-    },
-    {
+      },
+      {
         "id": 14,
         "image": "https://images.squarespace-cdn.com/content/v1/6258ee903be15c518b42e5b9/b65fc7ea-260b-40d7-87d5-aad577d9cd93/Crossroads_Horizontal_logo-01.png?format=1500w",
         "label": "Crossroads Market",
@@ -58,8 +60,8 @@
         "lat": "51.030379",
         "lng": "-114.035355",
         "link": ""
-    },
-    {
+      },
+      {
         "id": 7,
         "image": "https://www.albertafarmersmarket.com/wp-content/uploads/DalhousieFarmersMarketLogo-wpcf_225x225.png",
         "label": "Dalhousie Farmers' Market",
@@ -68,8 +70,8 @@
         "lat": "51.112784",
         "lng": "-114.198037",
         "link": "https://www.google.com/maps/dir//Dalhousie+Community+Association+(Dallyn+Building),+Dallyn+Street+Northwest,+Calgary,+AB/@51.1072521,-114.1926607,13z/data=!3m2!4b1!5s0x5371407e95a8f6df:0x5fc8cafd47c8bf67!4m9!4m8!1m0!1m5!1m1!1s0x53716f8126a568c9:0x293c5ce3b9fad921!2m2!1d-114.1513757!2d51.1072055!3e3?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D"
-    },
-    {
+      },
+      {
         "id": 13,
         "image": "https://images.squarespace-cdn.com/content/v1/58bdf17f86e6c05548fb14ed/1512336596139-Z1UGHMG242P3AVFR64EV/Final+Main+Logo.png?format=1500w",
         "label": "Hillhurst Sunnyside Farmers Market",
@@ -78,8 +80,8 @@
         "lat": "51.058820",
         "lng": "-114.092700",
         "link": ""
-    },
-    {
+      },
+      {
         "id": 18,
         "image": "https://res.cloudinary.com/dui2ou4f1/image/upload/v1750884632/samples/dessert-on-a-plate.jpg",
         "label": "Marks Market",
@@ -88,8 +90,8 @@
         "lat": "52.000000",
         "lng": "-114.000000",
         "link": ""
-    },
-    {
+      },
+      {
         "id": 16,
         "image": "https://osfm.ca/wp-content/uploads/2025/04/OSFM-logomonogram.svg",
         "label": "Old Strathcona Farmers Market",
@@ -98,5 +100,6 @@
         "lat": "53.519635",
         "lng": "-113.495641",
         "link": ""
-    }
-]
+      }
+  ]
+}
