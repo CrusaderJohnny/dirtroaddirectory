@@ -15,8 +15,6 @@ import {
 import { useForm, isNotEmpty, isEmail } from '@mantine/form';
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
 import { notifications } from '@mantine/notifications';
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD'; // Used to fetch the list of all markets
-import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD'; // Used for the update/delete operations
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 interface VendorOwnerEditFormProps {
@@ -59,8 +57,9 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
         const fetchMarkets = async () => {
             setLoadingMarkets(true);
             try {
-                const marketsData = await marketsAPI.getMarkets();
-                setAllMarketsForSelection(marketsData);
+            const marketResponse = await fetch(`/api/markets/`);
+            const marketsData = await marketResponse.json();
+            setAllMarketsForSelection(marketsData);
             } catch (err) {
                 console.error('Failed to fetch markets:', err);
                 notifications.show({
@@ -96,10 +95,19 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
         };
 
         try {
-            await vendorsAPI.updateVendor(initialVendor.id, vendorData as VendorsInterface);
+            //await vendorsAPI.updateVendor(initialVendor.id, vendorData as VendorsInterface);
+            // UPDATE existing vendor
+            const response = await fetch(`/api/vendors/${initialVendor.id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(vendorData),
+            });
+            const updatedVendor = await response.json();
             notifications.show({
                 title: 'Success!',
-                message: `Your vendor "${values.name}" has been updated.`,
+                message: `Your vendor "${updatedVendor.name}" has been updated.`,
                 color: 'blue',
                 autoClose: 5000,
             });
@@ -120,7 +128,9 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
         if (window.confirm(`Are you sure you want to delete your market "${initialVendor.name}"? This action cannot be undone.`)) {
             setIsSaving(true);
             try {
-                await vendorsAPI.deleteVendor(initialVendor.id);
+                await fetch(`/api/vendors/${initialVendor.id}`, {
+                    method: "DELETE",
+                });
                 notifications.show({
                     title: 'Deleted!',
                     message: `Your vendor "${initialVendor.name}" deleted successfully.`,
