@@ -36,9 +36,7 @@ import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 import { trackEvent } from "@/analytics";
 
 // Import the API fetching functions and interfaces
-import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces'; // <--- Ensure MarketsInterface is imported
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
-import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
+import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 
 const fadeInUp = {
@@ -68,8 +66,9 @@ export default function VendorsContent() {
       setLoading(true);
       setError(null);
       try {
-        const fetchedVendors = await vendorsAPI.getVendors();
-        setVendors(fetchedVendors);
+        const vendorResponse = await fetch(`/api/vendors/`);
+        const vendorsData = await vendorResponse.json();
+        setVendors(vendorsData);
       } catch (err) {
         console.error("Failed to load vendor data:", err);
         setError(err instanceof Error ? err.message : "Failed to load vendor data.");
@@ -107,11 +106,11 @@ export default function VendorsContent() {
       const fetchedMarketDetails: MarketsInterface[] = [];
 
       try {
-        // Fetch each market by its ID from the marketsCRUD.ts API
         for (const marketId of selectedVendor.markets) {
           try {
-            const marketDetail = await marketsAPI.getMarketById(marketId); // Assuming getMarketById is implemented
-            fetchedMarketDetails.push(marketDetail);
+            const response = await fetch(`/api/markets/${marketId}`)
+            const data = await response.json();
+            fetchedMarketDetails.push(data);
           } catch (individualMarketError) {
             console.warn(`Could not fetch details for market ID ${marketId}:`, individualMarketError);
             // Optionally, add a placeholder market object or handle this error specifically
