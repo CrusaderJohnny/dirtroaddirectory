@@ -29,8 +29,6 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import { trackEvent } from "@/analytics";
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
-import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
 import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
@@ -64,12 +62,13 @@ export default function MarketContent() {
             setLoading(true);
             setError(null);
             try {
-                const fetchedMarkets = await marketsAPI.getMarkets();
-                setMarkets(fetchedMarkets);
+                const vendorResponse = await fetch(`/api/vendors/`);
+                const marketResponse = await fetch(`/api/markets/`);
+                const vendorsData = await vendorResponse.json();
+                const marketsData = await marketResponse.json();
 
-                const fetchedVendors = await vendorsAPI.getVendors();
-                setVendors(fetchedVendors);
-
+                setVendors(vendorsData);
+                setMarkets(marketsData);
                 if (user) {
                     try {
                         const favs = await favoritesMarketAPI.getFavoriteMarketIds(user.id);
@@ -318,7 +317,7 @@ export default function MarketContent() {
                 px="lg"
                 style={{ maxWidth: '1400px', margin: '0 auto' }}
             >
-                <Paper shadow="md" p="lg" mb="xl" withBorder radius="md" bg="white">
+                <Paper shadow="md" p="lg" mb="xl" mt="xl" withBorder radius="md" bg="white">
                     <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
                     <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
                     <Group mb="lg" grow>

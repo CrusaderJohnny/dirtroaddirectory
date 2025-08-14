@@ -57,18 +57,18 @@ export interface VendorPostFormProps {
 }
 
 export interface VendorsInterface {
-    id: number;
-    name: string;
-    category: string;
-    location: string;
-    image: string;
-    contact?: string;
-    email?: string;
-    website?: string;
-    markets: number[];
-    products?: string[];
-    description: string;
-    uuid?: string;
+  id: number;
+  name: string;
+  category: string;
+  location: string;
+  image: string;
+  contact?: string;
+  email?: string;
+  website?: string;
+  markets: number[];
+  products?: string[];
+  description: string;
+  uuid?: string;
 }
 
 export interface UserInfoInterface {
