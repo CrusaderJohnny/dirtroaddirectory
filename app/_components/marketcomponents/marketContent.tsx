@@ -29,6 +29,8 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import { trackEvent } from "@/analytics";
+import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
+import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
 import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
@@ -62,13 +64,11 @@ export default function MarketContent() {
             setLoading(true);
             setError(null);
             try {
-                const vendorResponse = await fetch(`/api/vendors/`);
-                const marketResponse = await fetch(`/api/markets/`);
-                const vendorsData = await vendorResponse.json();
-                const marketsData = await marketResponse.json();
+                const fetchedMarkets = await marketsAPI.getMarkets();
+                setMarkets(fetchedMarkets);
 
-                setVendors(vendorsData);
-                setMarkets(marketsData);
+                const fetchedVendors = await vendorsAPI.getVendors();
+                setVendors(fetchedVendors);
 
                 if (user) {
                     try {
