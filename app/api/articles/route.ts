@@ -6,7 +6,7 @@ const EXPRESS_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(req: Request) {
     try {
-        const backendUrl = `${EXPRESS_BACKEND_URL}/articles`;
+        const backendUrl = `${process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL}/articles`;
 
         const response = await fetch(backendUrl, {
             method: "GET",

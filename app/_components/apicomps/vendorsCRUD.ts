@@ -1,6 +1,6 @@
 import { VendorsInterface } from "@/app/_types/interfaces";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 // check to ensure the environment variable is defined
 if (!API_BASE_URL) {

@@ -28,75 +28,19 @@ import {
   IconStarFilled,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+
 import { ContactMessageInterface } from "../../_types/interfaces";
 import NavMT from "@/app/_components/navcomps/navmt";
-
-const base = '';
-
-export async function fetchContactMessages(): Promise<ContactMessageInterface[]> {
-  const r = await fetch(`${base}/api/contact`, { cache: 'no-store' });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return r.json();
-}
-
-export async function deleteContactMessage(id: number): Promise<void> {
-  // our /api/contact DELETE expects ?id=...
-  const r = await fetch(`${base}/api/contact?id=${id}`, { method: 'DELETE', cache: 'no-store' });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-}
-
-export async function fetchStarredMessageIds(): Promise<number[]> {
-  const r = await fetch(`${base}/api/contact/starred`, { cache: 'no-store' });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return r.json();
-}
-
-export async function starMessage(id: number): Promise<void> {
-  const r = await fetch(`${base}/api/contact/starred`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id }),
-    cache: 'no-store',
-  });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-}
-
-export async function unstarMessage(id: number): Promise<void> {
-  const r = await fetch(`${base}/api/contact/starred`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id }),
-    cache: 'no-store',
-  });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-}
-
-export async function fetchReadMessageIds(): Promise<number[]> {
-  const r = await fetch(`${base}/api/contact/read`, { cache: 'no-store' });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return r.json();
-}
-
-export async function markMessageAsRead(id: number): Promise<void> {
-  const r = await fetch(`${base}/api/contact/read`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id }),
-    cache: 'no-store',
-  });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-}
-
-export async function markMessageAsUnread(id: number): Promise<void> {
-  const r = await fetch(`${base}/api/contact/read`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id }),
-    cache: 'no-store',
-  });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-}
-
+import {
+  fetchContactMessages,
+  deleteContactMessage,
+  fetchStarredMessageIds,
+  starMessage,
+  unstarMessage,
+  fetchReadMessageIds,
+  markMessageAsRead,
+  markMessageAsUnread,
+} from "@/app/_components/apicomps/fetchContactMessages";
 
 export default function ContactMessagesPage() {
   const [messages, setMessages] = useState<ContactMessageInterface[]>([]);
@@ -280,7 +224,7 @@ export default function ContactMessagesPage() {
                       }}
                       onClick={() => handleViewDetails(msg)}
                     >
-
+                      
                       <Box
                         style={{
                           flex: 1,

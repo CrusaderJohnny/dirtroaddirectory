@@ -13,6 +13,7 @@ import {
   Space,
   Modal,
   Accordion,
+  Paper,
 } from '@mantine/core';
 import { useForm, hasLength, isEmail } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -162,11 +163,23 @@ export default function Page() {
             </Grid>
 
             <Space h="xl" />
-            <Title order={3} ta="center" mb="md" c="dark.8">
-              Frequently Asked Questions
-            </Title>
-
-            <Accordion
+            <Paper
+            withBorder
+            radius="md"
+            shadow="md"
+            p="xl"
+            mt="xl"
+            bg="#fefcf9"
+            style={{
+              border: '1px solid #ddd',
+              backgroundColor: '#fefcf9',
+            }}
+            >
+              <Title order={3} ta="center" mb="md" c="dark.8">
+                Frequently Asked Questions
+              </Title>
+              
+              <Accordion
               variant="separated"
               radius="md"
               chevronPosition="right"
@@ -192,6 +205,7 @@ export default function Page() {
                 },
               }}
             >
+            
               <Accordion.Item value="approved-market">
                 <Accordion.Control>
                   What’s the difference between Approved and Public Farmers’ Markets?
@@ -227,7 +241,6 @@ export default function Page() {
                   You should always try to resolve issues with your market manager directly. If the conflict escalates or remains unresolved, you may reach out to AFMA or relevant municipal authorities for mediation and further action.
                 </Accordion.Panel>
               </Accordion.Item>
-
               <Accordion.Item value="alcohol-license">
                 <Accordion.Control>
                   What license do I need to sell alcohol at a market?
@@ -237,9 +250,11 @@ export default function Page() {
                 </Accordion.Panel>
               </Accordion.Item>
             </Accordion>
+            </Paper>
           </Container>
         </AppShell.Main>
       </AppShell>
     </>
   );
 }
+
