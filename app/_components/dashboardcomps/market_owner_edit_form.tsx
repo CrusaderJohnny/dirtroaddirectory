@@ -65,7 +65,7 @@ export default function MarketOwnerEditForm({ initialMarket }: MarketOwnerEditFo
             //await marketsAPI.updateMarket(initialMarket.id, values as MarketsInterface);
             notifications.show({
                 title: 'Success!',
-                message: `Your market "${values.label}" has been updated.`,
+                message: `Your market "${updatedMarket.label}" has been updated.`,
                 color: 'blue',
                 autoClose: 5000,
             });
