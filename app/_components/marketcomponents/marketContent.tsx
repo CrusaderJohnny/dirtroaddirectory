@@ -345,7 +345,7 @@ export default function MarketContent() {
             <Container
                 size="xl"
                 px="lg"
-                style={{ maxWidth: '1400px', margin: '0 auto' }}
+                style={{ maxWidth: '1400px', margin: '0 auto', overflowY: 'hidden' }}
             >
                 <Paper shadow="md" p="lg" mb="xl" mt="xl" withBorder radius="md" bg="white">
                     <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
