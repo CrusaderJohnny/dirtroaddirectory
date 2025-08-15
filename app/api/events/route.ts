@@ -15,7 +15,7 @@ export async function GET() {
         const backendResponse = await fetch(`${ANALYTICS_API_ENDPOINT}/events`, {
             method: 'GET',
             headers: {
-                contentType: "application/json",
+                'content-Type': "application/json",
             }
         });
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         const backendResponse = await fetch(`${ANALYTICS_API_ENDPOINT}/events`, {
             method: 'POST',
             headers: {
-                contentType: 'application/json',
+                'content-Type': 'application/json',
             },
             body: JSON.stringify(body), // Send the received body to the backend
         });
