@@ -8,7 +8,16 @@ import {IconUser} from '@tabler/icons-react';
 export default function HeaderLarge() {
     const [opened, {open, close}] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width: 20rem)');
-    const {user} = useUser();
+
+    // isLoaded boolean to handle the asynchronous nature of Clerk
+    const {user, isLoaded} = useUser();
+
+    // If the user data hasn't loaded yet, return null or a loading state.
+    // This prevents the component from rendering with an undefined 'user' object.
+    if (!isLoaded) {
+        return null;
+    }
+
     const isAdmin = user?.publicMetadata?.role === 'admin';
 
     return (
@@ -73,9 +82,7 @@ export default function HeaderLarge() {
                 </Button>
             </Group>
 
-            {/*(Sign-in) / (Panel / Favs + Clerk Icon)*/}
             <Group>
-                {/* If signed out, show button for the sign-in / sign-up model*/}
                 <SignedOut>
                     <Button
                         onClick={open}
@@ -91,30 +98,27 @@ export default function HeaderLarge() {
                     </Button>
                 </SignedOut>
 
-                {/*Signed in section*/}
-                {/*Basic user favs section*/}
-                {!isAdmin && (
-                    <SignedIn>
+                {/* The rest of the component is rendered conditionally inside SignedIn */}
+                <SignedIn>
+                    {!isAdmin && (
                         <Button component="a" href="/userfavs" variant="subtle" c="white" size="md">
                             Favs
                         </Button>
-                    </SignedIn>
-                )}
-
-                {/*Admin Panel Section*/}
-                {isAdmin && (
-                    <Button
-                        component="a"
-                        href="/admin"
-                        variant="outline"
-                        color="white"
-                        size="xs"
-                        style={{backgroundColor: '#ff7070'}}
-                    >
-                        Admin Panel
-                    </Button>
-                )}
-                <UserButton/>
+                    )}
+                    {isAdmin && (
+                        <Button
+                            component="a"
+                            href="/admin"
+                            variant="outline"
+                            color="white"
+                            size="xs"
+                            style={{backgroundColor: '#ff7070'}}
+                        >
+                            Admin Panel
+                        </Button>
+                    )}
+                    <UserButton/>
+                </SignedIn>
             </Group>
         </Group>
     );
