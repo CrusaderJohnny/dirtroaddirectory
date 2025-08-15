@@ -93,16 +93,8 @@ export default function HeaderLarge() {
 
                 {/*Signed in section*/}
                 {/*Basic user favs section*/}
-                {!isAdmin && (
-                    <SignedIn>
-                        <Button component="a" href="/userfavs" variant="subtle" c="white" size="md">
-                            Favs
-                        </Button>
-                    </SignedIn>
-                )}
-
                 {/*Admin Panel Section*/}
-                {isAdmin && (
+                {isAdmin ? (
                     <Button
                         component="a"
                         href="/admin"
@@ -113,7 +105,13 @@ export default function HeaderLarge() {
                     >
                         Admin Panel
                     </Button>
-                )}
+                ) : (
+                    <SignedIn>
+                    <Button component="a" href="/userfavs" variant="subtle" c="white" size="md">
+                    Favs
+                    </Button>
+                    </SignedIn>
+                    )}
                 <UserButton/>
             </Group>
         </Group>

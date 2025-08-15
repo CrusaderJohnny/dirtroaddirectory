@@ -74,16 +74,8 @@ export default function HeaderMedium() {
 
                             {/*Signed in section*/}
                             {/*Basic user favs section*/}
-                            {!isAdmin && (
-                                <SignedIn>
-                                    <Button component="a" href="/userfavs" variant="subtle" c="white" size="compact-xs">
-                                        Favs
-                                    </Button>
-                                </SignedIn>
-                            )}
-
                             {/*Admin Panel Section*/}
-                            {isAdmin && (
+                            {isAdmin ? (
                                 <Button
                                     component="a"
                                     href="/admin"
@@ -94,7 +86,13 @@ export default function HeaderMedium() {
                                 >
                                     Admin Panel
                                 </Button>
-                            )}
+                            ) : (
+                                <SignedIn>
+                                <Button component="a" href="/userfavs" variant="subtle" c="white" size="compact-xs">
+                                Favs
+                                </Button>
+                                </SignedIn>
+                                )}
                             <UserButton
                                 appearance={{
                                     elements: {

@@ -137,6 +137,19 @@ export default async function AdminDashboard() {
                                     </Center>
                                 </Card>
                             </Group>
+                            <Group>
+                                <Card
+                                    bg={'#d0f2da'}
+                                    title="User Favs"
+                                    w={'20rem'}
+                                    component='a'
+                                    href={'userfavs'}
+                                >
+                                    <Center>
+                                        <Text fw={500}>User Favourites</Text>
+                                    </Center>
+                                </Card>
+                            </Group>
                         </Stack>
                     </Center>
                 </Container>

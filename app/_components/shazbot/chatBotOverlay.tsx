@@ -20,10 +20,11 @@ import remarkGfm from 'remark-gfm';
 const ChatbotOverlay: React.FC = () => {
     // State to control chat pop up
     const [isChatReal, setIsChatReal] = useState(false);
+    const date = new Date();
     // State to hold the chat messages
     const [messages, setMessages] = useState<Message[]>([
         // SYSTEM MESSAGE: This instructs the AI on its behavior. It is NOT displayed to the user.
-        { role: "system", content: "You are a helpful assistant. Helping people locate farmers markets and vendors in Alberta. You are to use the information on 'https://dirtroaddirectory.vercel.app/markets' for market information and 'https://dirtroaddirectory.vercel.app/vendors' for vendor information  " },
+        { role: "system", content: `You are an AI assistant that helps people find information. Todays date is ${date.toLocaleDateString()}` },
         // ASSISTANT WELCOME MESSAGE: This is displayed to the user when the chat opens.
         { role: 'assistant', content: "Hello! I'm FarmHand, An AI to help you find information. How can I help you today?" },
     ]);

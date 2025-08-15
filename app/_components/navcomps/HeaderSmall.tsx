@@ -89,24 +89,8 @@ export default function HeaderSmall() {
 
                     <SignedIn>
                         {/*Basic user favs section*/}
-                        {!isAdmin && (
-                            <Tooltip label="Favorites">
-                                <Avatar
-                                    component="a"
-                                    href="/userfavs"
-                                    variant="subtle"
-                                    radius="xl"
-                                    color="green"
-                                    size="sm"
-                                    style={{backgroundColor: '#ffc2c2'}}
-                                >
-                                    <IconHeartStar size={14}/>
-                                </Avatar>
-                            </Tooltip>
-                        )}
-
                         {/*Admin Panel Section*/}
-                        {isAdmin && (
+                        {isAdmin ? (
                             <Tooltip label="Admin Panel">
                                 <Avatar
                                     component="a"
@@ -120,7 +104,21 @@ export default function HeaderSmall() {
                                     <IconLockCode size={14}/>
                                 </Avatar>
                             </Tooltip>
-                        )}
+                        ) : (
+                            <Tooltip label="Favorites">
+                            <Avatar
+                            component="a"
+                            href="/userfavs"
+                            variant="subtle"
+                            radius="xl"
+                            color="green"
+                            size="sm"
+                            style={{backgroundColor: '#ffc2c2'}}
+                    >
+                        <IconHeartStar size={14}/>
+                    </Avatar>
+                </Tooltip>
+                )}
                         <UserButton/>
                     </SignedIn>
 
