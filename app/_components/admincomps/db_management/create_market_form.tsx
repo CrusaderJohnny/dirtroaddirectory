@@ -17,6 +17,7 @@ import { isNotEmpty } from '@mantine/form';
 import {MarketsInterface} from "@/app/_types/interfaces";
 import { notifications } from '@mantine/notifications';
 import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
 
 export default function CreateMarketForm() {
@@ -304,6 +305,7 @@ export default function CreateMarketForm() {
                 mb="md" // Margin bottom
             />
 
+            {/*
             <TextInput
                 withAsterisk
                 label="Image Link (URL)"
@@ -311,6 +313,13 @@ export default function CreateMarketForm() {
                 key={form.key('image')}
                 {...form.getInputProps('image')}
                 mb="md"
+            />
+            */}
+
+            <ImageUploader
+                onImageUploadAction={(url) => form.setFieldValue('image', url)}
+                signatureEndpoint={"/api/sign-cloudinary-params"}
+                initialImage={form.values.image} // Correctly pass the current form image value
             />
 
             <Textarea
