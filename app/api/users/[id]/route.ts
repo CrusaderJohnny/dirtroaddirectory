@@ -14,8 +14,9 @@ if (!BACKEND_API_BASE_URL) {
  * @param request The NextRequest object.
  * @param params Contains the dynamic 'id' from the URL.
  */
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    // Await params before destructuring
+    const { id } = await params;
 
     // Validate if the ID is a valid number format
     if (isNaN(parseInt(id))) {
@@ -50,8 +51,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
  * @param request The NextRequest object.
  * @param params Contains the dynamic 'id' from the URL.
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    // Await params before destructuring
+    const { id } = await params;
 
     // Validate if the ID is a valid number format
     if (isNaN(parseInt(id))) {
