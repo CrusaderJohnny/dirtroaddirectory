@@ -16,6 +16,7 @@ import { useForm, isNotEmpty, isEmail } from '@mantine/form';
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
 interface VendorOwnerEditFormProps {
     initialVendor: VendorsInterface;
@@ -200,13 +201,10 @@ export default function VendorOwnerEditForm({ initialVendor }: VendorOwnerEditFo
                     mb="md"
                     disabled={isSaving}
                 />
-                <TextInput
-                    label="Image Link (URL)"
-                    placeholder="e.g., https://example.com/images/vendor.jpg"
-                    key={form.key('image')}
-                    {...form.getInputProps('image')}
-                    mb="md"
-                    disabled={isSaving}
+                <ImageUploader
+                    onImageUploadAction={(url) => form.setFieldValue('image', url ?? '')} // Set to empty string if null
+                    signatureEndpoint={"/api/sign-cloudinary-params"}
+                    initialImage={form.values.image}
                 />
                 <TextInput
                     label="Phone Number"

@@ -15,6 +15,7 @@ import { useForm, isNotEmpty } from '@mantine/form';
 import { MarketsInterface } from "@/app/_types/interfaces";
 import { notifications } from '@mantine/notifications';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
 interface MarketOwnerEditFormProps {
     initialMarket: MarketsInterface;
@@ -125,12 +126,10 @@ export default function MarketOwnerEditForm({ initialMarket }: MarketOwnerEditFo
                         key={form.key('label')}
                         {...form.getInputProps('label')}
                     />
-                    <TextInput
-                        withAsterisk
-                        label="Image Link (URL)"
-                        placeholder=""
-                        key={form.key('image')}
-                        {...form.getInputProps('image')}
+                    <ImageUploader
+                        onImageUploadAction={(url) => form.setFieldValue('image', url ?? '')} // Set to empty string if null
+                        signatureEndpoint={"/api/sign-cloudinary-params"}
+                        initialImage={form.values.image}
                     />
                     <Textarea
                         label="Content"
