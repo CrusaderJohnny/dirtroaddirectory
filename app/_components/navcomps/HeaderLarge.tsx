@@ -114,31 +114,6 @@ export default function HeaderLarge() {
                         Admin Panel
                     </Button>
                 )}
-
-                {/*Vendor Panel Section*/}
-                {/*<Button*/}
-                {/*    component="a"*/}
-                {/*    href="/admin"*/}
-                {/*    variant="outline"*/}
-                {/*    color="white"*/}
-                {/*    size="xs"*/}
-                {/*    style={{backgroundColor: '#ff7070'}}*/}
-                {/*>*/}
-                {/*    Vendor Panel*/}
-                {/*</Button>*/}
-
-                {/*Market Panel Section*/}
-                {/*<Button*/}
-                {/*    component="a"*/}
-                {/*    href="/admin"*/}
-                {/*    variant="outline"*/}
-                {/*    color="white"*/}
-                {/*    size="xs"*/}
-                {/*    style={{backgroundColor: '#ff7070'}}*/}
-                {/*>*/}
-                {/*    Market Panel*/}
-                {/*</Button>*/}
-
                 <UserButton/>
             </Group>
         </Group>

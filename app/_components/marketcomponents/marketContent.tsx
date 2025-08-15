@@ -29,7 +29,6 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import { trackEvent } from "@/analytics";
-import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
 import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
 import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
 import {useUser} from "@clerk/nextjs";
@@ -55,23 +54,34 @@ export default function MarketContent() {
     const [favoriteMarketIds, setFavoriteMarketIds] = useState<number[]>([]);
     const { user } = useUser();
 
-    // useEffect to fetch data when the component mounts
-
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
             setError(null);
             try {
-                const vendorResponse = await fetch(`/api/vendors/`);
-                const marketResponse = await fetch(`/api/markets/`);
-                const vendorsData = await vendorResponse.json();
-                const marketsData = await marketResponse.json();
+                const [vendorResponse, marketResponse] = await Promise.all([
+                    fetch(`/api/vendors/`),
+                    fetch(`/api/markets/`)
+                ]);
+
+                if (!vendorResponse.ok) throw new Error(`Failed to fetch vendors: ${vendorResponse.statusText}`);
+                if (!marketResponse.ok) throw new Error(`Failed to fetch markets: ${marketResponse.statusText}`);
+
+                const vendorsData: VendorsInterface[] = await vendorResponse.json();
+                const marketsData: MarketsInterface[] = await marketResponse.json();
 
                 setVendors(vendorsData);
                 setMarkets(marketsData);
-                if (user) {
+
+                if (user && user.id) {
                     try {
-                        const favs = await favoritesMarketAPI.getFavoriteMarketIds(user.id);
+                        // Use the new API route for fetching favorite market IDs
+                        const favsResponse = await fetch(`/api/users/${user.id}/favourite-markets`);
+                        if (!favsResponse.ok) {
+                            throw new Error(`Failed to fetch favorite market IDs: ${favsResponse.statusText}`);
+                        }
+                        const favs: string[] = await favsResponse.json();
+
                         const numericFavs = favs
                             .map((id) => Number(id))
                             .filter((n) => Number.isFinite(n));
@@ -92,18 +102,36 @@ export default function MarketContent() {
     }, [user]);
 
     const toggleFavorite = async (marketId: number) => {
-        if (!user) return;
+        if (!user || !user.id) return; // Ensure user and user.id exist
+
         const isFav = favoriteMarketIds.includes(marketId);
         try {
             if (isFav) {
-                await favoritesMarketAPI.removeFavoriteMarket(user.id, marketId.toString());
+                // Use the new API route for removing a favorite
+                const response = await fetch(`/api/users/${user.id}/favourite-markets/${marketId.toString()}`, {
+                    method: "DELETE",
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error deleting favorite' }));
+                    throw new Error(errorData.message || `Failed to remove favorite: ${response.statusText}`);
+                }
                 setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketId));
             } else {
-                await favoritesMarketAPI.addFavoriteMarket(user.id, marketId.toString());
+                // Use the new API route for adding a favorite
+                const response = await fetch(`/api/users/${user.id}/favourite-markets`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ market_id: marketId.toString() }),
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error adding favorite' }));
+                    throw new Error(errorData.message || `Failed to add favorite: ${response.statusText}`);
+                }
                 setFavoriteMarketIds((prev) => [...prev, marketId]);
             }
         } catch (err) {
             console.error("Error updating favorite:", err);
+            // Optionally, show a user-friendly message for the error
         }
     };
 
@@ -117,6 +145,7 @@ export default function MarketContent() {
         const matchesRegion = selectedRegion ? market.region === selectedRegion : true;
         return matchesName && matchesRegion;
     });
+
     const handleMarketView = async (marketName: string) => {
         await AnalyticsTracker('market_view', marketName);
         trackEvent({
@@ -126,6 +155,7 @@ export default function MarketContent() {
             },
         });
     };
+
     useEffect(() => {
         if(selectedMarket){
             handleMarketView(selectedMarket.label as string).then();
@@ -328,7 +358,6 @@ export default function MarketContent() {
                 <Grid gutter="xl">
                     {filteredMarkets.map((market) => (
                         <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
-                            {/* Ensure MarketCard can accept the MarketsInterface type */}
                             <MarketCard
                                 market={market}
                                 isFavorited={favoriteMarketIds.includes(market.id)}
