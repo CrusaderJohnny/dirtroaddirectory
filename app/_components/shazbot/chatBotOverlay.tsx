@@ -25,7 +25,7 @@ const ChatbotOverlay: React.FC = () => {
         // SYSTEM MESSAGE: This instructs the AI on its behavior. It is NOT displayed to the user.
         { role: "system", content: "You are a helpful assistant. Helping people locate farmers markets and vendors in Alberta. You are to use the information on 'https://dirtroaddirectory.vercel.app/markets' for market information and 'https://dirtroaddirectory.vercel.app/vendors' for vendor information  " },
         // ASSISTANT WELCOME MESSAGE: This is displayed to the user when the chat opens.
-        { role: 'assistant', content: "Hello! I'm your AI assistant. How can I help you today?" },
+        { role: 'assistant', content: "Hello! I'm FarmHand, An AI to help you find information. How can I help you today?" },
     ]);
     // State for the current user input
     const [input, setInput] = useState<string>("");
