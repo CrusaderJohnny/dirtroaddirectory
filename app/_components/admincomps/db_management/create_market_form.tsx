@@ -16,7 +16,6 @@ import { useForm } from '@mantine/form';
 import { isNotEmpty } from '@mantine/form';
 import {MarketsInterface} from "@/app/_types/interfaces";
 import { notifications } from '@mantine/notifications';
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
 import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 
 
@@ -77,7 +76,8 @@ export default function CreateMarketForm() {
     const fetchAllMarkets = async () => {
         setLoading(true);
         try {
-            const data = await marketsAPI.getMarkets();
+            const response = await fetch(`/api/markets/`)
+            const data = await response.json();
             setAllMarkets(data);
         } catch (err) {
             console.error('Failed to fetch markets:', err);
@@ -133,7 +133,15 @@ export default function CreateMarketForm() {
         try {
             if (marketToEdit && marketToEdit.id) {
                 // UPDATE existing market
-                const updatedMarket = await marketsAPI.updateMarket(marketToEdit.id, { id: marketToEdit.id, ...marketData } as MarketsInterface);
+                const response = await fetch(`/api/markets/${marketToEdit.id}`, {
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(marketData),
+                });
+                const updatedMarket = await response.json();
+                //const updatedMarket = await marketsAPI.updateMarket(marketToEdit.id, { id: marketToEdit.id, ...marketData } as MarketsInterface);
                 notifications.show({
                     title: 'Success!',
                     message: `Market "${updatedMarket.label}" updated successfully!`,
@@ -142,7 +150,15 @@ export default function CreateMarketForm() {
                 });
             } else {
                 // CREATE new market
-                const newMarket = await marketsAPI.createMarket(marketData);
+                const response = await fetch(`/api/markets/`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(marketData),
+                });
+                const newMarket = await response.json();
+                //const newMarket = await marketsAPI.createMarket(marketData);
                 notifications.show({
                     title: 'Success!',
                     message: `Market "${newMarket.label}" created successfully! ID: ${newMarket.id}`,
@@ -172,7 +188,10 @@ export default function CreateMarketForm() {
             if (window.confirm(`Are you sure you want to delete "${marketToEdit.label}"? This action cannot be undone.`)) {
                 setIsSaving(true);
                 try {
-                    await marketsAPI.deleteMarket(marketToEdit.id);
+                    await fetch(`/api/markets/${marketToEdit.id}`, {
+                        method: "DELETE",
+                    });
+
                     notifications.show({
                         title: 'Deleted!',
                         message: `Market "${marketToEdit.label}" deleted successfully.`,

@@ -36,12 +36,11 @@ import VendorCard from "@/app/_components/vendorcomps/vendorcard";
 import { trackEvent } from "@/analytics";
 
 // Import the API fetching functions and interfaces
-import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces'; // <--- Ensure MarketsInterface is imported
-import marketsAPI from '@/app/_components/apicomps/marketsCRUD';
-import vendorsAPI from '@/app/_components/apicomps/vendorsCRUD';
-import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
+import { VendorsInterface, MarketsInterface } from '@/app/_types/interfaces';
+import { AnalyticsTracker } from "@/app/_components/analytic-tracking/analyticsTracker";
 
-import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
+// Removed the deprecated import:
+// import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
 import { useUser } from "@clerk/nextjs";
 
 const fadeInUp = {
@@ -74,13 +73,26 @@ export default function VendorsContent() {
       setLoading(true);
       setError(null);
       try {
-        const fetchedVendors = await vendorsAPI.getVendors();
-        setVendors(fetchedVendors);
+        const vendorResponse = await fetch(`/api/vendors/`);
+        if (!vendorResponse.ok) {
+          throw new Error(`Failed to fetch vendors: ${vendorResponse.statusText}`);
+        }
+        const vendorsData = await vendorResponse.json();
+        setVendors(vendorsData);
 
-        if (user) {
+        if (user && user.id) {
           try {
-            const favVendorIds = await favoriteVendorsAPI.getFavoriteVendorIds(Number(user.id));
-            setFavoriteVendorIds(favVendorIds);
+            // Use the new API route for fetching favorite vendor IDs
+            const favsResponse = await fetch(`/api/users/${user.id}/favourite-vendors`);
+            if (!favsResponse.ok) {
+              throw new Error(`Failed to fetch favorite vendor IDs: ${favsResponse.statusText}`);
+            }
+            const favVendorIds: string[] = await favsResponse.json();
+
+            const numericFavs = favVendorIds
+                .map((id) => Number(id))
+                .filter((n) => Number.isFinite(n));
+            setFavoriteVendorIds(numericFavs);
           } catch (favErr) {
             console.error("Failed to fetch vendor favorites:", favErr);
             // Do not block page if no favorites exist or an error occurs
@@ -98,18 +110,36 @@ export default function VendorsContent() {
   }, [user]); // ← added user here to refetch when it becomes available
 
   const toggleFavoriteVendor = async (vendorId: number) => {
-    if (!user) return;
+    if (!user || !user.id) return; // Ensure user and user.id exist
+
     const isFav = favoriteVendorIds.includes(vendorId);
     try {
       if (isFav) {
-        await favoriteVendorsAPI.removeFavoriteVendor(Number(user.id), vendorId);
+        // Use the new API route for removing a favorite vendor
+        const response = await fetch(`/api/users/${user.id}/favourite-vendors/${vendorId.toString()}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'Unknown error deleting favorite' }));
+          throw new Error(errorData.message || `Failed to remove favorite vendor: ${response.statusText}`);
+        }
         setFavoriteVendorIds(prev => prev.filter(id => id !== vendorId));
       } else {
-        await favoriteVendorsAPI.addFavoriteVendor(Number(user.id), vendorId);
+        // Use the new API route for adding a favorite vendor
+        const response = await fetch(`/api/users/${user.id}/favourite-vendors`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ vendor_id: vendorId.toString() }), // Ensure body matches backend expectation
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'Unknown error adding favorite' }));
+          throw new Error(errorData.message || `Failed to add favorite vendor: ${response.statusText}`);
+        }
         setFavoriteVendorIds(prev => [...prev, vendorId]);
       }
     } catch (err) {
       console.error("Error updating favorite vendor:", err);
+      // Optionally, show a user-friendly message for the error
     }
   };
 
@@ -139,11 +169,15 @@ export default function VendorsContent() {
       const fetchedMarketDetails: MarketsInterface[] = [];
 
       try {
-        // Fetch each market by its ID from the marketsCRUD.ts API
         for (const marketId of selectedVendor.markets) {
           try {
-            const marketDetail = await marketsAPI.getMarketById(marketId); // Assuming getMarketById is implemented
-            fetchedMarketDetails.push(marketDetail);
+            const response = await fetch(`/api/markets/${marketId}`);
+            if (!response.ok) {
+              console.warn(`Could not fetch details for market ID ${marketId}: HTTP status ${response.status}`);
+              continue; // Skip this market but continue with others
+            }
+            const data = await response.json();
+            fetchedMarketDetails.push(data);
           } catch (individualMarketError) {
             console.warn(`Could not fetch details for market ID ${marketId}:`, individualMarketError);
             // Optionally, add a placeholder market object or handle this error specifically
@@ -161,10 +195,10 @@ export default function VendorsContent() {
     // Only run this effect if a vendor is selected and its market IDs array is available
     if (selectedVendor) {
       fetchMarketDetailsForVendor();
-      handleVendorView(selectedVendor.name)
+      handleVendorView(selectedVendor.name);
     } else {
-        setAssociatedMarkets([]); // Clear markets if no vendor is selected or removed
-        setIsLoadingMarkets(false);
+      setAssociatedMarkets([]); // Clear markets if no vendor is selected or removed
+      setIsLoadingMarkets(false);
     }
   }, [selectedVendor]); // Re-run this effect whenever selectedVendor changes
 
@@ -176,21 +210,20 @@ export default function VendorsContent() {
   const allCategories = [...new Set(vendors.map((v) => v.category))];
 
 
-
   // Add loading and error states for initial render (all vendors list)
   if (loading) {
     return (
-      <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Text size="xl">Loading vendor data...</Text>
-      </AppShellMain>
+        <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Text size="xl">Loading vendor data...</Text>
+        </AppShellMain>
     );
   }
 
   if (error) {
     return (
-      <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Text size="xl" c="red">Error loading data: {error}</Text>
-      </AppShellMain>
+        <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Text size="xl" c="red">Error loading data: {error}</Text>
+        </AppShellMain>
     );
   }
 
@@ -198,204 +231,203 @@ export default function VendorsContent() {
   if (vendorIdParam && selectedVendor) {
 
     return (
-      <AppShellMain style={{ minHeight: "100vh" }}>
-        <Container size="lg" py="xl">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-              <Image
-                src={selectedVendor.image}
-                alt={selectedVendor.name}
-                height={350}
-                fit="cover"
-                style={{
-                  borderRadius: "12px",
-                  border: "4px solid #f0f0f0",
-                  objectFit: "cover",
-                  maxWidth: "100%",
-                  width: "auto",
-                  margin: "0 auto",
-                }}
-              />
-              <Title
-                order={2}
-                mt="md"
-                style={{
-                  fontFamily: "Georgia, serif",
-                  color: "#1f4d2e",
-                  fontWeight: 800,
-                }}
-              >
-                {selectedVendor.name}
-              </Title>
-              <Text size="lg" c="dimmed">
-                {selectedVendor.category}
-              </Text>
-            </div>
-          </motion.div>
+        <AppShellMain style={{ minHeight: "100vh" }}>
+          <Container size="lg" py="xl">
+            <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInUp}
+            >
+              <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+                <Image
+                    src={selectedVendor.image}
+                    alt={selectedVendor.name}
+                    height={350}
+                    fit="cover"
+                    style={{
+                      borderRadius: "12px",
+                      border: "4px solid #f0f0f0",
+                      objectFit: "cover",
+                      maxWidth: "100%",
+                      width: "auto",
+                      margin: "0 auto",
+                    }}
+                />
+                <Title
+                    order={2}
+                    mt="md"
+                    style={{
+                      fontFamily: "Georgia, serif",
+                      color: "#1f4d2e",
+                      fontWeight: 800,
+                    }}
+                >
+                  {selectedVendor.name}
+                </Title>
+                <Text size="lg" c="dimmed">
+                  {selectedVendor.category}
+                </Text>
+              </div>
+            </motion.div>
 
-          {/* Description */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-            <Card withBorder radius="md" style={{ backgroundColor: "#fff", marginBottom: "1.5rem", padding: "1.5rem" }}>
-              <Group align="center" mb="sm">
-                <ThemeIcon variant="light" color="orange" radius="xl" size="lg"><IconList size={20} /></ThemeIcon>
-                <Title order={4} c="#1f4d2e" m={0}>Description</Title>
-              </Group>
-              <Text size="sm" c="gray.8">{selectedVendor.description || "No description available"}</Text>
-            </Card>
-          </motion.div>
+            {/* Description */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+              <Card withBorder radius="md" style={{ backgroundColor: "#fff", marginBottom: "1.5rem", padding: "1.5rem" }}>
+                <Group align="center" mb="sm">
+                  <ThemeIcon variant="light" color="orange" radius="xl" size="lg"><IconList size={20} /></ThemeIcon>
+                  <Title order={4} c="#1f4d2e" m={0}>Description</Title>
+                </Group>
+                <Text size="sm" c="gray.8">{selectedVendor.description || "No description available"}</Text>
+              </Card>
+            </motion.div>
 
-          {/* Products Offered */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-            <Card withBorder radius="md" style={{ backgroundColor: "#fff", marginBottom: "1.5rem", padding: "1.5rem" }}>
-              <Group align="center" mb="sm">
-                <ThemeIcon variant="light" color="green" radius="xl" size="lg"><IconShoppingCart size={20} /></ThemeIcon>
-                <Title order={4} c="#1f4d2e" m={0}>Products Offered</Title>
-              </Group>
-              {selectedVendor.products && selectedVendor.products.length > 0 ? (
-                <Grid gutter="md">
-                  {selectedVendor.products.map((product, index) => (
-                    <Grid.Col span={{ base: 12, sm: 6 }} key={index}>
-                      <Group gap="xs">
-                        <ThemeIcon variant="light" color="dark" size="xs" radius="xs">
-                          <IconCircleDot size={14} />
-                        </ThemeIcon>
-                        <Text size="sm">{product}</Text>
-                      </Group>
-                    </Grid.Col>
-                  ))}
-                </Grid>
-              ) : (
-                <Text size="sm" c="dimmed" ta="center">No product list available.</Text>
-              )}
-            </Card>
-          </motion.div>
+            {/* Products Offered */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+              <Card withBorder radius="md" style={{ backgroundColor: "#fff", marginBottom: "1.5rem", padding: "1.5rem" }}>
+                <Group align="center" mb="sm">
+                  <ThemeIcon variant="light" color="green" radius="xl" size="lg"><IconShoppingCart size={20} /></ThemeIcon>
+                  <Title order={4} c="#1f4d2e" m={0}>Products Offered</Title>
+                </Group>
+                {selectedVendor.products && selectedVendor.products.length > 0 ? (
+                    <Grid gutter="md">
+                      {selectedVendor.products.map((product, index) => (
+                          <Grid.Col span={{ base: 12, sm: 6 }} key={index}>
+                            <Group gap="xs">
+                              <ThemeIcon variant="light" color="dark" size="xs" radius="xs">
+                                <IconCircleDot size={14} />
+                              </ThemeIcon>
+                              <Text size="sm">{product}</Text>
+                            </Group>
+                          </Grid.Col>
+                      ))}
+                    </Grid>
+                ) : (
+                    <Text size="sm" c="dimmed" ta="center">No product list available.</Text>
+                )}
+              </Card>
+            </motion.div>
 
-          {/* Markets Section - UPDATED */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-            <Card withBorder radius="md" style={{ backgroundColor: "#ffffff", marginBottom: "1.5rem", padding: "1.5rem" }}>
-              <Title order={4} c="#1f4d2e" ta="center" mb="md">Find Us at Markets</Title>
-              
-              {isLoadingMarkets ? (
-                <Center>
-                  <Loader /> <Text ml="sm">Loading market details...</Text>
-                </Center>
-              ) : errorLoadingMarkets ? (
-                <Text c="red" ta="center">{errorLoadingMarkets}</Text>
-              ) : associatedMarkets.length > 0 ? (
-                <Grid gutter="lg">
-                  {associatedMarkets.map((market) => ( // Changed 'market, idx' to just 'market'
-                    <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}> {/* Use market.id as key */}
-                      <Link href={`/markets?marketId=${market.id}`} passHref>
-                        <Card withBorder radius="md" p="md" style={{ backgroundColor: "#f9fafb", cursor: "pointer" }}>
-                          <Group mb="xs" gap="xs">
-                            <ThemeIcon variant="light" c="red" size="sm"><IconMapPin size={16} /></ThemeIcon>
-                            <Text fw={600} size="md" c="blue">{market.label}</Text> {/* Changed to market.label */}
-                          </Group>
-                          <Text size="xs" c="dimmed">Click to view more</Text>
-                        </Card>
-                      </Link>
-                    </Grid.Col>
-                  ))}
-                </Grid>
-              ) : (
-                <Text ta="center" size="sm" c="dimmed">No market information available.</Text>
-              )}
-            </Card>
-          </motion.div>
+            {/* Markets Section - UPDATED */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+              <Card withBorder radius="md" style={{ backgroundColor: "#ffffff", marginBottom: "1.5rem", padding: "1.5rem" }}>
+                <Title order={4} c="#1f4d2e" ta="center" mb="md">Find Us at Markets</Title>
 
-          {/* Contact + Social */}
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
-            <Grid gutter="xl">
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <Card shadow="sm" radius="md" withBorder p="lg" bg="#e6f4ea">
-                  <Group justify="center" mb="sm">
-                    <ThemeIcon size="xl" radius="xl" c="green"><IconPhone size={28} /></ThemeIcon>
-                  </Group>
-                  <Title order={4} ta="center" c="dark.8" mb="sm">CONTACT</Title>
-                  <Text size="sm"><strong>Phone:</strong> {selectedVendor.contact || 'Not available'}</Text>
-                  <Text size="sm"><strong>Email:</strong> {selectedVendor.email ? (
-                    <a href={`mailto:${selectedVendor.email}`} style={{ color: '#1e88e5' }}>{selectedVendor.email}</a>
-                  ) : 'Not available'}</Text>
-                  <Text size="sm"><strong>Website:</strong> {selectedVendor.website ? (
-                    <a href={selectedVendor.website} target="_blank" rel="noopener noreferrer" style={{ color: '#1e88e5' }}>{selectedVendor.website}</a>
-                  ) : 'Not available'}</Text>
-                </Card>
-              </Grid.Col>
+                {isLoadingMarkets ? (
+                    <Center>
+                      <Loader /> <Text ml="sm">Loading market details...</Text>
+                    </Center>
+                ) : errorLoadingMarkets ? (
+                    <Text c="red" ta="center">{errorLoadingMarkets}</Text>
+                ) : associatedMarkets.length > 0 ? (
+                    <Grid gutter="lg">
+                      {associatedMarkets.map((market) => (
+                          <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={market.id}>
+                            <Link href={`/markets?marketId=${market.id}`} passHref>
+                              <Card withBorder radius="md" p="md" style={{ backgroundColor: "#f9fafb", cursor: "pointer" }}>
+                                <Group mb="xs" gap="xs">
+                                  <ThemeIcon variant="light" c="red" size="sm"><IconMapPin size={16} /></ThemeIcon>
+                                  <Text fw={600} size="md" c="blue">{market.label}</Text>
+                                </Group>
+                                <Text size="xs" c="dimmed">Click to view more</Text>
+                              </Card>
+                            </Link>
+                          </Grid.Col>
+                      ))}
+                    </Grid>
+                ) : (
+                    <Text ta="center" size="sm" c="dimmed">No market information available.</Text>
+                )}
+              </Card>
+            </motion.div>
 
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <Card shadow="sm" radius="md" withBorder p="lg" bg="#d3d3d3">
-                  <Group justify="center" mb="sm">
-                    <ThemeIcon size="xl" radius="xl" color="gray"><IconShare2 size={28} /></ThemeIcon>
-                  </Group>
-                  <Title order={4} ta="center" c="dark.7">SOCIAL MEDIA</Title>
+            {/* Contact + Social */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
+              <Grid gutter="xl">
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <Card shadow="sm" radius="md" withBorder p="lg" bg="#e6f4ea">
+                    <Group justify="center" mb="sm">
+                      <ThemeIcon size="xl" radius="xl" c="green"><IconPhone size={28} /></ThemeIcon>
+                    </Group>
+                    <Title order={4} ta="center" c="dark.8" mb="sm">CONTACT</Title>
+                    <Text size="sm"><strong>Phone:</strong> {selectedVendor.contact || 'Not available'}</Text>
+                    <Text size="sm"><strong>Email:</strong> {selectedVendor.email ? (
+                        <a href={`mailto:${selectedVendor.email}`} style={{ color: '#1e88e5' }}>{selectedVendor.email}</a>
+                    ) : 'Not available'}</Text>
+                    <Text size="sm"><strong>Website:</strong> {selectedVendor.website ? (
+                        <a href={selectedVendor.website} target="_blank" rel="noopener noreferrer" style={{ color: '#1e88e5' }}>{selectedVendor.website}</a>
+                    ) : 'Not available'}</Text>
+                  </Card>
+                </Grid.Col>
 
-                  <Group justify="space-evenly" mt="md">
-                    <Group gap={6}><IconBrandFacebook color="darkblue" /><Text size="sm">Facebook</Text></Group>
-                    <Group gap={6}><IconBrandInstagram color="purple" /><Text size="sm">Instagram</Text></Group>
-                  </Group>
-                </Card>
-              </Grid.Col>
-            </Grid>
-          </motion.div>
-        {/* </motion.div> Removed redundant motion.div closure */}
+                <Grid.Col span={{ base: 12, sm: 6 }}>
+                  <Card shadow="sm" radius="md" withBorder p="lg" bg="#d3d3d3">
+                    <Group justify="center" mb="sm">
+                      <ThemeIcon size="xl" radius="xl" color="gray"><IconShare2 size={28} /></ThemeIcon>
+                    </Group>
+                    <Title order={4} ta="center" c="dark.7">SOCIAL MEDIA</Title>
 
-          <Group justify="center" mt="xl">
-            <Button component="a" href="/vendors" variant="outline" color="orange">← Back to all Vendors</Button>
-          </Group>
-        </Container>
-      </AppShellMain>
+                    <Group justify="space-evenly" mt="md">
+                      <Group gap={6}><IconBrandFacebook color="darkblue" /><Text size="sm">Facebook</Text></Group>
+                      <Group gap={6}><IconBrandInstagram color="purple" /><Text size="sm">Instagram</Text></Group>
+                    </Group>
+                  </Card>
+                </Grid.Col>
+              </Grid>
+            </motion.div>
+
+            <Group justify="center" mt="xl">
+              <Button component="a" href="/vendors" variant="outline" color="orange">← Back to all Vendors</Button>
+            </Group>
+          </Container>
+        </AppShellMain>
     );
   }
 
   // --- All vendors list view (fallback) ---
   return (
-    <AppShellMain style={{ minHeight: "100vh" }}>
-      <Container size="xl" px="lg" style={{ maxWidth: "1400px", margin: "0 auto" }}>
-        <Paper shadow="md" p="lg" mt="xl" mb="lg" withBorder radius="md" bg="white">
-          <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
-            Our Vendors
-          </Title>
-          <Text size="sm" c="dimmed" mb="md">
-            Browse our trusted vendors by name or category
-          </Text>
-          <Group mb="lg" grow>
-          <TextInput
-            placeholder="Search by name"
-            leftSection={<IconSearch size={16} />}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.currentTarget.value)}
-            radius="md"
-            size="md"
-          />
-          <Select
-            data={allCategories}
-            placeholder="Filter by category"
-            clearable
-            value={selectedCategory}
-            onChange={setSelectedCategory}
-            radius="md"
-            size="md"
-          />
-        </Group>
-      </Paper>
+      <AppShellMain style={{ minHeight: "100vh" }}>
+        <Container size="xl" px="lg" style={{ maxWidth: "1400px", margin: "0 auto" }}>
+          <Paper shadow="md" p="lg" mt="xl" mb="lg" withBorder radius="md" bg="white">
+            <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
+              Our Vendors
+            </Title>
+            <Text size="sm" c="dimmed" mb="md">
+              Browse our trusted vendors by name or category
+            </Text>
+            <Group mb="lg" grow>
+              <TextInput
+                  placeholder="Search by name"
+                  leftSection={<IconSearch size={16} />}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.currentTarget.value)}
+                  radius="md"
+                  size="md"
+              />
+              <Select
+                  data={allCategories}
+                  placeholder="Filter by category"
+                  clearable
+                  value={selectedCategory}
+                  onChange={setSelectedCategory}
+                  radius="md"
+                  size="md"
+              />
+            </Group>
+          </Paper>
 
-      <Grid gutter="xl">
-        {filteredVendors.map((vendor) => (
-          <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
-            <VendorCard
-                vendor={vendor}
-                isFavorited={favoriteVendorIds.includes(vendor.id)}
-                onToggleFavorite={() => toggleFavoriteVendor(vendor.id)}
-            />
-          </Grid.Col>
-        ))}
-      </Grid>
-      </Container>
-    </AppShellMain>
+          <Grid gutter="xl">
+            {filteredVendors.map((vendor) => (
+                <Grid.Col span={{ base: 12, sm: 6, md: 4 }} key={vendor.id}>
+                  <VendorCard
+                      vendor={vendor}
+                      isFavorited={favoriteVendorIds.includes(vendor.id)}
+                      onToggleFavorite={() => toggleFavoriteVendor(vendor.id)}
+                  />
+                </Grid.Col>
+            ))}
+          </Grid>
+        </Container>
+      </AppShellMain>
   );
 }

@@ -10,7 +10,6 @@ import {
     Text,
     SegmentedControl,
     TextInput,
-    Select,
     Grid,
     GridCol,
     Card,
@@ -19,13 +18,16 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import favoritesMarketAPI from "@/app/_components/apicomps/favoritesMarketCRUD";
-import favoriteVendorsAPI from "@/app/_components/apicomps/favoriteVendorCRUD";
-import marketsAPI from "@/app/_components/apicomps/marketsCRUD";
-import vendorsAPI from "@/app/_components/apicomps/vendorsCRUD";
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
 import MarketCard from "@/app/_components/marketaccordian/marketcard";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
+
+// Need to delete and replace with routes
+import favoritesMarketAPI from "@/app/userfavs/toBeDeleted/favoritesMarketCRUD";
+import favoriteVendorsAPI from "@/app/userfavs/toBeDeleted/favoriteVendorCRUD";
+import marketsAPI from "@/app/userfavs/toBeDeleted/marketsCRUD";
+import vendorsAPI from "@/app/userfavs/toBeDeleted/vendorsCRUD";
+import usersAPI from "@/app/userfavs/toBeDeleted/usersCRUD";
 
 export default function UserContentPage() {
     const { user } = useUser();
@@ -34,30 +36,49 @@ export default function UserContentPage() {
     const [favoriteMarkets, setFavoriteMarkets] = useState<MarketsInterface[]>([]);
     const [favoriteVendors, setFavoriteVendors] = useState<VendorsInterface[]>([]);
     const [loading, setLoading] = useState(false);
+    const [dbUserId, setDbUserId] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
         const loadFavorites = async () => {
             if (!user) return;
             setLoading(true);
+
             try {
-                const userId = 1; // Replace this with real mapping when needed
+                const allUsers = await usersAPI.getAllUsers();
+                const matchedUser = allUsers.find(
+                    (u) => u.email === user.emailAddresses[0].emailAddress
+                );
 
-                if (activeSegment === 'Markets') {
-                    const favIds = await favoritesMarketAPI.getFavoriteMarketIds(userId);
-                    const allMarkets = await marketsAPI.getMarkets();
-                    const filtered = allMarkets.filter((m) => favIds.includes(m.id));
-                    setFavoriteMarkets(filtered);
+                if (!matchedUser) {
+                    console.warn("No DB user found for Clerk email");
+                    return;
                 }
 
-                if (activeSegment === 'Vendors') {
-                    const favIds = await favoriteVendorsAPI.getFavoriteVendorIds(userId);
-                    const allVendors = await vendorsAPI.getVendors();
-                    const filtered = allVendors.filter((v) => favIds.includes(v.id));
-                    setFavoriteVendors(filtered);
-                }
+                const dbId = matchedUser.id.toString();
+                setDbUserId(dbId);
 
+                const [favMarketIds, favVendorIds] = await Promise.all([
+                    favoritesMarketAPI.getFavoriteMarketIds(dbId),
+                    favoriteVendorsAPI.getFavoriteVendorIds(dbId),
+                ]);
+
+                const [allMarkets, allVendors] = await Promise.all([
+                    marketsAPI.getMarkets(),
+                    vendorsAPI.getVendors(),
+                ]);
+
+                const filteredMarkets = allMarkets.filter(
+                    (market) => favMarketIds.includes(market.id.toString())
+                );
+                const filteredVendors = allVendors.filter(
+                    (vendor) => favVendorIds.includes(vendor.id.toString())
+                );
+
+                setFavoriteMarkets(filteredMarkets);
+                setFavoriteVendors(filteredVendors);
             } catch (err) {
-                console.error("Failed to load favorites:", err);
+                console.error("[Favorites Page] Failed to load favorites:", err);
             } finally {
                 setLoading(false);
             }
@@ -72,17 +93,26 @@ export default function UserContentPage() {
         }
 
         if (activeSegment === 'Markets') {
-            if (favoriteMarkets.length === 0) {
-                return <Text size="sm" c="dimmed">No favorite markets saved.</Text>;
+            const filtered = favoriteMarkets.filter(m => m.label.toLowerCase().includes(searchTerm.toLowerCase()));
+            if (filtered.length === 0) {
+                return <Text size="sm" c="dimmed">No favorite markets match your search.</Text>;
             }
             return (
                 <Grid gutter="xl">
-                    {favoriteMarkets.map((market) => (
+                    {filtered.map((market) => (
                         <GridCol key={market.id} span={{ base: 12, sm: 6, md: 4 }}>
                             <MarketCard
                                 market={market}
                                 isFavorited={true}
-                                onToggleFavorite={() => {}}
+                                onToggleFavorite={async () => {
+                                    if (!dbUserId) return;
+                                    try {
+                                        await favoritesMarketAPI.removeFavoriteMarket(dbUserId, market.id.toString());
+                                        setFavoriteMarkets(prev => prev.filter(m => m.id !== market.id));
+                                    } catch (err) {
+                                        console.error("Error removing favorite market:", err);
+                                    }
+                                }}
                             />
                         </GridCol>
                     ))}
@@ -91,17 +121,26 @@ export default function UserContentPage() {
         }
 
         if (activeSegment === 'Vendors') {
-            if (favoriteVendors.length === 0) {
-                return <Text size="sm" c="dimmed">No favorite vendors saved.</Text>;
+            const filtered = favoriteVendors.filter(v => v.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            if (filtered.length === 0) {
+                return <Text size="sm" c="dimmed">No favorite vendors match your search.</Text>;
             }
             return (
                 <Grid gutter="xl">
-                    {favoriteVendors.map((vendor) => (
+                    {filtered.map((vendor) => (
                         <GridCol key={vendor.id} span={{ base: 12, sm: 6, md: 4 }}>
                             <VendorCard
                                 vendor={vendor}
                                 isFavorited={true}
-                                onToggleFavorite={() => {}}
+                                onToggleFavorite={async () => {
+                                    if (!dbUserId) return;
+                                    try {
+                                        await favoriteVendorsAPI.removeFavoriteVendor(dbUserId, vendor.id.toString());
+                                        setFavoriteVendors(prev => prev.filter(v => v.id !== vendor.id));
+                                    } catch (err) {
+                                        console.error("Error removing favorite vendor:", err);
+                                    }
+                                }}
                             />
                         </GridCol>
                     ))}
@@ -138,12 +177,8 @@ export default function UserContentPage() {
                             leftSection={<IconSearch size={16} />}
                             radius="md"
                             size="md"
-                        />
-                        <Select
-                            placeholder="Filter by category"
-                            clearable
-                            radius="md"
-                            size="md"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.currentTarget.value)}
                         />
                     </Group>
                 </Paper>

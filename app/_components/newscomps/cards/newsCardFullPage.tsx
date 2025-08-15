@@ -1,6 +1,7 @@
 import {Card, Image, Button, Title, Box, Flex, Spoiler, Divider, BackgroundImage} from "@mantine/core";
 import { ArticleInterface } from "@/app/_types/interfaces";
 import {useState} from "react";
+import ConvertDate from "@/app/_components/newscomps/convertDate";
 
 
 export default function NewsCardFullPage({ article }: { article: ArticleInterface } ) {
@@ -9,28 +10,35 @@ export default function NewsCardFullPage({ article }: { article: ArticleInterfac
 
     return(
         <Box>
-            <BackgroundImage
-                src={article.image}
-                radius="md"
-                h="20rem"
-                w='auto'
-            >
-                <Flex
-                    justify="center"
-                    align="flex-end"
-                    h="100%"
+            <Card p={0} radius="md" withBorder={false} shadow="sm">
+                <BackgroundImage
+                    src={article.image}
+                    radius="md"
+                    h="20rem"
+                    w='auto'
                     style={{
-                        background:
-                            'linear-gradient(to top, rgba(0, 0, 0, 0.6) 30%, rgba(0, 0, 0, 0) 100%)',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
                     }}
                 >
-                    <Box p="md" w="100%" style={{ textAlign: 'center', color: 'white' }}>
-                        <Title order={2}>
-                            {article.title}
-                        </Title>
-                    </Box>
-                </Flex>
-            </BackgroundImage>
+                    <Flex
+                        justify="center"
+                        align="flex-end"
+                        h="100%"
+                        style={{
+                            background:
+                                'linear-gradient(to top, rgba(0, 0, 0, 0.6) 30%, rgba(0, 0, 0, 0) 100%)',
+                        }}
+                    >
+                        <Box p="md" w="100%" style={{ textAlign: 'center', color: 'white' }}>
+                            <Title order={2}>
+                                {article.title}
+                            </Title>
+                        </Box>
+                    </Flex>
+                </BackgroundImage>
+            </Card>
 
 
             <Card
@@ -45,7 +53,13 @@ export default function NewsCardFullPage({ article }: { article: ArticleInterfac
                     backgroundColor: '#ebfbee',
                 }}
             >
-                <Title order={4} c="dimmed">{article.created_at.toString()}</Title>
+                <Flex justify='space-between'>
+                    {/*If article.market_label = null, it will not display*/}
+                    <Title order={4} fw={700}>{article.market_label}</Title>
+                    <Title order={4} c="dimmed">
+                        <ConvertDate inputtedDate={article.created_at.toString()} />
+                    </Title>
+                </Flex>
                 <Divider/>
 
                 <Spoiler

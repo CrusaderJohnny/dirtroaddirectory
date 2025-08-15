@@ -57,7 +57,7 @@ export default function ArticlePutForm() {
                 title: selected.title,
                 content: selected.content,
                 imgLink: selected.image,
-                featured: selected.isFeatured === "1",
+                featured: selected.is_featured === "1",
                 summary: selected.summary
             });
         }

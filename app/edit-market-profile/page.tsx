@@ -14,8 +14,6 @@ import {
     Paper
 } from '@mantine/core';
 
-import marketsAPI from '../_components/apicomps/marketsCRUD';
-
 
 import MarketOwnerEditForm from '../_components/dashboardcomps/market_owner_edit_form';
 import { MarketsInterface } from '@/app/_types/interfaces';
@@ -29,7 +27,7 @@ export default function TestMarketFetchPage() {
     const { isLoaded, isSignedIn, user } = useUser();
 
     const UUID = user?.id;
-    console.log("Current UUID: "+UUID);
+    //console.log("Current UUID: "+UUID);
 
     useEffect(() => {
         if (isLoaded && isSignedIn && UUID) {
@@ -38,7 +36,9 @@ export default function TestMarketFetchPage() {
                 setLoading(true);
                 setError(null);
                 try {
-                    const data = await marketsAPI.getMarketByUuid(UUID);
+                    // NEW FETCH USING ROUTES
+                    const response = await fetch(`/api/markets/uuid/${UUID}`)
+                    const data = await response.json();
                     setMarketData(data);
                 } catch (err) {
                     console.error("Error fetching market by UUID:", err);

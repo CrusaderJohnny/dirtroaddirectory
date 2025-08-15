@@ -3,34 +3,34 @@ import {User} from "@clerk/backend";
 import {Roles} from "@/app/_types/globals";
 
 export interface MarketsInterface {
-  id: number;
-  image: string;
-  label: string;
-  description: string;
-  link: string;
-  lat: number;
-  lng: number;
-  hours?: {
-    dateRange: string;
-    days: { day: string; time: string }[];
-  };
-  contact?: {
-    phone?: string;
-    email?: string;
-    website?: string;
-  };
-  socials?: {
-    facebook?: string;
-    instagram?: string;
-  };
-  region?: string;
-  events?: string[];
-  vendors?: {
     id: number;
-    name: string;
-    category: string;
-  }[];
-  uuid?: string;
+    image: string;
+    label: string;
+    description: string;
+    link: string;
+    lat: number;
+    lng: number;
+    hours?: {
+        dateRange: string;
+        days: { day: string; time: string }[];
+    };
+    contact?: {
+        phone?: string;
+        email?: string;
+        website?: string;
+    };
+    socials?: {
+        facebook?: string;
+        instagram?: string;
+    };
+    region?: string;
+    events?: string[];
+    vendors?: {
+        id: number;
+        name: string;
+        category: string;
+    }[];
+    uuid?: string;
 }
 
 export interface MarketGridProps {
@@ -68,6 +68,7 @@ export interface VendorsInterface {
   markets: number[];
   products?: string[];
   description: string;
+  uuid?: string;
 }
 
 export interface UserInfoInterface {
@@ -115,17 +116,24 @@ export interface ArticleInterface {
     content: string;
     created_at: Date;
     image: string;
-    isFeatured: string;
+    is_featured: string;
     summary:  string;
 }
 
+export interface ReferencesInterface {
+    title: string;
+    logo_image: string;
+    website: string;
+    content: string;
+}
+
 export interface ContactMessageInterface {
-  id: number;
-  name: string;
-  email: string;
-  subject?: string; 
-  message: string;
-  created_at: string;
+    id: number;
+    name: string;
+    email: string;
+    subject?: string;
+    message: string;
+    created_at: string;
 }
 
 export interface ImageUploaderProps {
