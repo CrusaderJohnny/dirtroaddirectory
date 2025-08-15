@@ -341,7 +341,7 @@ export default function MarketContent() {
 
     // Default view for all markets (when no marketId is in search params)
     return (
-        <AppShellMain style={{ minHeight: '100vh', paddingTop: 0}}>
+        <AppShellMain>
             <Container
                 size="xl"
                 px="lg"
