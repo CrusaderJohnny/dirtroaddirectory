@@ -9,7 +9,7 @@ import {
     ActionIcon,
     useMantineTheme
 } from '@mantine/core';
-import { IconHeart, IconHeartFilled } from '@tabler/icons-react';
+import { IconStar, IconStarFilled } from '@tabler/icons-react';
 import { VendorsInterface } from '@/app/_types/interfaces';
 
 interface VendorCardProps {
@@ -37,13 +37,13 @@ export default function VendorCard({ vendor, isFavorited, onToggleFavorite }: Ve
                 <ActionIcon
                     variant="light"
                     onClick={(e) => {
-                        e.preventDefault();
+                        e.preventDefault(); // prevent link navigation
                         onToggleFavorite();
                     }}
-                    style={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
-                    color="red"
+                    style={{ position: "absolute", bottom: 8, right: 8, zIndex: 10 }}
+                    color="yellow"
                 >
-                    {isFavorited ? <IconHeartFilled size={20} /> : <IconHeart size={20} />}
+                    {isFavorited ? <IconStarFilled size={20} /> : <IconStar size={20} />}
                 </ActionIcon>
             )}
             <Link href={`/vendors?vendorId=${vendor.id}`} passHref>
