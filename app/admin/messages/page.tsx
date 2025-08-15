@@ -40,7 +40,7 @@ import {
   fetchReadMessageIds,
   markMessageAsRead,
   markMessageAsUnread,
-} from "@/app/_components/apicomps/fetchContactMessages";
+} from "@/app/_components/contactmessages/fetchContactMessages";
 
 export default function ContactMessagesPage() {
   const [messages, setMessages] = useState<ContactMessageInterface[]>([]);
