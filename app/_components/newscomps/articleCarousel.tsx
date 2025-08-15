@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Carousel } from '@mantine/carousel';
 import { Card, Text, Box, Button } from '@mantine/core';
 import Autoplay from 'embla-carousel-autoplay';
@@ -8,24 +8,21 @@ import Autoplay from 'embla-carousel-autoplay';
 import { ArticleInterface } from "@/app/_types/interfaces";
 import NewsCardSmall from "@/app/_components/newscomps/cards/newsCardSmall";
 
-export default function ArticleCarousel({
-                                            articles,
-                                            height,
-                                        }: {
+export default function ArticleCarousel( { articles, height } : {
     articles: ArticleInterface[];
     height?: number | string;
 }) {
     const autoplay = useRef(Autoplay({ delay: 4500 }));
 
-    // Filter out featured article(s)
-    const nonFeaturedArticles = articles.filter(article => !article.isFeatured);
 
-    // Create slides from remaining articles
-    const slides = nonFeaturedArticles.map(article => (
+    const slides = articles.map(article => (
         <Carousel.Slide key={article.post_id}>
             <NewsCardSmall article={article} />
         </Carousel.Slide>
     ));
+
+    // button hover state to change text
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <Card
@@ -67,11 +64,15 @@ export default function ArticleCarousel({
 
             {/* Call-to-action Section */}
             <Box mt="xs">
-                <Text size="lg" fw={700} ta="center" mb="xs">
-                    Want Your Story Featured?
-                </Text>
-                <Button component="a" href="/contact" fullWidth size="sm">
-                    Contact Us
+                <Button
+                    component="a"
+                    href="/contact"
+                    fullWidth
+                    size="sm"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    {isHovered ? "Contact Us!" : "Want your story Featured ?"}
                 </Button>
             </Box>
         </Card>

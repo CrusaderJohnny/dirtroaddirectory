@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, Container, Text } from "@mantine/core";
 import { ArticleInterface } from "@/app/_types/interfaces";
@@ -18,22 +18,34 @@ export default function ArticleDetailsContent() {
     useEffect(() => {
         const getArticle = async () => {
             if (articleId === null || isNaN(articleId)) {
+                console.error('ArticleDetailsContent: Invalid or missing articleId, cannot fetch.');
                 setError("Invalid article ID");
                 setLoading(false);
                 return;
             }
 
             try {
-                const response = await fetch('/api/articles/' + articleId);
+                const url = `/api/articles/${articleId}`;
+                const response = await fetch(url, { cache: 'no-store' });
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        setError("Article not found");
+                    } else {
+                        setError(`Failed to fetch article: HTTP status ${response.status}`);
+                    }
+                    setLoading(false);
+                    return;
+                }
+
                 const data: ArticleInterface = await response.json();
 
-                if (!data || data.post_id !== articleId) {
+                if (!data || Number(data.post_id) !== articleId) {
                     setError("Article not found");
                 } else {
                     setArticle(data);
                 }
             } catch (err) {
-                console.error("Error fetching article:", err);
+                console.error("ArticleDetailsContent: Error fetching article:", err);
                 setError("Failed to fetch article");
             } finally {
                 setLoading(false);
@@ -41,7 +53,7 @@ export default function ArticleDetailsContent() {
         };
 
         void getArticle();
-    }, [articleId]);
+    }, [articleId, articleIdParam]);
 
     if (loading) {
         return (
