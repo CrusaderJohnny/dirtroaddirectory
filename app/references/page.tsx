@@ -25,10 +25,6 @@ export default function Page() {
             <AppShellMain>
                 <Container size="xl" py="xl">
                     <Card mb="xl"
-                          style={{
-                              background: 'linear-gradient(135deg, #226a38 0%, #dee2e6 50%, #226a38 100%)', // A rainbow-like gradient at an angle
-                              color: 'black', // Text color
-                          }}
                     >
                         <Title order={1} ta="center" pb="md">Technologies Used</Title>
                         <Divider/>
