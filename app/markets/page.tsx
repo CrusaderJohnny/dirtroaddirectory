@@ -14,12 +14,10 @@ export default function Page() {
 
         <AppShell>
             <AppShellHeader component={NavMT} />
-            <AppShellMain>
                 {/* Wrap the client component that uses useSearchParams in Suspense */}
                 <Suspense fallback={<div>Loading markets...</div>}>
                     <MarketsContent />
                 </Suspense>
-            </AppShellMain>
         </AppShell>
     );
 }

@@ -347,7 +347,7 @@ export default function MarketContent() {
                 px="lg"
                 style={{ maxWidth: '1400px', margin: '0 auto', overflowY: 'hidden' }}
             >
-                <Paper shadow="md" p="lg" mb="xl" mt="xl" withBorder radius="md" bg="white">
+                <Paper shadow="md" p="lg" mt="xl" mb="lg" withBorder radius="md" bg="white">
                     <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Markets</Title>
                     <Text size="sm" c="dimmed" mb="md">Browse verified farmers&apos; markets by name or region</Text>
                     <Group mb="lg" grow>
