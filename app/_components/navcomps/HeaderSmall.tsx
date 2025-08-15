@@ -29,11 +29,21 @@ import {
     IconLockCode,
     IconHeartStar
 } from '@tabler/icons-react';
+// import {checkRole} from "@/_utils/roles";
 
 export default function HeaderSmall() {
     const [opened, {open, close}] = useDisclosure(false);
     const isMobile = useMediaQuery('(max-width: 20rem)');
-    const {user} = useUser();
+
+    // isLoaded boolean to handle the asynchronous nature of Clerk
+    const {user, isLoaded} = useUser();
+
+    // If the user data hasn't loaded yet, return null or a loading state.
+    // This prevents the component from rendering with an undefined 'user' object.
+    if (!isLoaded) {
+        return null;
+    }
+
     const isAdmin = user?.publicMetadata?.role === 'admin';
 
     return (
