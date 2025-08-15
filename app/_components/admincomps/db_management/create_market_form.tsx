@@ -317,9 +317,9 @@ export default function CreateMarketForm() {
             */}
 
             <ImageUploader
-                onImageUploadAction={(url) => form.setFieldValue('image', url)}
+                onImageUploadAction={(url) => form.setFieldValue('image', url ?? '')} // Set to empty string if null
                 signatureEndpoint={"/api/sign-cloudinary-params"}
-                initialImage={form.values.image} // Correctly pass the current form image value
+                initialImage={form.values.image}
             />
 
             <Textarea

@@ -18,6 +18,7 @@ import { isNotEmpty, isEmail } from '@mantine/form';
 import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces"; // Import both interfaces
 import { notifications } from '@mantine/notifications';
 import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
+import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 
 export default function CreateVendorForm() {
     const [allVendors, setAllVendors] = useState<VendorsInterface[]>([]);
@@ -333,6 +334,7 @@ export default function CreateVendorForm() {
                     disabled={isSaving}
                 />
 
+                {/*
                 <TextInput
                     label="Image Link (URL)"
                     placeholder=""
@@ -340,6 +342,13 @@ export default function CreateVendorForm() {
                     {...form.getInputProps('image')}
                     mb="md"
                     disabled={isSaving}
+                />
+                */}
+
+                <ImageUploader
+                    onImageUploadAction={(url) => form.setFieldValue('image', url ?? '')} // Set to empty string if null
+                    signatureEndpoint={"/api/sign-cloudinary-params"}
+                    initialImage={form.values.image}
                 />
 
                 <TextInput
