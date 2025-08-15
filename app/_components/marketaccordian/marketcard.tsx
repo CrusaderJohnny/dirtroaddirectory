@@ -32,7 +32,7 @@ export default function MarketCard({ market, isFavorited, onToggleFavorite }: Ma
                         e.preventDefault(); // prevent link navigation
                         onToggleFavorite();
                     }}
-                    style={{ position: "absolute", top: 8, right: 8, zIndex: 10 }}
+                    style={{ position: "absolute", bottom: 8, right: 8, zIndex: 10 }}
                     color="yellow"
                 >
                     {isFavorited ? <IconStarFilled size={20} /> : <IconStar size={20} />}

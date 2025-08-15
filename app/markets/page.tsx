@@ -1,4 +1,4 @@
-import {AppShell, AppShellHeader, AppShellMain} from "@mantine/core";
+import {AppShell, AppShellHeader} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import { Suspense } from 'react';
 import MarketsContent from "@/app/_components/marketcomponents/marketContent";
@@ -14,12 +14,10 @@ export default function Page() {
 
         <AppShell>
             <AppShellHeader component={NavMT} />
-            <AppShellMain>
                 {/* Wrap the client component that uses useSearchParams in Suspense */}
                 <Suspense fallback={<div>Loading markets...</div>}>
                     <MarketsContent />
                 </Suspense>
-            </AppShellMain>
         </AppShell>
     );
 }

@@ -387,11 +387,9 @@ export default function VendorsContent() {
   // --- All vendors list view (fallback) ---
   return (
       <AppShellMain style={{ minHeight: "100vh" }}>
-        <Container size="xl" px="lg" style={{ maxWidth: "1400px", margin: "0 auto" }}>
+        <Container size="xl" px="lg" style={{ maxWidth: "1400px", margin: "0 auto", overflowY: 'hidden' }}>
           <Paper shadow="md" p="lg" mt="xl" mb="lg" withBorder radius="md" bg="white">
-            <Title order={1} mb={4} style={{ fontSize: "2rem", fontWeight: 700 }}>
-              Our Vendors
-            </Title>
+            <Title order={1} mb={4} style={{ fontSize: '2rem', fontWeight: 700, color: '#1f4d2e', fontFamily: 'Georgia, serif' }}>All Vendors</Title>
             <Text size="sm" c="dimmed" mb="md">
               Browse our trusted vendors by name or category
             </Text>
