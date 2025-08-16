@@ -13,7 +13,7 @@ import {
     Grid,
     GridCol,
     Loader,
-    Center, AppShellSection, Flex, AppShell, Card
+    Center, AppShellSection, Flex, AppShell, Card, Button
 } from "@mantine/core";
 import {IconSearch} from "@tabler/icons-react";
 import {useUser} from "@clerk/nextjs";
@@ -232,7 +232,26 @@ export default function UserContentPage() {
         if (activeSegment === 'Markets') {
             const filtered = favoriteMarkets.filter(m => m.label.toLowerCase().includes(searchTerm.toLowerCase()));
             if (filtered.length === 0) {
-                // return <Text size="sm" c="dimmed">No favorite markets match your search.</Text>;
+                return (
+                    <>
+                        <Center h="400px">
+                            <Container size="md" py="xl">
+                                <Card>
+                                    <Flex
+                                        justify="center"
+                                        align="center"
+                                        direction="column"
+                                    >
+                                        <Text size="xl" fw={800} c="balck">No current favorites, visit Market page find to favourites</Text>
+                                        <Button component="a" href="/markets" mt="sm" fullWidth>
+                                            markets
+                                        </Button>
+                                    </Flex>
+                                </Card>
+                            </Container>
+                        </Center>
+                    </>
+                );
             }
             return (
                 <Grid gutter="xl">
@@ -253,7 +272,26 @@ export default function UserContentPage() {
         if (activeSegment === 'Vendors') {
             const filtered = favoriteVendors.filter(v => v.name.toLowerCase().includes(searchTerm.toLowerCase()));
             if (filtered.length === 0) {
-                return <Text size="sm" c="dimmed">No favorite vendors match your search.</Text>;
+                return (
+                    <>
+                        <Center h="400px">
+                            <Container size="md" py="xl">
+                                <Card>
+                                    <Flex
+                                        justify="center"
+                                        align="center"
+                                        direction="column"
+                                    >
+                                        <Text size="xl" fw={800} c="balck">No current favorites, visit Vendor page find to favourites</Text>
+                                        <Button component="a" href="/vendors" mt="sm" fullWidth>
+                                            Vendors
+                                        </Button>
+                                    </Flex>
+                                </Card>
+                            </Container>
+                        </Center>
+                    </>
+                );
             }
             return (
                 <Grid gutter="xl">
