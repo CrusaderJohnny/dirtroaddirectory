@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
-// Ensure the backend URL is set
 if (!BACKEND_API_BASE_URL) {
     console.error("Environment variable BACKEND_URL is not set for users API route.");
     throw new Error("Backend API URL not configured.");
@@ -15,14 +14,12 @@ if (!BACKEND_API_BASE_URL) {
  */
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json(); // Get the JSON body from the frontend request (should contain username and email)
+        const body = await request.json();
 
-        // Note: The old usersAPI used '/users/register' for creating a user.
-        // We'll maintain this convention to match your backend.
         const response = await fetch(`${BACKEND_API_BASE_URL}/users/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body), // Forward the request body to your backend
+            body: JSON.stringify(body),
         });
 
         if (!response.ok) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import {
     AppShellMain,
     Button,
@@ -15,6 +16,8 @@ import {
     Select,
     Paper,
     Grid,
+    Loader,
+    Center,
 } from '@mantine/core';
 import {
     IconPhone,
@@ -26,12 +29,11 @@ import {
     IconCalendar,
 } from '@tabler/icons-react';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import MarketCard from '@/app/_components/marketaccordian/marketcard';
 import { trackEvent } from "@/analytics";
-import { MarketsInterface, VendorsInterface } from '@/app/_types/interfaces';
-import {AnalyticsTracker} from "@/app/_components/analytic-tracking/analyticsTracker";
-import {useUser} from "@clerk/nextjs";
+import { MarketsInterface, VendorsInterface, UserInfoInterface } from '@/app/_types/interfaces';
+import { AnalyticsTracker } from "@/app/_components/analytic-tracking/analyticsTracker";
+import { useUser } from "@clerk/nextjs";
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -42,7 +44,6 @@ export default function MarketContent() {
     const searchParams = useSearchParams();
     const marketId = searchParams.get('marketId');
 
-    // States for holding fetched data
     const [markets, setMarkets] = useState<MarketsInterface[]>([]);
     const [vendors, setVendors] = useState<VendorsInterface[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -51,11 +52,13 @@ export default function MarketContent() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
-    const [favoriteMarketIds, setFavoriteMarketIds] = useState<number[]>([]);
     const { user } = useUser();
+    const [favoriteMarketIds, setFavoriteMarketIds] = useState<number[]>([]);
+    const [dbUserId, setDbUserId] = useState<number | null>(null);
+    const [isTogglingFavorite, setIsTogglingFavorite] = useState<number | null>(null);
 
     useEffect(() => {
-        const loadData = async () => {
+        const loadInitialData = async () => {
             setLoading(true);
             setError(null);
             try {
@@ -72,43 +75,109 @@ export default function MarketContent() {
 
                 setVendors(vendorsData);
                 setMarkets(marketsData);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "Failed to load initial data.");
+                setLoading(false);
+            }
+        };
 
-                if (user && user.id) {
+        loadInitialData();
+    }, []);
+
+    useEffect(() => {
+        const fetchUserAndFavorites = async () => {
+            if (!user || !user.emailAddresses || !user.emailAddresses[0]) {
+                setDbUserId(null);
+                setFavoriteMarketIds([]);
+                setLoading(false);
+                return;
+            }
+
+            const userEmail = user.emailAddresses[0].emailAddress;
+
+            try {
+                const allUsersResponse = await fetch(`/api/users/`);
+                if (!allUsersResponse.ok) {
+                    throw new Error(`Failed to fetch all users: ${allUsersResponse.statusText}`);
+                }
+                const allUsersData: UserInfoInterface[] = await allUsersResponse.json();
+                let matchedUser = allUsersData.find(
+                    (dbUser) => dbUser.email === userEmail
+                );
+
+                if (!matchedUser) {
+                    const username = userEmail.split('@')[0];
+                    const createUserResponse = await fetch('/api/users/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, email: userEmail }),
+                    });
+
+                    if (!createUserResponse.ok) {
+                        const errorData = await createUserResponse.json().catch(() => ({ message: 'Unknown error creating user' }));
+                        throw new Error(errorData.message || `Failed to create user: ${createUserResponse.statusText}`);
+                    }
+
+                    const newUser: UserInfoInterface = await createUserResponse.json();
+                    matchedUser = newUser;
+                }
+
+                if (matchedUser && matchedUser.id) {
+                    setDbUserId(matchedUser.id);
+
+                    // Fetch favorites using the newly found/created user ID
                     try {
-                        // Use the new API route for fetching favorite market IDs
-                        const favsResponse = await fetch(`/api/users/${user.id}/favourite-markets`);
+                        const favsResponse = await fetch(`/api/users/${matchedUser.id}/favourite-markets`);
                         if (!favsResponse.ok) {
-                            throw new Error(`Failed to fetch favorite market IDs: ${favsResponse.statusText}`);
+                            if (favsResponse.status === 404) {
+                                setFavoriteMarketIds([]);
+                            } else {
+                                throw new Error(`Failed to fetch favorite market IDs: ${favsResponse.statusText}`);
+                            }
+                        } else {
+                            const favMarketIds: string[] = await favsResponse.json();
+                            const numericFavs = favMarketIds.map(Number).filter(Number.isFinite);
+                            setFavoriteMarketIds(numericFavs);
                         }
-                        const favs: string[] = await favsResponse.json();
-
-                        const numericFavs = favs
-                            .map((id) => Number(id))
-                            .filter((n) => Number.isFinite(n));
-                        setFavoriteMarketIds(numericFavs);
                     } catch (favErr) {
                         console.error("Failed to fetch favorites:", favErr);
+                        setFavoriteMarketIds([]);
                     }
+                } else {
+                    console.error("Matched user has no ID.");
+                    setDbUserId(null);
+                    setFavoriteMarketIds([]);
                 }
             } catch (err) {
-                console.error("Failed to load data:", err);
-                setError(err instanceof Error ? err.message : "Failed to load data.");
+                console.error("Failed to process user or fetch favorites:", err);
+                setError(err instanceof Error ? err.message : "An unknown error occurred.");
+                setDbUserId(null);
+                setFavoriteMarketIds([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        loadData();
-    }, [user]);
+        if (user && markets.length > 0) {
+            fetchUserAndFavorites();
+        } else if (!user && markets.length > 0) {
+            setLoading(false);
+        }
+    }, [user, markets]);
 
     const toggleFavorite = async (marketId: number) => {
-        if (!user || !user.id) return; // Ensure user and user.id exist
+        setIsTogglingFavorite(marketId);
+
+        if (!user || dbUserId === null) {
+            console.error("User or database ID is not available. Cannot toggle favorite.");
+            setIsTogglingFavorite(null);
+            return;
+        }
 
         const isFav = favoriteMarketIds.includes(marketId);
         try {
             if (isFav) {
-                // Use the new API route for removing a favorite
-                const response = await fetch(`/api/users/${user.id}/favourite-markets/${marketId.toString()}`, {
+                const response = await fetch(`/api/users/${dbUserId}/favourite-markets/${marketId.toString()}`, {
                     method: "DELETE",
                 });
                 if (!response.ok) {
@@ -117,11 +186,10 @@ export default function MarketContent() {
                 }
                 setFavoriteMarketIds((prev) => prev.filter((id) => id !== marketId));
             } else {
-                // Use the new API route for adding a favorite
-                const response = await fetch(`/api/users/${user.id}/favourite-markets`, {
+                const response = await fetch(`/api/users/${dbUserId}/favourite-markets`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ market_id: marketId.toString() }),
+                    body: JSON.stringify({ market_id: marketId }), // Changed to pass as number
                 });
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({ message: 'Unknown error adding favorite' }));
@@ -131,15 +199,13 @@ export default function MarketContent() {
             }
         } catch (err) {
             console.error("Error updating favorite:", err);
-            // Optionally, show a user-friendly message for the error
+        } finally {
+            setIsTogglingFavorite(null);
         }
     };
 
-
     const selectedMarket = markets.find((v) => v.id === Number(marketId));
-
     const allRegions = [...new Set(markets.map((market) => market.region as string))].filter(Boolean);
-
     const filteredMarkets = markets.filter((market) => {
         const matchesName = market.label.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesRegion = selectedRegion ? market.region === selectedRegion : true;
@@ -157,16 +223,18 @@ export default function MarketContent() {
     };
 
     useEffect(() => {
-        if(selectedMarket){
+        if (selectedMarket) {
             handleMarketView(selectedMarket.label as string).then();
         }
     }, [selectedMarket]);
 
-    // Add loading and error states for initial render
     if (loading) {
         return (
             <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Text size="xl">Loading market data...</Text>
+                <Center>
+                    <Loader size="xl" />
+                    <Text ml="sm">Loading market data...</Text>
+                </Center>
             </AppShellMain>
         );
     }
@@ -179,8 +247,7 @@ export default function MarketContent() {
         );
     }
 
-    // Conditional rendering for a specific market profile
-    if (marketId && selectedMarket) { // Check if marketId is present and selectedMarket is found
+    if (marketId && selectedMarket) {
         return (
             <AppShellMain style={{ minHeight: '100vh' }}>
                 <Container size="lg" py="xl">
@@ -216,7 +283,6 @@ export default function MarketContent() {
                         </div>
                     </motion.div>
 
-                    {/* Description */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
                         <Card withBorder radius="md" mb="lg" p="lg" style={{ backgroundColor: '#ffffff', textAlign: 'left' }}>
                             <Title order={3} mb="xs" c="#1f4d2e">Description</Title>
@@ -224,10 +290,8 @@ export default function MarketContent() {
                         </Card>
                     </motion.div>
 
-                    {/* Info Cards */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
                         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg" mb="lg">
-                            {/* Location */}
                             <Card withBorder radius="md" p="lg" style={{ backgroundColor: '#ffffff', textAlign: 'left' }}>
                                 <Group align="center" mb="xs">
                                     <IconMapPin size={20} color="#f26522" />
@@ -236,7 +300,6 @@ export default function MarketContent() {
                                 <Text size="sm">{selectedMarket.region}</Text>
                             </Card>
 
-                            {/* Hours of Operation */}
                             <Card withBorder radius="md" p="lg" style={{ backgroundColor: '#ffffff', textAlign: 'left' }}>
                                 <Group align="center" mb="xs">
                                     <IconCalendar size={20} color="#f26522" />
@@ -260,7 +323,6 @@ export default function MarketContent() {
                                 )}
                             </Card>
 
-                            {/* Contact */}
                             <Card withBorder radius="md" p="lg" style={{ backgroundColor: '#ffffff', textAlign: 'left' }}>
                                 <Group align="center" mb="xs">
                                     <IconPhone size={20} color="#f26522" />
@@ -270,7 +332,6 @@ export default function MarketContent() {
                                 <Text size="sm"><strong>Email:</strong> {selectedMarket.contact?.email || 'Not available'}</Text>
                             </Card>
 
-                            {/* Social Media */}
                             <Card withBorder radius="md" p="lg" style={{ backgroundColor: '#ffffff', textAlign: 'left' }}>
                                 <Group align="center" mb="xs">
                                     <IconBrandFacebook size={20} color="#f26522" />
@@ -288,7 +349,6 @@ export default function MarketContent() {
                         </SimpleGrid>
                     </motion.div>
 
-                    {/* Events */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
                         <Card withBorder radius="md" p="lg" mb="lg" style={{ backgroundColor: '#f5deb3', textAlign: 'left' }}>
                             <Title order={4} c="#1f4d2e" mb="xs">Events</Title>
@@ -296,14 +356,12 @@ export default function MarketContent() {
                         </Card>
                     </motion.div>
 
-                    {/* Vendors */}
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}>
                         <Card withBorder radius="md" p="lg" style={{ backgroundColor: '#ffffff', textAlign: 'left' }}>
                             <Title order={4} c="#1f4d2e" mb="sm">Vendors at this Market</Title>
                             {Array.isArray(selectedMarket.vendors) && selectedMarket.vendors.length > 0 ? (
                                 <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="sm">
                                     {selectedMarket.vendors.map((vendor) => {
-                                        // Use the fetched 'vendors' array
                                         const vendorDetails = vendors.find((v) => v.id === vendor.id);
                                         return (
                                             <Card
@@ -339,7 +397,6 @@ export default function MarketContent() {
         );
     }
 
-    // Default view for all markets (when no marketId is in search params)
     return (
         <AppShellMain>
             <Container
@@ -362,6 +419,7 @@ export default function MarketContent() {
                                 market={market}
                                 isFavorited={favoriteMarketIds.includes(market.id)}
                                 onToggleFavorite={() => toggleFavorite(market.id)}
+                                isTogglingFavorite={isTogglingFavorite === market.id}
                             />
                         </Grid.Col>
                     ))}

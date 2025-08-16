@@ -8,9 +8,8 @@ export default function ArticleDetailsPage() {
         <AppShell
             header={{ height: '7vh' }}
         >
-            <AppShellHeader component={NavMT}/>{/* NavMT seems to be a client component, which is fine outside Suspense */}
+            <AppShellHeader component={NavMT}/>
             <AppShellMain>
-                {/* Wrap the client component that uses useSearchParams in Suspense */}
                 <Suspense fallback={<div>Loading article details...</div>}>
                     <ArticleDetailsContent />
                 </Suspense>

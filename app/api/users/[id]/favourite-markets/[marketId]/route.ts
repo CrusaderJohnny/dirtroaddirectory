@@ -1,84 +1,49 @@
+// src/app/api/users/[id]/favourite-markets/[marketId]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
-// Ensure the backend URL is set
 if (!BACKEND_API_BASE_URL) {
     console.error("Environment variable BACKEND_URL is not set for favorite markets API route.");
     throw new Error("Backend API URL not configured.");
 }
 
 /**
- * Handles GET requests to /api/users/:id/favourite-markets (fetches all favorite market IDs for a user).
- * Corresponds to the old favoritesMarketAPI.getFavoriteMarketIds().
- * @param request The NextRequest object.
- * @param params Contains the dynamic 'id' (user ID) from the URL.
+ * Handles DELETE requests to /api/users/:userId/favourite-markets/:marketId (removes a favorite market).
  */
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    // Await params before destructuring
-    const { id: userId } = await params;
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string; marketId: string }> }) {
 
-    // Basic validation for userId format
-    if (!userId) {
-        return NextResponse.json({ message: 'User ID is missing.' }, { status: 400 });
+    const { id: userId, marketId } = await params;
+
+    // console.log(`[Market DELETE Route] Received userId: "${userId}", marketId: "${marketId}"`);
+
+    if (!userId || !marketId) {
+        // console.error("[Market DELETE Route] User ID or Market ID is missing after parsing params.");
+        return NextResponse.json({ message: 'User ID or Market ID is missing.' }, { status: 400 });
     }
 
     try {
-        const response = await fetch(`${BACKEND_API_BASE_URL}/users/${userId}/favourite-markets`);
+        const requestUrl = `${BACKEND_API_BASE_URL}/users/${userId}/favourite-markets/${marketId}`;
+        // console.log(`[Market DELETE Route] Sending DELETE request to backend: ${requestUrl}`);
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend' }));
-            return NextResponse.json(errorData, { status: response.status });
-        }
-
-        const data = await response.json();
-        // The old CRUD mapped to string IDs, so we'll maintain that consistency
-        const favoriteMarketIds = data.map((market: { id: number }) => market.id.toString());
-        return NextResponse.json(favoriteMarketIds);
-    } catch (error) {
-        console.error(`Error in Next.js API route (GET /api/users/${userId}/favourite-markets):`, error);
-        return NextResponse.json({ message: "Internal Server Error while fetching favorite markets." }, { status: 500 });
-    }
-}
-
-/**
- * Handles POST requests to /api/users/:id/favourite-markets (adds a market to a user's favorites).
- * Corresponds to the old favoritesMarketAPI.addFavoriteMarket().
- * @param request The NextRequest object, used to get the request body.
- * @param params Contains the dynamic 'id' (user ID) from the URL.
- */
-export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    // Await params before destructuring
-    const { id: userId } = await params;
-
-    // Basic validation for userId format
-    if (!userId) {
-        return NextResponse.json({ message: 'User ID is missing.' }, { status: 400 });
-    }
-
-    try {
-        const body = await request.json(); // Expected to contain { market_id: string }
-
-        // Ensure market_id is present in the request body
-        if (!body.market_id) {
-            return NextResponse.json({ message: 'market_id is required in the request body.' }, { status: 400 });
-        }
-
-        const response = await fetch(`${BACKEND_API_BASE_URL}/users/${userId}/favourite-markets`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: userId, market_id: body.market_id }), // Ensure body matches backend expectation
+        const response = await fetch(requestUrl, {
+            method: 'DELETE',
         });
 
+        // console.log(`[Market DELETE Route] Backend response status: ${response.status}`);
+
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend' }));
+            const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend (non-JSON)' }));
+            // console.error(`[Market DELETE Route] Backend response not OK. Error details:`, errorData);
             return NextResponse.json(errorData, { status: response.status });
         }
 
-        const data = await response.json(); // Assuming backend returns some success data
-        return NextResponse.json(data, { status: response.status });
+        // console.log(`[Market DELETE Route] Successfully deleted favorite market.`);
+        // Return a success response, typically 204 No Content for successful deletion
+        return new NextResponse(null, { status: 204 });
+
     } catch (error) {
-        console.error(`Error in Next.js API route (POST /api/users/${userId}/favourite-markets):`, error);
-        return NextResponse.json({ message: "Internal Server Error while adding favorite market." }, { status: 500 });
+        console.error(`[Market DELETE Route] Caught an error during backend fetch:`, error);
+        return NextResponse.json({ message: "Internal Server Error while deleting favorite market." }, { status: 500 });
     }
 }

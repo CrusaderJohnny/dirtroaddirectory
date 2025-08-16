@@ -14,20 +14,14 @@ import {
     GridCol,
     Card,
     Loader,
+    Center,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import { MarketsInterface, VendorsInterface } from "@/app/_types/interfaces";
+import { MarketsInterface, VendorsInterface, UserInfoInterface } from "@/app/_types/interfaces";
 import MarketCard from "@/app/_components/marketaccordian/marketcard";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
-
-// Need to delete and replace with routes
-import favoritesMarketAPI from "@/app/userfavs/toBeDeleted/favoritesMarketCRUD";
-import favoriteVendorsAPI from "@/app/userfavs/toBeDeleted/favoriteVendorCRUD";
-import marketsAPI from "@/app/userfavs/toBeDeleted/marketsCRUD";
-import vendorsAPI from "@/app/userfavs/toBeDeleted/vendorsCRUD";
-import usersAPI from "@/app/userfavs/toBeDeleted/usersCRUD";
 
 export default function UserContentPage() {
     const { user } = useUser();
@@ -35,61 +29,180 @@ export default function UserContentPage() {
 
     const [favoriteMarkets, setFavoriteMarkets] = useState<MarketsInterface[]>([]);
     const [favoriteVendors, setFavoriteVendors] = useState<VendorsInterface[]>([]);
+
     const [loading, setLoading] = useState(false);
     const [dbUserId, setDbUserId] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const [togglingItemId, setTogglingItemId] = useState<number | null>(null);
 
     useEffect(() => {
         const loadFavorites = async () => {
-            if (!user) return;
-            setLoading(true);
+            if (!user || !user.emailAddresses || !user.emailAddresses[0]) {
+                setLoading(false);
+                return;
+            }
 
+            setLoading(true);
             try {
-                const allUsers = await usersAPI.getAllUsers();
+                // 1. Fetch all users from your Next.js API route
+                const usersResponse = await fetch(`/api/users`);
+                if (!usersResponse.ok) {
+                    const errorText = await usersResponse.text();
+                    throw new Error(`Failed to fetch all users: ${usersResponse.statusText}. Response: ${errorText}`);
+                }
+                const allUsers: UserInfoInterface[] = await usersResponse.json();
+
                 const matchedUser = allUsers.find(
                     (u) => u.email === user.emailAddresses[0].emailAddress
                 );
 
-                if (!matchedUser) {
-                    console.warn("No DB user found for Clerk email");
+                if (!matchedUser || !matchedUser.id) {
+                    console.warn("No DB user found for Clerk email or user ID missing. Cannot load favorites.");
+                    setLoading(false);
                     return;
                 }
 
-                const dbId = matchedUser.id.toString();
-                setDbUserId(dbId);
+                const currentDbUserId = matchedUser.id.toString();
+                setDbUserId(currentDbUserId);
 
-                const [favMarketIds, favVendorIds] = await Promise.all([
-                    favoritesMarketAPI.getFavoriteMarketIds(dbId),
-                    favoriteVendorsAPI.getFavoriteVendorIds(dbId),
+                // 2. Fetch favorite market and vendor IDs using new API routes
+                const [favMarketIdsResponse, favVendorIdsResponse] = await Promise.all([
+                    fetch(`/api/users/${currentDbUserId}/favourite-markets`),
+                    fetch(`/api/users/${currentDbUserId}/favourite-vendors`),
                 ]);
 
-                const [allMarkets, allVendors] = await Promise.all([
-                    marketsAPI.getMarkets(),
-                    vendorsAPI.getVendors(),
+                let favMarketIdsNumbers: number[] = [];
+                if (!favMarketIdsResponse.ok) {
+                    if (favMarketIdsResponse.status === 404) {
+                    } else {
+                        const errorText = await favMarketIdsResponse.text();
+                        console.error(`[UserContentPage] Failed to fetch favorite market IDs: ${favMarketIdsResponse.statusText}. Response: ${errorText}`);
+                    }
+                } else {
+                    const favMarketIdsStrings: string[] = await favMarketIdsResponse.json();
+                    favMarketIdsNumbers = favMarketIdsStrings.map(Number).filter(Number.isFinite);
+                }
+
+                let favVendorIdsNumbers: number[] = [];
+                if (!favVendorIdsResponse.ok) {
+                    if (favVendorIdsResponse.status === 404) {
+                    } else {
+                        const errorText = await favVendorIdsResponse.text();
+                        console.error(`[UserContentPage] Failed to fetch favorite vendor IDs: ${favVendorIdsResponse.statusText}. Response: ${errorText}`);
+                    }
+                } else {
+                    const favVendorIdsStrings: string[] = await favVendorIdsResponse.json();
+                    favVendorIdsNumbers = favVendorIdsStrings.map(Number).filter(Number.isFinite);
+                }
+
+
+                // 3. Fetch all markets and vendors
+                const [allMarketsResponse, allVendorsResponse] = await Promise.all([
+                    fetch(`/api/markets`),
+                    fetch(`/api/vendors`),
                 ]);
 
+                if (!allMarketsResponse.ok) {
+                    const errorText = await allMarketsResponse.text();
+                    throw new Error(`Failed to fetch all markets: ${allMarketsResponse.statusText}. Response: ${errorText}`);
+                }
+                if (!allVendorsResponse.ok) {
+                    const errorText = await allVendorsResponse.text();
+                    throw new Error(`Failed to fetch all vendors: ${allVendorsResponse.statusText}. Response: ${errorText}`);
+                }
+
+                const allMarkets: MarketsInterface[] = await allMarketsResponse.json();
+                const allVendors: VendorsInterface[] = await allVendorsResponse.json();
+
+                // Filter based on fetched favorite IDs (all as numbers now)
                 const filteredMarkets = allMarkets.filter(
-                    (market) => favMarketIds.includes(market.id.toString())
-                );
-                const filteredVendors = allVendors.filter(
-                    (vendor) => favVendorIds.includes(vendor.id.toString())
+                    (market) => favMarketIdsNumbers.includes(market.id)
                 );
 
+                const filteredVendors = allVendors.filter(
+                    (vendor) => {
+                        const isFavorited = favVendorIdsNumbers.includes(vendor.id);
+                        console.log(`[UserContentPage Filter] Vendor: '${vendor.name}' (ID: ${vendor.id}, Type: ${typeof vendor.id}), favVendorIdsNumbers includes ${vendor.id}?: ${isFavorited}`);
+                        return isFavorited;
+                    }
+                );
                 setFavoriteMarkets(filteredMarkets);
                 setFavoriteVendors(filteredVendors);
+
             } catch (err) {
-                console.error("[Favorites Page] Failed to load favorites:", err);
+                console.error("[Favorites Page] Fatal error during loadFavorites:", err);
             } finally {
                 setLoading(false);
             }
         };
 
         loadFavorites();
-    }, [user, activeSegment]);
+    }, [user]);
+
+    const handleToggleMarketFavorite = async (marketId: number) => {
+        if (!dbUserId) {
+            console.error("DB User ID is not available. Cannot toggle market favorite.");
+            return;
+        }
+
+        setTogglingItemId(marketId);
+        try {
+            const response = await fetch(`/api/users/${dbUserId}/favourite-markets/${marketId.toString()}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || `Failed to remove favorite market: ${response.statusText}`);
+            }
+
+            setFavoriteMarkets(prev => {
+                const updated = prev.filter(m => m.id !== marketId);
+                return updated;
+            });
+        } catch (err) {
+            console.error("Error removing favorite market:", err);
+        } finally {
+            setTogglingItemId(null);
+        }
+    };
+
+    const handleToggleVendorFavorite = async (vendorId: number) => {
+        if (!dbUserId) {
+            console.error("DB User ID is not available. Cannot toggle vendor favorite.");
+            return;
+        }
+
+        setTogglingItemId(vendorId);
+        try {
+            const response = await fetch(`/api/users/${dbUserId}/favourite-vendors/${vendorId.toString()}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || `Failed to remove favorite vendor: ${response.statusText}`);
+            }
+
+            setFavoriteVendors(prev => {
+                const updated = prev.filter(v => v.id !== vendorId);
+                return updated;
+            });
+        } catch (err) {
+            console.error("Error removing favorite vendor:", err);
+        } finally { // Corrected syntax for finally block
+            setTogglingItemId(null);
+        }
+    };
 
     const renderCards = () => {
         if (loading) {
-            return <Loader size="lg" />;
+            return (
+                <Center style={{ minHeight: '200px' }}>
+                    <Loader size="lg" />
+                    <Text ml="sm">Loading your favorites...</Text>
+                </Center>
+            );
         }
 
         if (activeSegment === 'Markets') {
@@ -104,15 +217,8 @@ export default function UserContentPage() {
                             <MarketCard
                                 market={market}
                                 isFavorited={true}
-                                onToggleFavorite={async () => {
-                                    if (!dbUserId) return;
-                                    try {
-                                        await favoritesMarketAPI.removeFavoriteMarket(dbUserId, market.id.toString());
-                                        setFavoriteMarkets(prev => prev.filter(m => m.id !== market.id));
-                                    } catch (err) {
-                                        console.error("Error removing favorite market:", err);
-                                    }
-                                }}
+                                onToggleFavorite={() => handleToggleMarketFavorite(market.id)}
+                                isTogglingFavorite={togglingItemId === market.id}
                             />
                         </GridCol>
                     ))}
@@ -132,15 +238,8 @@ export default function UserContentPage() {
                             <VendorCard
                                 vendor={vendor}
                                 isFavorited={true}
-                                onToggleFavorite={async () => {
-                                    if (!dbUserId) return;
-                                    try {
-                                        await favoriteVendorsAPI.removeFavoriteVendor(dbUserId, vendor.id.toString());
-                                        setFavoriteVendors(prev => prev.filter(v => v.id !== vendor.id));
-                                    } catch (err) {
-                                        console.error("Error removing favorite vendor:", err);
-                                    }
-                                }}
+                                onToggleFavorite={() => handleToggleVendorFavorite(vendor.id)}
+                                isTogglingFavorite={togglingItemId === vendor.id}
                             />
                         </GridCol>
                     ))}
