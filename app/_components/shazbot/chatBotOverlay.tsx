@@ -11,7 +11,7 @@ import {
     ScrollArea,
     useMantineTheme, ActionIcon,
 } from '@mantine/core';
-import {Message} from "@/app/_types/interfaces";
+import {MarketsInterface, Message, VendorsInterface} from "@/app/_types/interfaces";
 import {IconArrowsMaximize, IconArrowsMinimize, IconMessageCircle, IconX} from "@tabler/icons-react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -20,18 +20,12 @@ import remarkGfm from 'remark-gfm';
 const ChatbotOverlay: React.FC = () => {
     // State to control chat pop up
     const [isChatReal, setIsChatReal] = useState(false);
-    const date = new Date();
-    // State to hold the chat messages
-    const [messages, setMessages] = useState<Message[]>([
-        // SYSTEM MESSAGE: This instructs the AI on its behavior. It is NOT displayed to the user.
-        { role: "system", content: `You are an AI assistant that helps people find information. Todays date is ${date.toLocaleDateString()}` },
-        // ASSISTANT WELCOME MESSAGE: This is displayed to the user when the chat opens.
-        { role: 'assistant', content: "Hello! I'm FarmHand, An AI to help you find information. How can I help you today?" },
-    ]);
     // State for the current user input
     const [input, setInput] = useState<string>("");
     // State to indicate if the assistant is currently generating a response
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    // State to indicate if initial system message was loaded
+    const hasAddedSystemMessage = useRef<boolean>(false);
     // Ref for auto-scrolling to the bottom of the chat
     const scrollViewAreaRef = useRef<HTMLDivElement>(null);
     // State for enlarging chat
@@ -39,6 +33,62 @@ const ChatbotOverlay: React.FC = () => {
 
     // Get Mantine theme for custom styling
     const theme = useMantineTheme();
+
+    const [markets, setMarkets] = useState<MarketsInterface[]>([]);
+    const [vendors, setVendors] = useState<VendorsInterface[]>([]);
+
+    // State to hold the chat messages
+    const [messages, setMessages] = useState<Message[]>([
+        { role: 'assistant', content: "Hello! I'm FarmHand, an AI to help you find information. How can I help you today?" },
+    ]);
+
+    useEffect(() => {
+        const fetchMarketData = async () => {
+            try {
+                const response = await fetch('/api/markets');
+                if(!response.ok) {
+                    console.error(`HTTP error! Status: ${response.status}`);
+                }
+                const data: MarketsInterface[] = await response.json();
+                setMarkets(data);
+            } catch (error) {
+                console.error("Error fetching markets:", error);
+            }
+        };
+        const fetchVendorData = async () => {
+            try {
+                const response = await fetch('/api/vendors');
+                if(!response.ok) {
+                    console.error(`HTTP error! Status: ${response.status}`);
+                }
+                const data: VendorsInterface[] = await response.json();
+                setVendors(data);
+            } catch (error) {
+                console.error("Error fetching vendors:", error);
+            }
+        };
+        fetchMarketData();
+        fetchVendorData();
+    }, []);
+
+    useEffect(() => {
+        if(markets.length > 0 && vendors.length > 0 && !hasAddedSystemMessage.current) {
+            const date = new Date();
+            const systemMessage: Message = {
+                role: "system",
+                content: `
+                    You are a specialized AI assistant that provides information about farmers' markets and vendors.
+                    You must ONLY use the provided JSON data to answer user questions.
+                    If a user asks for information that is not in the data, politely state that you do not have that information.
+                    Do not guess, make up, or hallucinate information.
+                    Here is the data you must use:\n\nMarkets: ${JSON.stringify(markets)}\nVendors: ${JSON.stringify(vendors)}
+                    Here is today's date as well: ${date}.
+                `
+            };
+            setMessages(prevMessages => [systemMessage, ...prevMessages]);
+            hasAddedSystemMessage.current = true;
+        }
+    }, [markets, vendors]);
 
     /**
      * Handles sending a user message to the chatbot.
@@ -48,7 +98,6 @@ const ChatbotOverlay: React.FC = () => {
     const sendMessage = async (userMessage: string) => {
         // Prevent sending empty messages
         if (!userMessage.trim()) return;
-
         // Add the user's message to the chat history
         const newMessages: Message[] = [...messages, { role: "user", content: userMessage }];
         setMessages(newMessages);
