@@ -60,14 +60,18 @@ export default function ArticleDetailsContent() {
             <AppShell>
                 <AppShellSection>
                     <Center h="400px">
-                        <Flex
-                            justify="center"
-                            align="center"
-                            direction="column"
-                        >
-                            <Text size="xl" fw={800} c="gray">Loading Article...</Text>
-                            <Loader size={50} color="green"/>
-                        </Flex>
+                        <Container size="md" py="xl">
+                            <Card>
+                                <Flex
+                                    justify="center"
+                                    align="center"
+                                    direction="column"
+                                >
+                                    <Text size="xl" fw={800} c="black">Loading Article...</Text>
+                                    <Loader size={50} color="green"/>
+                                </Flex>
+                            </Card>
+                        </Container>
                     </Center>
                 </AppShellSection>
             </AppShell>

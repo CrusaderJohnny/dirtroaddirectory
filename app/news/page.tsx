@@ -12,7 +12,7 @@ import {
     Loader,
     Flex,
     Center,
-    Card,
+    Card
 } from '@mantine/core';
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
@@ -52,14 +52,18 @@ export default function Page() {
             <AppShell>
                 <AppShellSection>
                     <Center h="400px">
-                        <Flex
-                            justify="center"
-                            align="center"
-                            direction="column"
-                        >
-                            <Text size="xl" fw={800} c="gray">Loading Articles...</Text>
-                            <Loader size={50} color="green"/>
-                        </Flex>
+                        <Container size="md" py="xl">
+                            <Card>
+                                <Flex
+                                    justify="center"
+                                    align="center"
+                                    direction="column"
+                                >
+                                    <Text size="xl" fw={800} c="black">Loading Articles...</Text>
+                                    <Loader size={50} color="green"/>
+                                </Flex>
+                            </Card>
+                        </Container>
                     </Center>
                 </AppShellSection>
             </AppShell>
@@ -74,17 +78,18 @@ export default function Page() {
                         <Container size="md" py="xl">
                             <Card>
 
-                        <Flex
-                            justify="center"
-                            align="center"
-                            direction="column"
-                        >
-                            <Text size="xl" fw={800} c="red">Error: {error}</Text>
-                            <Text size="xl" fw={800} c="black">We were unable to get your article for you, please come back later.</Text>
-                            <Button component="a" href="/contact" mt="sm" fullWidth>
-                                Contact us about this issue
-                            </Button>
-                        </Flex>
+                                <Flex
+                                    justify="center"
+                                    align="center"
+                                    direction="column"
+                                >
+                                    <Text size="xl" fw={800} c="red">Error: {error}</Text>
+                                    <Text size="xl" fw={800} c="black">We were unable to get your article for you,
+                                        please come back later.</Text>
+                                    <Button component="a" href="/contact" mt="sm" fullWidth>
+                                        Contact us about this issue
+                                    </Button>
+                                </Flex>
                             </Card>
                         </Container>
                     </Center>
@@ -117,7 +122,8 @@ export default function Page() {
                                                     align="center"
                                                     direction="column"
                                                 >
-                                                    <Text size="xl" fw={800} c="red">Error: No featured article available.</Text>
+                                                    <Text size="xl" fw={800} c="red">Error: No featured article
+                                                        available.</Text>
                                                     <Text size="xl" fw={800} c="black">Please come back later.</Text>
                                                     <Button component="a" href="/contact" mt="sm" fullWidth>
                                                         Contact us about this issue
@@ -141,7 +147,8 @@ export default function Page() {
                                                     align="center"
                                                     direction="column"
                                                 >
-                                                    <Text size="xl" fw={800} c="red">Error: No non-featured articles available.</Text>
+                                                    <Text size="xl" fw={800} c="red">Error: No non-featured articles
+                                                        available.</Text>
                                                     <Text size="xl" fw={800} c="black">Please come back later.</Text>
                                                     <Button component="a" href="/contact" mt="sm" fullWidth>
                                                         Contact us about this issue

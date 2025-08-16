@@ -36,7 +36,7 @@ export default function MarketCard({
             radius="md"
             withBorder
             h="18rem"
-            bg={theme.colors.gray[0]}
+            bg={theme.colors.primaryGreen[0]}
             style={{
                 position: "relative",
                 border: `1px solid ${theme.colors.gray[2]}`,
