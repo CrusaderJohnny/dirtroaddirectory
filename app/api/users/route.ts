@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 
 const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
-// Ensure the backend URL is set
 if (!BACKEND_API_BASE_URL) {
     console.error("Environment variable BACKEND_URL is not set for users API route.");
     throw new Error("Backend API URL not configured.");
@@ -12,7 +11,7 @@ if (!BACKEND_API_BASE_URL) {
  * Handles GET requests to /api/users (fetches all users).
  * Corresponds to the old usersAPI.getAllUsers().
  */
-export async function GET() { // No NextRequest needed here
+export async function GET() {
     try {
         const response = await fetch(`${BACKEND_API_BASE_URL}/users`);
 

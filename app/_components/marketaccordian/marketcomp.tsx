@@ -14,14 +14,7 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import {MarketsInterface} from "@/app/_types/interfaces";
 
-// All information taken from respective websites for each individual farmers market. Pictures taken from their websites.
-// Image URL was copied as well as description and content was taken from the websites for each respective market
 
-
-
-
-
-// Displays the information before the accordion is opened
 function AccordionLabel({ label, image, description } : MarketsInterface) {
     return (
         <Group wrap="nowrap">
@@ -174,7 +167,6 @@ export default function MarketAccordion({defaultOpenItemId,onCardSelect}: Market
             <Accordion chevronPosition="right" variant="contained"
             value={String(activeItem)} // Control the active item
             onChange={handleAccordionChange} // Update the active item when a user clicks
-            // FIX BUG HERE ------ closing the item doesn't set active to null
             >
                 {items}
             </Accordion>

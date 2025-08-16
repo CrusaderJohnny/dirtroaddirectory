@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const BACKEND_API_BASE_URL = process.env.BACKEND_URL;
 
-// Ensure the backend URL is set
 if (!BACKEND_API_BASE_URL) {
     console.error("Environment variable BACKEND_URL is not set for favorite vendors DELETE API route.");
     throw new Error("Backend API URL not configured.");
@@ -15,27 +14,27 @@ if (!BACKEND_API_BASE_URL) {
  * @param params Contains the dynamic 'id' (user ID) and 'vendorId' from the URL.
  */
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string, vendorId: string }> }) {
-    // Await params before destructuring its properties
     const { id: userId, vendorId } = await params;
 
-    // Basic validation for userId and vendorId format
     if (!userId || !vendorId) {
         return NextResponse.json({ message: 'User ID or Vendor ID is missing.' }, { status: 400 });
     }
 
     try {
-        // Construct the backend URL using both dynamic parameters
-        const response = await fetch(`${BACKEND_API_BASE_URL}/users/${userId}/favourite-vendors/${vendorId}`, {
+        const vendorIdAsNumber = Number(vendorId);
+        if (isNaN(vendorIdAsNumber)) {
+            return NextResponse.json({ message: 'Vendor ID must be a valid number.' }, { status: 400 });
+        }
+
+        const response = await fetch(`${BACKEND_API_BASE_URL}/users/${userId}/favourite-vendors/${vendorIdAsNumber}`, {
             method: 'DELETE',
         });
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: 'Unknown error from backend' }));
-            // Using throw new Error here to ensure the catch block handles it consistently.
             throw new Error(errorData.message || `Failed to remove favorite: ${response.statusText}`);
         }
 
-        // For a successful DELETE operation, the backend typically returns a 204 No Content status.
         return new NextResponse(null, { status: response.status });
     } catch (error) {
         console.error(`Error in Next.js API route (DELETE /api/users/${userId}/favourite-vendors/${vendorId}):`, error);

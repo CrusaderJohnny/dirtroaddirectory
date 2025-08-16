@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Container,
     Text,
@@ -9,12 +9,14 @@ import {
     Grid,
     AppShellSection,
     AppShell,
+    Loader,
+    Flex,
+    Center
 } from '@mantine/core';
-
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
 import ArticleCarousel from '@/app/_components/newscomps/articleCarousel';
-import { ArticleInterface } from '@/app/_types/interfaces';
+import {ArticleInterface} from '@/app/_types/interfaces';
 
 export default function Page() {
     const [articles, setArticles] = useState<ArticleInterface[]>([]);
@@ -24,7 +26,7 @@ export default function Page() {
     useEffect(() => {
         const loadArticles = async () => {
             try {
-                const response = await fetch('/api/articles', { cache: 'no-store' });
+                const response = await fetch('/api/articles', {cache: 'no-store'});
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -45,34 +47,63 @@ export default function Page() {
     const hasNonFeaturedArticles = nonFeaturedArticles.length > 0;
 
     if (loading) {
-        return <Text>Loading articles...</Text>;
+        return (
+            <AppShell>
+                <AppShellSection>
+                    <Center h="400px">
+                        <Flex
+                            justify="center"
+                            align="center"
+                            direction="column"
+                        >
+                            <Text size='xl' fw={800} c="gray">Loading articles...</Text>;
+                            <Loader size={50} color="green"/>
+                        </Flex>
+                    </Center>
+                </AppShellSection>
+            </AppShell>
+        );
     }
 
     if (error) {
-        return <Text>{error}</Text>;
+        return (
+            <AppShell>
+                <AppShellSection>
+                    <Center h="400px">
+                        <Flex
+                            justify="center"
+                            align="center"
+                            direction="column"
+                        >
+                            <Text size='xl' fw={800} c="gray">Error: {error}</Text>;
+                        </Flex>
+                    </Center>
+                </AppShellSection>
+            </AppShell>
+        );
     }
 
     return (
         <AppShell>
             <AppShellSection>
                 <Container size="xl" pt="lg">
-                    <SiteIntroCard />
+                    <SiteIntroCard/>
                     <Button component="a" href="/aboutus" mt="sm" fullWidth>
                         Learn More About Us
                     </Button>
-                    <Divider my="md" />
+                    <Divider my="md"/>
                     <Container size="xl" p="sm">
                         <Grid mt="sm">
-                            <Grid.Col span={{ base: 12, md: 7 }}>
+                            <Grid.Col span={{base: 12, md: 7}}>
                                 {featuredArticle ? (
-                                    <FeaturedCard article={featuredArticle} />
+                                    <FeaturedCard article={featuredArticle}/>
                                 ) : (
                                     <Text>No featured article available.</Text>
                                 )}
                             </Grid.Col>
-                            <Grid.Col span={{ base: 12, md: 5 }}>
+                            <Grid.Col span={{base: 12, md: 5}}>
                                 {hasNonFeaturedArticles ? (
-                                    <ArticleCarousel articles={nonFeaturedArticles} />
+                                    <ArticleCarousel articles={nonFeaturedArticles}/>
                                 ) : (
                                     <Text>No other articles available.</Text>
                                 )}

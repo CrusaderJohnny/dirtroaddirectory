@@ -1,24 +1,32 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
 import {
     Card,
     Text,
     Image,
     Title,
     ActionIcon,
-    useMantineTheme
-} from '@mantine/core';
-import { IconStar, IconStarFilled } from '@tabler/icons-react';
-import { VendorsInterface } from '@/app/_types/interfaces';
+    Tooltip,
+    useMantineTheme,
+    Loader,
+} from "@mantine/core";
+import {IconStar, IconStarFilled} from "@tabler/icons-react";
+import Link from "next/link";
+import {VendorsInterface} from "@/app/_types/interfaces";
 
 interface VendorCardProps {
     vendor: VendorsInterface;
-    isFavorited?: boolean;
-    onToggleFavorite?: () => void;
+    isFavorited: boolean;
+    onToggleFavorite: () => Promise<void>;
+    isTogglingFavorite: boolean;
 }
 
-export default function VendorCard({ vendor, isFavorited, onToggleFavorite }: VendorCardProps) {
+export default function VendorCard({
+                                       vendor,
+                                       isFavorited,
+                                       onToggleFavorite,
+                                       isTogglingFavorite,
+                                   }: VendorCardProps) {
     const theme = useMantineTheme();
 
     return (
@@ -34,17 +42,39 @@ export default function VendorCard({ vendor, isFavorited, onToggleFavorite }: Ve
             }}
         >
             {onToggleFavorite && (
-                <ActionIcon
-                    variant="light"
-                    onClick={(e) => {
-                        e.preventDefault(); // prevent link navigation
-                        onToggleFavorite();
-                    }}
-                    style={{ position: "absolute", bottom: 8, right: 8, zIndex: 10 }}
-                    color="yellow"
+                <Tooltip
+                    label={
+                        isTogglingFavorite
+                            ? "Please wait..."
+                            : isFavorited
+                                ? "Remove from Favorites"
+                                : "Add to Favorites"
+                    }
+                    withArrow
+                    position="top"
                 >
-                    {isFavorited ? <IconStarFilled size={20} /> : <IconStar size={20} />}
-                </ActionIcon>
+                    <ActionIcon
+                        variant="light"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!isTogglingFavorite) {
+                                onToggleFavorite();
+                            }
+                        }}
+                        style={{position: "absolute", bottom: 8, right: 8, zIndex: 10}}
+                        color="yellow"
+                        disabled={isTogglingFavorite}
+                    >
+                        {isTogglingFavorite ? (
+                            <Loader size={20} color="yellow" />
+                        ) : isFavorited ? (
+                            <IconStarFilled size={20}/>
+                        ) : (
+                            <IconStar size={20}/>
+                        )}
+                    </ActionIcon>
+                </Tooltip>
             )}
             <Link href={`/vendors?vendorId=${vendor.id}`} passHref>
                 <div>
@@ -56,9 +86,12 @@ export default function VendorCard({ vendor, isFavorited, onToggleFavorite }: Ve
                         fit="cover"
                         mb="sm"
                     />
-                    <Title order={4} fw={600} mb={4}>{vendor.name}</Title>
-                    <Text size="sm" c="dimmed">Category: {vendor.category}</Text>
-                    <Text size="sm" c="dimmed">Location: {vendor.location}</Text>
+                    <Title order={4} fw={600} mb={4}>
+                        {vendor.name}
+                    </Title>
+                    <Text size="xs" c="dimmed">
+                        {vendor.category}
+                    </Text>
                 </div>
             </Link>
         </Card>
