@@ -82,7 +82,9 @@ export default function HeaderLarge() {
                 </Button>
             </Group>
 
+            {/*(Sign-in) / (Panel / Favs + Clerk Icon)*/}
             <Group>
+                {/* If signed out, show button for the sign-in / sign-up model*/}
                 <SignedOut>
                     <Button
                         onClick={open}
@@ -98,27 +100,28 @@ export default function HeaderLarge() {
                     </Button>
                 </SignedOut>
 
-                {/* The rest of the component is rendered conditionally inside SignedIn */}
-                <SignedIn>
-                    {!isAdmin && (
-                        <Button component="a" href="/userfavs" variant="subtle" c="white" size="md">
-                            Favs
-                        </Button>
+                {/*Signed in section*/}
+                {/*Basic user favs section*/}
+                {/*Admin Panel Section*/}
+                {isAdmin ? (
+                    <Button
+                        component="a"
+                        href="/admin"
+                        variant="outline"
+                        color="white"
+                        size="xs"
+                        style={{backgroundColor: '#ff7070'}}
+                    >
+                        Admin Panel
+                    </Button>
+                ) : (
+                    <SignedIn>
+                    <Button component="a" href="/userfavs" variant="subtle" c="white" size="md">
+                    Favs
+                    </Button>
+                    </SignedIn>
                     )}
-                    {isAdmin && (
-                        <Button
-                            component="a"
-                            href="/admin"
-                            variant="outline"
-                            color="white"
-                            size="xs"
-                            style={{backgroundColor: '#ff7070'}}
-                        >
-                            Admin Panel
-                        </Button>
-                    )}
-                    <UserButton/>
-                </SignedIn>
+                <UserButton/>
             </Group>
         </Group>
     );
