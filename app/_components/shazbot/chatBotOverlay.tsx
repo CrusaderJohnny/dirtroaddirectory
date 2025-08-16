@@ -11,7 +11,7 @@ import {
     ScrollArea,
     useMantineTheme, ActionIcon,
 } from '@mantine/core';
-import {Message} from "@/app/_types/interfaces";
+import {MarketsInterface, Message, VendorsInterface} from "@/app/_types/interfaces";
 import {IconArrowsMaximize, IconArrowsMinimize, IconMessageCircle, IconX} from "@tabler/icons-react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -40,6 +40,9 @@ const ChatbotOverlay: React.FC = () => {
     // Get Mantine theme for custom styling
     const theme = useMantineTheme();
 
+    const [markets, setMarkets] = useState<MarketsInterface[]>([]);
+    const [vendors, setVendors] = useState<VendorsInterface[]>([]);
+
     /**
      * Handles sending a user message to the chatbot.
      * Updates chat history, makes the API call, and processes streaming responses.
@@ -48,6 +51,17 @@ const ChatbotOverlay: React.FC = () => {
     const sendMessage = async (userMessage: string) => {
         // Prevent sending empty messages
         if (!userMessage.trim()) return;
+        const marketsData = JSON.stringify(markets);
+        const vendorsData = JSON.stringify(vendors);
+
+        const dataContextMessage: Message = {
+            role: 'system',
+            content: `
+            You are an AI assistant for a local farmers market. Here is a list of all current markets and vendors on our website to help you answer questions.
+            Markets: ${marketsData}
+            Vendors: ${vendorsData}
+            `
+        };
 
         // Add the user's message to the chat history
         const newMessages: Message[] = [...messages, { role: "user", content: userMessage }];
@@ -56,6 +70,7 @@ const ChatbotOverlay: React.FC = () => {
         setIsLoading(true); // Set loading state to true
 
         try {
+            const messagesToSend = [dataContextMessage, ...messages];
             // Make the API call to Azure OpenAI for chat completions
             const apiUrl = `${window.location.origin}/api/chat`;
             const response = await fetch(apiUrl, {
@@ -63,7 +78,7 @@ const ChatbotOverlay: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({messages: newMessages}),
+                body: JSON.stringify({messages: messagesToSend}),
             });
             if(!response.ok) {
                 let errorMessage = 'An Unknown error occurred.';
@@ -123,6 +138,35 @@ const ChatbotOverlay: React.FC = () => {
             })
         }
     }, [messages, isChatReal]);
+
+    useEffect(() => {
+        const fetchMarketData = async () => {
+            try {
+                const response = await fetch('/api/markets');
+                if(!response.ok) {
+                    console.error(`HTTP error! Status: ${response.status}`);
+                }
+                const data: MarketsInterface[] = await response.json();
+                setMarkets(data);
+            } catch (error) {
+                console.error("Error fetching markets:", error);
+            }
+        };
+        const fetchVendorData = async () => {
+            try {
+                const response = await fetch('/api/vendors');
+                if(!response.ok) {
+                    console.error(`HTTP error! Status: ${response.status}`);
+                }
+                const data: VendorsInterface[] = await response.json();
+                setVendors(data);
+            } catch (error) {
+                console.error("Error fetching vendors:", error);
+            }
+        };
+        fetchMarketData();
+        fetchVendorData();
+    }, []);
 
     // Handle Enter key press in the input field
     const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
