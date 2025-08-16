@@ -11,7 +11,7 @@ import {
     AppShellHeader,
     AppShellMain,
     GridCol,
-    Flex,
+    Flex
 } from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 
@@ -94,21 +94,21 @@ export default function Page() {
                         </GridCol>
                     </Grid>
                     <Flex justify={"center"}>
-                            <Card
-                                shadow="sm"
-                                withBorder
-                                radius="md"
-                                p="md"
-                                mt="md"
-                                component="a"
-                                href="/references"
-                                style={{backgroundColor: "#ece2d2"}}
-                            >
-                                <Title order={4} c="dark" mb="xs">References</Title>
-                                <Text size="sm" c="gray.7">
-                                    Learn about what technologies were used to create this project.
-                                </Text>
-                            </Card>
+                        <Card
+                            shadow="sm"
+                            withBorder
+                            radius="md"
+                            p="md"
+                            mt="md"
+                            component="a"
+                            href="/references"
+                            style={{backgroundColor: "#ece2d2"}}
+                        >
+                            <Title order={4} c="dark" mb="xs">References</Title>
+                            <Text size="sm" c="gray.7">
+                                Learn about what technologies were used to create this project.
+                            </Text>
+                        </Card>
                     </Flex>
                 </Container>
             </AppShellMain>

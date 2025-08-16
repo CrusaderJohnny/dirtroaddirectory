@@ -77,7 +77,6 @@ export default function Page() {
                     <Center h="400px">
                         <Container size="md" py="xl">
                             <Card>
-
                                 <Flex
                                     justify="center"
                                     align="center"
