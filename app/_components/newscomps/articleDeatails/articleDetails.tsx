@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Card, Container, Text } from "@mantine/core";
-import { ArticleInterface } from "@/app/_types/interfaces";
+import React, {useState, useEffect} from 'react';
+import {useSearchParams} from 'next/navigation';
+import {AppShell, AppShellSection, Card, Center, Container, Flex, Loader, Text, Button} from "@mantine/core";
+import {ArticleInterface} from "@/app/_types/interfaces";
 import NewsCardFullPage from '@/app/_components/newscomps/cards/newsCardFullPage';
 
 export default function ArticleDetailsContent() {
@@ -26,7 +26,7 @@ export default function ArticleDetailsContent() {
 
             try {
                 const url = `/api/articles/${articleId}`;
-                const response = await fetch(url, { cache: 'no-store' });
+                const response = await fetch(url, {cache: 'no-store'});
                 if (!response.ok) {
                     if (response.status === 404) {
                         setError("Article not found");
@@ -57,26 +57,53 @@ export default function ArticleDetailsContent() {
 
     if (loading) {
         return (
-            <Container size="md" py="xl">
-                <Text>Loading article...</Text>
-            </Container>
+            <AppShell>
+                <AppShellSection>
+                    <Center h="400px">
+                        <Flex
+                            justify="center"
+                            align="center"
+                            direction="column"
+                        >
+                            <Text size="xl" fw={800} c="gray">Loading Article...</Text>
+                            <Loader size={50} color="green"/>
+                        </Flex>
+                    </Center>
+                </AppShellSection>
+            </AppShell>
         );
     }
 
     if (error || !article) {
         return (
-            <Container size="md" py="xl">
-                <Card withBorder shadow="sm" p="lg" radius="md">
-                    <Text size="xl" fw={700}>Article Not Found</Text>
-                    <Text mt="md">The article you are looking for does not exist or the ID is invalid.</Text>
-                </Card>
-            </Container>
-        );
+            <AppShell>
+                <AppShellSection>
+                    <Center h="400px">
+                        <Container size="md" py="xl">
+                        <Card >
+                            <Flex
+                                justify="center"
+                                align="center"
+                                direction="column"
+                            >
+                                <Text size="xl" fw={800} c="red">Error: Article Not Found</Text>
+                                <Text size="xl" fw={800} c="black">The article you are looking for does not exist or the ID is invalid.</Text>
+                                <Button component="a" href="/contact" mt="sm" fullWidth>
+                                    Contact us about this issue
+                                </Button>
+                            </Flex>
+                        </Card>
+                        </Container>
+                    </Center>
+                </AppShellSection>
+            </AppShell>
+        )
+            ;
     }
 
     return (
         <Container size="lg" py="xl">
-            <NewsCardFullPage article={article} />
+            <NewsCardFullPage article={article}/>
         </Container>
     );
 }

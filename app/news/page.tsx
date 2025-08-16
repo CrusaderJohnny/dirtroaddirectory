@@ -11,7 +11,8 @@ import {
     AppShell,
     Loader,
     Flex,
-    Center
+    Center,
+    Card,
 } from '@mantine/core';
 import SiteIntroCard from '@/app/_components/newscomps/cards/siteIntroCard';
 import FeaturedCard from '@/app/_components/newscomps/cards/featuredCard';
@@ -33,8 +34,8 @@ export default function Page() {
                 const data = await response.json();
                 setArticles(data);
             } catch (err) {
-                console.error('Failed to load articles:', err);
-                setError('Failed to load articles. Please try again later.');
+                console.error('Failed to load articles: ', err);
+                setError('Failed to load articles.');
             } finally {
                 setLoading(false);
             }
@@ -56,7 +57,7 @@ export default function Page() {
                             align="center"
                             direction="column"
                         >
-                            <Text size='xl' fw={800} c="gray">Loading articles...</Text>;
+                            <Text size="xl" fw={800} c="gray">Loading Articles...</Text>
                             <Loader size={50} color="green"/>
                         </Flex>
                     </Center>
@@ -70,13 +71,22 @@ export default function Page() {
             <AppShell>
                 <AppShellSection>
                     <Center h="400px">
+                        <Container size="md" py="xl">
+                            <Card>
+
                         <Flex
                             justify="center"
                             align="center"
                             direction="column"
                         >
-                            <Text size='xl' fw={800} c="gray">Error: {error}</Text>;
+                            <Text size="xl" fw={800} c="red">Error: {error}</Text>
+                            <Text size="xl" fw={800} c="black">We were unable to get your article for you, please come back later.</Text>
+                            <Button component="a" href="/contact" mt="sm" fullWidth>
+                                Contact us about this issue
+                            </Button>
                         </Flex>
+                            </Card>
+                        </Container>
                     </Center>
                 </AppShellSection>
             </AppShell>
@@ -98,14 +108,48 @@ export default function Page() {
                                 {featuredArticle ? (
                                     <FeaturedCard article={featuredArticle}/>
                                 ) : (
-                                    <Text>No featured article available.</Text>
+                                    <Center h="400px">
+                                        <Container size="md" py="xl">
+                                            <Card>
+
+                                                <Flex
+                                                    justify="center"
+                                                    align="center"
+                                                    direction="column"
+                                                >
+                                                    <Text size="xl" fw={800} c="red">Error: No featured article available.</Text>
+                                                    <Text size="xl" fw={800} c="black">Please come back later.</Text>
+                                                    <Button component="a" href="/contact" mt="sm" fullWidth>
+                                                        Contact us about this issue
+                                                    </Button>
+                                                </Flex>
+                                            </Card>
+                                        </Container>
+                                    </Center>
                                 )}
                             </Grid.Col>
                             <Grid.Col span={{base: 12, md: 5}}>
                                 {hasNonFeaturedArticles ? (
                                     <ArticleCarousel articles={nonFeaturedArticles}/>
                                 ) : (
-                                    <Text>No other articles available.</Text>
+                                    <Center h="400px">
+                                        <Container size="md" py="xl">
+                                            <Card>
+
+                                                <Flex
+                                                    justify="center"
+                                                    align="center"
+                                                    direction="column"
+                                                >
+                                                    <Text size="xl" fw={800} c="red">Error: No non-featured articles available.</Text>
+                                                    <Text size="xl" fw={800} c="black">Please come back later.</Text>
+                                                    <Button component="a" href="/contact" mt="sm" fullWidth>
+                                                        Contact us about this issue
+                                                    </Button>
+                                                </Flex>
+                                            </Card>
+                                        </Container>
+                                    </Center>
                                 )}
                             </Grid.Col>
                         </Grid>
