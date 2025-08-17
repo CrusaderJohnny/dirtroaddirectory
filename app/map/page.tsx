@@ -93,6 +93,9 @@ export default function App() {
         }
         else{
             setOpenMarketId(marketId);
+            if (!mobileOpened) { // Toggle navbar if closed
+                toggleMobile();
+            }
             //scrollIntoView({alignment: 'center',});
         }
 
@@ -110,9 +113,6 @@ export default function App() {
              // Only scroll if there's a node
             if (node) {
                 console.log("Scrolling to card:"+targetRef)
-                // Now call scrollIntoView *without* a 'target' property
-                // It will automatically scroll to whatever is in targetRef.current
-                // Pass the offset here if it's dynamic, otherwise set it in useScrollIntoView options
                 scrollIntoView({ alignment: 'center'});
             }
         }
@@ -183,6 +183,9 @@ export default function App() {
         >
             <AppShell.Header component={NavMT}/>
             <AppShell.Navbar>
+                <Button onClick={toggleMobile} hiddenFrom="sm" p={8} m={8}>
+                    <IconChevronLeft style={iconStyle(mobileOpened)} />
+                </Button>
                 <ScrollArea
                     type='auto'
                     viewportRef={scrollableRef}
@@ -201,7 +204,7 @@ export default function App() {
                         <IconChevronLeft style={iconStyle(desktopOpened)} />
                     </Button>
                     <Button onClick={toggleMobile} hiddenFrom="sm" p={8}>
-                        <IconChevronLeft style={iconStyle(desktopOpened)} />
+                        <IconChevronLeft style={iconStyle(mobileOpened)} />
                     </Button>
                     <Autocomplete
                         placeholder="Search"
