@@ -24,10 +24,11 @@ export default function Page() {
             </AppShellHeader>
             <AppShellMain>
                 <Container size="xl" py="xl">
-                    <Card mb="xl"
-                    >
-                        <Title order={1} ta="center" pb="md">Technologies Used</Title>
-                        <Divider/>
+                    <Card mb="xl">
+                        <Container size="lg">
+                            <Title order={1} fw={800} ta="center" size="3rem">Technologies Used</Title>
+                            <Divider/>
+                        </Container>
                     </Card>
 
                     <Grid gutter="xl">

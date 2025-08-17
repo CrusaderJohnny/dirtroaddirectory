@@ -17,7 +17,7 @@ import {
     Paper,
     Grid,
     Loader,
-    Center,
+    Center, AppShellSection, Flex, AppShell
 } from '@mantine/core';
 import {
     IconPhone,
@@ -230,20 +230,50 @@ export default function MarketContent() {
 
     if (loading) {
         return (
-            <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Center>
-                    <Loader size="xl" />
-                    <Text ml="sm">Loading market data...</Text>
-                </Center>
-            </AppShellMain>
+            <AppShell>
+                <AppShellSection>
+                    <Center h="400px">
+                        <Container size="md" py="xl">
+                            <Card>
+                                <Flex
+                                    justify="center"
+                                    align="center"
+                                    direction="column"
+                                >
+                                    <Text size="xl" fw={800} c="black">Loading market data...</Text>
+                                    <Loader size={50} color="green"/>
+                                </Flex>
+                            </Card>
+                        </Container>
+                    </Center>
+                </AppShellSection>
+            </AppShell>
         );
     }
 
     if (error) {
         return (
-            <AppShellMain style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Text size="xl" c="red">Error loading data: {error}</Text>
-            </AppShellMain>
+            <AppShell>
+                <AppShellSection>
+                    <Center h="400px">
+                        <Container size="md" py="xl">
+                            <Card>
+                                <Flex
+                                    justify="center"
+                                    align="center"
+                                    direction="column"
+                                >
+                                    <Text size="xl" fw={800} c="red">Error: {error}</Text>
+                                    <Text size="xl" fw={800} c="black">Unable to load this page, please come back later.</Text>
+                                    <Button component="a" href="/contact" mt="sm" fullWidth>
+                                        Contact us about this issue
+                                    </Button>
+                                </Flex>
+                            </Card>
+                        </Container>
+                    </Center>
+                </AppShellSection>
+            </AppShell>
         );
     }
 
