@@ -6,7 +6,7 @@ import ConvertDate from "@/app/_components/newscomps/convertDate";
 export default function FeaturedCard({article}: { article: ArticleInterface }) {
     return (
         <Link href={`/articleSubPage?articleId=${article.post_id}`} passHref>
-            <Card withBorder radius="md" shadow="sm" p="md" w="100%" h="100%" bg="green.1" className="cursor-pointer">
+            <Card withBorder radius="md" shadow="sm" p="md" w="100%" h="100%" bg="#ece2d2" className="cursor-pointer">
                 <Title
                     order={3}
                     style={{

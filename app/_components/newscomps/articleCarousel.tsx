@@ -25,7 +25,7 @@ export default function ArticleCarousel( { articles, height } : {
 
     return (
         <Card
-            bg="green.1"
+            bg="#f2ebe5"
             withBorder
             radius="md"
             shadow="sm"

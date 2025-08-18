@@ -8,7 +8,7 @@ export default function NewsCardSmall({article}: { article: ArticleInterface }) 
 
     return (
         <Link href={`/articleSubPage?articleId=${article.post_id}`} passHref>
-            <Card withBorder shadow="sm" radius="lg" p="md" w="auto" h="100%" className="cursor-pointer" style={{backgroundColor: '#f8f9fa'}}>
+            <Card withBorder shadow="sm" radius="lg" p="md" w="auto" h="100%" className="cursor-pointer" style={{backgroundColor: '#fefcf9'}}>
                 <Title
                     order={4}
                     c="black"
