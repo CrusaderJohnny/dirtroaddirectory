@@ -1,4 +1,4 @@
-import {AppShell, AppShellFooter, AppShellHeader, AppShellMain, Button, Center} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain, Center} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import AdminPostForm from "@/app/_components/postmanagement/adminPostForm";
 import {currentUser} from "@clerk/nextjs/server";
@@ -17,13 +17,13 @@ export default async function Page() {
                     <AdminPostForm currentUser={serializedUser}/>
                 </Center>
             </AppShellMain>
-            <AppShellFooter>
-                <Center>
-                    <Button variant={'light'} component={'a'} href={'/admin'}>
-                        Return to Admin Page
-                    </Button>
-                </Center>
-            </AppShellFooter>
+            {/*<AppShellFooter>*/}
+            {/*    <Center>*/}
+            {/*        <Button variant={'light'} component={'a'} href={'/admin'}>*/}
+            {/*            Return to Admin Page*/}
+            {/*        </Button>*/}
+            {/*    </Center>*/}
+            {/*</AppShellFooter>*/}
         </AppShell>
     )
 }

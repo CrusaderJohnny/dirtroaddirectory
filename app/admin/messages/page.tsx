@@ -18,7 +18,7 @@ import {
   ActionIcon,
   Box,
   Button,
-  SegmentedControl, AppShellFooter,
+  SegmentedControl,
 } from "@mantine/core";
 import {
   IconSearch,
@@ -331,13 +331,13 @@ export default function ContactMessagesPage() {
           )}
         </Modal>
       </AppShellMain>
-      <AppShellFooter>
-        <Center>
-          <Button variant={'light'} component={'a'} href={'/admin'}>
-            Return to Admin Page
-          </Button>
-        </Center>
-      </AppShellFooter>
+      {/*<AppShellFooter>*/}
+      {/*  <Center>*/}
+      {/*    <Button variant={'light'} component={'a'} href={'/admin'}>*/}
+      {/*      Return to Admin Page*/}
+      {/*    </Button>*/}
+      {/*  </Center>*/}
+      {/*</AppShellFooter>*/}
     </AppShell>
   );
 }
