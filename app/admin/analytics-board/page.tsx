@@ -2,10 +2,8 @@
 
 import {
     AppShell,
-    AppShellFooter,
     AppShellHeader,
     AppShellMain,
-    Button,
     Center,
     Text,
     Container,
@@ -252,13 +250,13 @@ export default function Page() {
                     )}
                 </Container>
             </AppShellMain>
-            <AppShellFooter>
-                <Center py="sm">
-                    <Button variant={'light'} component={'a'} href={'/admin'}>
-                        Return to Admin Page
-                    </Button>
-                </Center>
-            </AppShellFooter>
+            {/*<AppShellFooter>*/}
+            {/*    <Center py="sm">*/}
+            {/*        <Button variant={'light'} component={'a'} href={'/admin'}>*/}
+            {/*            Return to Admin Page*/}
+            {/*        </Button>*/}
+            {/*    </Center>*/}
+            {/*</AppShellFooter>*/}
         </AppShell>
     );
 }

@@ -1,23 +1,14 @@
-import {checkRole} from '@/_utils/roles'
 import {currentUser} from '@clerk/nextjs/server'
 import NavMT from "@/app/_components/navcomps/navmt";
 import {
-    AppShell, AppShellFooter,
-    AppShellHeader,
+    AppShell, AppShellHeader,
     AppShellMain,
-    Button,
     Center,
     Group,
     Title, Container, Card, Text, Stack
 } from "@mantine/core";
-import Link from "next/link";
-import {checkMarket} from "@/_utils/checkMarket";
-import {checkVendor} from "@/_utils/checkVendor";
 
 export default async function AdminDashboard() {
-    const hasMarketAccess = await checkMarket();
-    const hasVendorAccess = await checkVendor();
-    const isAdmin = await checkRole('admin');
     const user = await currentUser();
 
     function titleFix(str: string | null | undefined): string {
@@ -156,32 +147,32 @@ export default async function AdminDashboard() {
                 </Container>
             </AppShellMain>
 
-            <AppShellFooter style={{backgroundColor: '#fff', padding: '1rem 0'}}>
-                <Center>
-                    <Group>
-                        {hasMarketAccess && (
-                            <Button component={Link} href="/post-market" variant="light">
-                                Market Post
-                            </Button>
-                        )}
-                        {hasVendorAccess && (
-                            <Button component={Link} href="/post-vendor" variant="light">
-                                Vendor Post
-                            </Button>
-                        )}
-                        {isAdmin && (
-                            <>
-                                <Button component={Link} href="/post-admin" variant="light">
-                                    Admin Post
-                                </Button>
-                                <Button component={Link} href="/contact-form-messages" variant="light">
-                                    Contact Messages
-                                </Button>
-                            </>
-                        )}
-                    </Group>
-                </Center>
-            </AppShellFooter>
+            {/*<AppShellFooter style={{backgroundColor: '#fff', padding: '1rem 0'}}>*/}
+            {/*    <Center>*/}
+            {/*        <Group>*/}
+            {/*            {hasMarketAccess && (*/}
+            {/*                <Button component={Link} href="/post-market" variant="light">*/}
+            {/*                    Market Post*/}
+            {/*                </Button>*/}
+            {/*            )}*/}
+            {/*            {hasVendorAccess && (*/}
+            {/*                <Button component={Link} href="/post-vendor" variant="light">*/}
+            {/*                    Vendor Post*/}
+            {/*                </Button>*/}
+            {/*            )}*/}
+            {/*            {isAdmin && (*/}
+            {/*                <>*/}
+            {/*                    <Button component={Link} href="/post-admin" variant="light">*/}
+            {/*                        Admin Post*/}
+            {/*                    </Button>*/}
+            {/*                    <Button component={Link} href="/contact-form-messages" variant="light">*/}
+            {/*                        Contact Messages*/}
+            {/*                    </Button>*/}
+            {/*                </>*/}
+            {/*            )}*/}
+            {/*        </Group>*/}
+            {/*    </Center>*/}
+            {/*</AppShellFooter>*/}
         </AppShell>
     );
 }

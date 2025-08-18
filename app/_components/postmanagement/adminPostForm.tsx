@@ -19,7 +19,6 @@ import {useEffect, useState} from "react";
 import ImageUploader from "@/app/_components/image-uploader/image-uploader";
 import {useUser} from "@clerk/nextjs";
 
-const apiUrl = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 export default function AdminPostForm({currentUser} : AdminPostFormProps) {
     const [selectedPosterType, setSelectedPosterType] = useState<'market' | 'vendor' | null>(null);
@@ -61,9 +60,9 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
                     return;
                 }
                 const [marketResponse, vendorResponse, userResponse] = await Promise.all([
-                    fetch(`${apiUrl}/markets`),
-                    fetch(`${apiUrl}/vendors`),
-                    fetch(`${apiUrl}/users`)
+                    fetch(`/api/markets`),
+                    fetch(`/api/vendors`),
+                    fetch(`/api/users`)
                 ]);
                 if(!marketResponse.ok || !vendorResponse.ok){
                     const marketError = await marketResponse.text();
@@ -179,7 +178,7 @@ export default function AdminPostForm({currentUser} : AdminPostFormProps) {
 
             console.log('Admin post data: ', postData);
 
-            const response = await fetch(`${apiUrl}/articles`, {
+            const response = await fetch(`/api/articles`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData),

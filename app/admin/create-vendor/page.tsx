@@ -1,4 +1,4 @@
-import {AppShell, AppShellFooter, AppShellHeader, AppShellMain, Button, Center, Title} from "@mantine/core";
+import {AppShell, AppShellHeader, AppShellMain, Center, Title} from "@mantine/core";
 import NavMT from "@/app/_components/navcomps/navmt";
 import CreateVendorForm from "@/app/_components/admincomps/db_management/create_vendor_form";
 
@@ -21,13 +21,13 @@ export default async function Page() {
                     <CreateVendorForm/>
                 </Center>
             </AppShellMain>
-            <AppShellFooter>
-                <Center>
-                    <Button variant={'light'} component={'a'} href={'/admin'}>
-                        Return to Admin Page
-                    </Button>
-                </Center>
-            </AppShellFooter>
+            {/*<AppShellFooter>*/}
+            {/*    <Center>*/}
+            {/*        <Button variant={'light'} component={'a'} href={'/admin'}>*/}
+            {/*            Return to Admin Page*/}
+            {/*        </Button>*/}
+            {/*    </Center>*/}
+            {/*</AppShellFooter>*/}
         </AppShell>
     )
 }
