@@ -28,13 +28,14 @@ export default async function AdminDashboard() {
     }
 
     const displayName = titleFix(user?.username || user?.firstName);
+    const footerHeight = '60px';
 
     return (
         <AppShell>
             <AppShellHeader>
                 <NavMT/>
             </AppShellHeader>
-            <AppShellMain style={{minHeight: '100vh'}}>
+            <AppShellMain style={{minHeight: '100vh', paddingBottom: footerHeight}}>
                 <Container size="lg" py="xl">
                     <Title ta="center" order={2} mb="lg">
                         Welcome to the Admin Dashboard, {displayName}!
