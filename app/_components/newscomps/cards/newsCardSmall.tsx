@@ -8,8 +8,16 @@ export default function NewsCardSmall({article}: { article: ArticleInterface }) 
 
     return (
         <Link href={`/articleSubPage?articleId=${article.post_id}`} passHref>
-            <Card withBorder shadow="sm" radius="md" p="md" w="auto" h="100%" className="cursor-pointer">
-                <Title order={4}>{article.title}</Title>
+            <Card withBorder shadow="sm" radius="lg" p="md" w="auto" h="100%" className="cursor-pointer" style={{backgroundColor: '#f8f9fa'}}>
+                <Title
+                    order={4}
+                    c="black"
+                    style={{
+                        fontFamily: "Georgia, serif",
+                        fontWeight: 800
+                    }}
+                >
+                    {article.title}</Title>
                 <Image
                     src={article.image}
                     alt={article.title}
@@ -20,7 +28,13 @@ export default function NewsCardSmall({article}: { article: ArticleInterface }) 
                 <Flex justify='space-between'>
                     {/*If article.market_label = null, it will not display*/}
                     <Text size="sm" fw={700}>{article.market_label}</Text>
-                    <Text size="sm" c="dimmed">
+                    <Text
+                        size="sm"
+                        c="gray.6"
+                        style={{
+                            fontWeight: 550,
+                        }}
+                    >
                         <ConvertDate inputtedDate={article.created_at.toString()} />
                     </Text>
                 </Flex>
