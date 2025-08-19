@@ -1,4 +1,4 @@
-import {Card, Image, Text, Title, Flex} from "@mantine/core";
+import {Card, Image, Text, Title, Flex, Divider} from "@mantine/core";
 import {ArticleInterface} from "@/app/_types/interfaces";
 import Link from 'next/link';
 import ConvertDate from "@/app/_components/newscomps/convertDate";
@@ -8,17 +8,25 @@ export default function FeaturedCard({article}: { article: ArticleInterface }) {
         <Link href={`/articleSubPage?articleId=${article.post_id}`} passHref>
             <Card withBorder radius="md" shadow="sm" p="md" w="100%" h="100%" bg="#ece2d2" className="cursor-pointer">
                 <Title
-                    order={3}
+                    order={4}
                     style={{
                         fontFamily: "Georgia, serif",
                         color: "#1f4d2e",
                         fontWeight: 800
                     }}
                 >{article.title}</Title>
+                <Divider size="sm" py='sm' color="#1f4d2e"/>
+                <Card
+                    bg='#f6f2eb'
+                    radius='lg'
+                >
                 <Image
                     src={article.image}
                     alt={article.title}
-                    h={300}
+                    h={250}
+                    // bg="#f6f2eb"
+                    // radius="lg"
+                    p='xs'
                     w="auto"
                     fit="contain"
                 />
@@ -37,12 +45,13 @@ export default function FeaturedCard({article}: { article: ArticleInterface }) {
                 </Flex>
                 <Text
                     p="sm"
+                    fw={500}
                     style={{
                         fontFamily: "Georgia, serif",
                         color: "black",
-                        fontWeight: 800
                     }}
                 >{article.summary}</Text>
+                </Card>
             </Card>
         </Link>
     );
