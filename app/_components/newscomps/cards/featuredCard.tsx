@@ -1,4 +1,4 @@
-import {Card, Image, Text, Title, Flex} from "@mantine/core";
+import {Card, Image, Text, Title, Flex, Divider} from "@mantine/core";
 import {ArticleInterface} from "@/app/_types/interfaces";
 import Link from 'next/link';
 import ConvertDate from "@/app/_components/newscomps/convertDate";
@@ -6,23 +6,52 @@ import ConvertDate from "@/app/_components/newscomps/convertDate";
 export default function FeaturedCard({article}: { article: ArticleInterface }) {
     return (
         <Link href={`/articleSubPage?articleId=${article.post_id}`} passHref>
-            <Card withBorder radius="md" shadow="sm" p="md" w="100%" h="100%" bg="gray.1" className="cursor-pointer">
-                <Title order={3}>{article.title}</Title>
+            <Card withBorder radius="md" shadow="sm" p="md" w="100%" h="100%" bg="#ece2d2" className="cursor-pointer">
+                <Title
+                    order={4}
+                    style={{
+                        fontFamily: "Georgia, serif",
+                        color: "#1f4d2e",
+                        fontWeight: 800
+                    }}
+                >{article.title}</Title>
+                <Divider size="sm" py='sm' color="#1f4d2e"/>
+                <Card
+                    bg='#f6f2eb'
+                    radius='lg'
+                >
                 <Image
                     src={article.image}
                     alt={article.title}
-                    h={300}
+                    h={250}
+                    // bg="#f6f2eb"
+                    // radius="lg"
+                    p='xs'
                     w="auto"
                     fit="contain"
                 />
                 <Flex justify='space-between'>
                     {/*If article.market_label = null, it will not display*/}
                     <Text size="sm" fw={700}>{article.market_label}</Text>
-                    <Text size="sm" c="dimmed">
+                    <Text
+                        size="sm"
+                        c="gray.6"
+                        style={{
+                            fontWeight: 550,
+                        }}
+                    >
                         <ConvertDate inputtedDate={article.created_at.toString()} />
                     </Text>
                 </Flex>
-                <Text p="sm">{article.summary}</Text>
+                <Text
+                    p="sm"
+                    fw={500}
+                    style={{
+                        fontFamily: "Georgia, serif",
+                        color: "black",
+                    }}
+                >{article.summary}</Text>
+                </Card>
             </Card>
         </Link>
     );

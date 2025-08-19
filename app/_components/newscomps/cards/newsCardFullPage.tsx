@@ -93,19 +93,9 @@ export default function NewsCardFullPage({ article }: { article: ArticleInterfac
                     backgroundColor: '#ebfbee',
                 }}
             >
-                <Flex
-                    justify="center"
-                    align="center"
-                    py='md'
-                >
-                    <Button component="a" href="./" >
-                        Other Articles
-                    </Button>
 
-                </Flex>
                 <Divider
                     size="sm"
-                    pb='0.5rem'
                     labelPosition="center"
                     color='gray'
                     label={
@@ -127,6 +117,16 @@ export default function NewsCardFullPage({ article }: { article: ArticleInterfac
                         </>
                     }
                 />
+                <Flex
+                    justify="center"
+                    align="center"
+                    py='md'
+                >
+                    <Button component="a" href="./" >
+                        Other Articles
+                    </Button>
+
+                </Flex>
             </Card>
         </Box>
     );

@@ -14,7 +14,6 @@ export default function ArticleCarousel( { articles, height } : {
 }) {
     const autoplay = useRef(Autoplay({ delay: 4500 }));
 
-
     const slides = articles.map(article => (
         <Carousel.Slide key={article.post_id}>
             <NewsCardSmall article={article} />
@@ -26,7 +25,7 @@ export default function ArticleCarousel( { articles, height } : {
 
     return (
         <Card
-            bg="gray.1"
+            bg="#ece2d2"
             withBorder
             radius="md"
             shadow="sm"
@@ -39,7 +38,15 @@ export default function ArticleCarousel( { articles, height } : {
                 gap: '1rem',
             }}
         >
-            <Text size="xl" fw={700}>Other News</Text>
+            <Text
+                size="xl"
+                fw={700}
+                style={{
+                    fontFamily: "Georgia, serif",
+                    color: "#1f4d2e",
+                    fontWeight: 800
+                }}
+            >Other News</Text>
 
             {/* Carousel Section */}
             <Box style={{ width: '100%' }}>
@@ -54,6 +61,17 @@ export default function ArticleCarousel( { articles, height } : {
                         onMouseEnter={autoplay.current.stop}
                         onMouseLeave={() => autoplay.current.play()}
                         emblaOptions={{ dragFree: false }}
+                        styles={{
+                            indicator: {
+                                height: 4,
+                                transition: 'width 250ms ease',
+                                backgroundColor:
+                                    '#1f4d2e'    // Bottom indicator color
+                                },
+                            control: {
+                                color: 'black', // Arrow button color
+                            },
+                        }}
                     >
                         {slides}
                     </Carousel>
