@@ -39,27 +39,28 @@ export default function Page() {
     },
   });
 
-  const handleSubmit = async (values: typeof form.values) => {
-    setSubmitError(null);
-    try {
-      const response = await fetch(`/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
+    const handleSubmit = async (values: typeof form.values) => {
+        setSubmitError(null);
+        try {
+            const response = await fetch(`/api/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(values),
+            });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Failed to send message.' }));
-        setSubmitError(errorData?.message);
-      }
-
-      open();
-      form.reset();
-    } catch (error) {
-      console.error('Error sending message to API:', error);
-      setSubmitError(error instanceof Error ? error.message : 'Failed to send message. Please try again.');
-    }
-  };
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Failed to send message.' }));
+                setSubmitError(errorData?.message);
+            } else {
+                // Only open success modal and reset form on successful response
+                open();
+                form.reset();
+            }
+        } catch (error) {
+            console.error('Error sending message to API:', error);
+            setSubmitError(error instanceof Error ? error.message : 'Failed to send message. Please try again.');
+        }
+    };
 
   return (
     <>
