@@ -1,379 +1,344 @@
 'use client';
 
-import {
-    Container,
-    Stack,
-    Paper,
-    Group,
-    Box,
-    Title,
-    Text,
-    SegmentedControl,
-    TextInput,
-    Grid,
-    GridCol,
-    Loader,
-    Center, AppShellSection, Flex, AppShell, Card, Button
-} from "@mantine/core";
-import {IconSearch} from "@tabler/icons-react";
+import React, {useEffect, useState, useCallback, useRef} from "react";
 import {useUser} from "@clerk/nextjs";
-import React, {useEffect, useState, useCallback} from "react"; // Import useCallback
 import {MarketsInterface, VendorsInterface, UserInfoInterface} from "@/app/_types/interfaces";
+import MainUserPageReturn from "@/app/_components/usercomps/other/MainUserPageReturn";
+import LoadingScreenComp from "@/_utils/loadingScreenComp";
+import DisplayMarketsAndVendors from "@/app/_components/usercomps/other/displayMarketsAndVendors";
+import NoFavsSetMessageComp from "@/app/_components/usercomps/other/noFavsSetMessageComp";
 import MarketCard from "@/app/_components/marketaccordian/marketcard";
 import VendorCard from "@/app/_components/vendorcomps/vendorcard";
+import {Grid, GridCol, Center, Container, Card, Flex, Text} from "@mantine/core";
 
-export default function UserContentPage() {
-    const {user} = useUser();
-    const [activeSegment, setActiveSegment] = useState<'Markets' | 'Vendors'>('Markets');
-
-    const [favoriteMarkets, setFavoriteMarkets] = useState<MarketsInterface[]>([]);
-    const [favoriteVendors, setFavoriteVendors] = useState<VendorsInterface[]>([]);
-
-    const [loading, setLoading] = useState(false);
+export default function UserFavouritesPage() {
+    const {user, isLoaded} = useUser();
+    const [activeSegment, setActiveSegment] = useState<'Markets' | 'Vendors' | 'Find Favs'>('Find Favs');
+    const [allMarkets, setAllMarkets] = useState<MarketsInterface[]>([]);
+    const [allVendors, setAllVendors] = useState<VendorsInterface[]>([]);
+    const [favoriteMarkets, setFavoriteMarkets] = useState<number[]>([]);
+    const [favoriteVendors, setFavoriteVendors] = useState<number[]>([]);
+    const [loading, setLoading] = useState(true);
     const [dbUserId, setDbUserId] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [togglingItemId, setTogglingItemId] = useState<number | null>(null);
 
-    // Encapsulate the data fetching logic into a useCallback hook
-    const loadFavorites = useCallback(async () => {
-        if (!user || !user.emailAddresses || !user.emailAddresses[0]) {
-            console.log("User not available from Clerk. Skipping favorite load.");
+    // Prevent StrictMode double-fetch on mount
+    const didFetchRef = useRef(false);
+
+    // Re-fetch user id after creation if the POST doesn't return it
+    const requeryUserId = useCallback(async (email: string, attempts = 2): Promise<string | null> => {
+        for (let i = 0; i <= attempts; i++) {
+            const res = await fetch(`/api/users/`);
+            if (!res.ok) break;
+            const users: UserInfoInterface[] = await res.json();
+            const found = users.find(u => u.email === email);
+            if (found?.id) return String(found.id);
+            // brief pause before next attempt
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        return null;
+    }, []);
+
+    const fetchAllData = useCallback(async () => {
+        if (!isLoaded || !user) return;
+        setLoading(true);
+
+        const userEmail =
+            user.primaryEmailAddress?.emailAddress ||
+            user.emailAddresses?.[0]?.emailAddress ||
+            null;
+
+        if (!userEmail) {
+            // No email address on Clerk user.
             setLoading(false);
             return;
         }
 
-        setLoading(true);
         try {
-            // 1. Fetch all users from your Next.js API route
-            const usersResponse = await fetch(`/api/users`);
-            if (!usersResponse.ok) {
-                const errorText = await usersResponse.text();
-                throw new Error(`Failed to fetch all users: ${usersResponse.statusText}. Response: ${errorText}`);
-            }
-            const allUsers: UserInfoInterface[] = await usersResponse.json();
+            // 1) Find existing user
+            const allUsersResponse = await fetch(`/api/users/`);
+            if (!allUsersResponse.ok) throw new Error(`Failed to fetch all users: ${allUsersResponse.statusText}`);
+            const allUsersData: UserInfoInterface[] = await allUsersResponse.json();
+            let matchedUser = allUsersData.find((dbUser) => dbUser.email === userEmail);
 
-            const matchedUser = allUsers.find(
-                (u) => u.email === user.emailAddresses[0].emailAddress
-            );
-
-            if (!matchedUser || !matchedUser.id) {
-                console.warn("No DB user found for Clerk email or user ID missing. Cannot load favorites.");
-                setLoading(false);
-                return;
-            }
-            const currentDbUserId = matchedUser.id.toString();
-            setDbUserId(currentDbUserId);
-
-            // 2. Fetch favorite market and vendor IDs using new API routes
-            const [favMarketIdsResponse, favVendorIdsResponse] = await Promise.all([
-                fetch(`/api/users/${currentDbUserId}/favourite-markets`),
-                fetch(`/api/users/${currentDbUserId}/favourite-vendors`)
-            ]);
-
-            let favMarketIdsNumbers: number[] = [];
-            if (!favMarketIdsResponse.ok) {
-                if (favMarketIdsResponse.status === 404) {
-                } else {
-                    const errorText = await favMarketIdsResponse.text();
-                    console.error(`[UserContentPage] Failed to fetch favorite market IDs: ${favMarketIdsResponse.statusText}. Response: ${errorText}`);
+            // 2) Create if missing
+            if (!matchedUser) {
+                const username = user.firstName || userEmail.split('@')[0];
+                const createUserResponse = await fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({username, email: userEmail})
+                });
+                if (!createUserResponse.ok) {
+                    const errorData = await createUserResponse.json().catch(() => ({message: 'Unknown error creating user'}));
+                    throw new Error(errorData.message || `Failed to create user: ${createUserResponse.statusText}`);
                 }
-            } else {
-                const favMarketIdsStrings: string[] = await favMarketIdsResponse.json();
-                favMarketIdsNumbers = favMarketIdsStrings.map(Number).filter(Number.isFinite);
-            }
 
-            let favVendorIdsNumbers: number[] = [];
-            if (!favVendorIdsResponse.ok) {
-                if (favVendorIdsResponse.status === 404) {
+                type PartialUser = Partial<UserInfoInterface>;
+                const created: PartialUser = await createUserResponse.json().catch(() => ({}));
+                if (created.id) {
+                    matchedUser = created as UserInfoInterface;
                 } else {
-                    const errorText = await favVendorIdsResponse.text();
-                    console.error(`[UserContentPage] Failed to fetch favorite vendor IDs: ${favVendorIdsResponse.statusText}. Response: ${errorText}`);
+                    const id = await requeryUserId(userEmail);
+                    if (id) {
+                        matchedUser = {
+                            ...(created as object),
+                            id: Number(id),
+                            email: userEmail,
+                            username
+                        } as UserInfoInterface;
+                    }
                 }
-            } else {
-                const favVendorIdsStrings: string[] = await favVendorIdsResponse.json();
-                favVendorIdsNumbers = favVendorIdsStrings.map(Number).filter(Number.isFinite);
             }
 
+            // 3) If we have an id, store it (favorites can be fetched). If not, proceed without favorites.
+            let resolvedUserId: string | null = null;
+            if (matchedUser?.id) {
+                resolvedUserId = String(matchedUser.id);
+                setDbUserId(resolvedUserId);
+            }
 
-            // 3. Fetch all markets and vendors
-            const [allMarketsResponse, allVendorsResponse] = await Promise.all([
+            // 4) Always fetch markets/vendors; favorites only if we have user id
+            const [marketsResponse, vendorsResponse] = await Promise.all([
                 fetch(`/api/markets`),
                 fetch(`/api/vendors`)
             ]);
+            if (!marketsResponse.ok || !vendorsResponse.ok) throw new Error("Failed to fetch all markets or vendors.");
 
-            if (!allMarketsResponse.ok) {
-                const errorText = await allMarketsResponse.text();
-                throw new Error(`Failed to fetch all markets: ${allMarketsResponse.statusText}. Response: ${errorText}`);
+            const [allMarketsData, allVendorsData]: [MarketsInterface[], VendorsInterface[]] = await Promise.all([
+                marketsResponse.json(),
+                vendorsResponse.json()
+            ]);
+
+            setAllMarkets(allMarketsData);
+            setAllVendors(allVendorsData);
+
+            if (resolvedUserId) {
+                const [favMarketIdsResponse, favVendorIdsResponse] = await Promise.all([
+                    fetch(`/api/users/${resolvedUserId}/favourite-markets`),
+                    fetch(`/api/users/${resolvedUserId}/favourite-vendors`)
+                ]);
+
+                setFavoriteMarkets(
+                    favMarketIdsResponse.ok
+                        ? (await favMarketIdsResponse.json()).map(Number).filter(Number.isFinite)
+                        : []
+                );
+                setFavoriteVendors(
+                    favVendorIdsResponse.ok
+                        ? (await favVendorIdsResponse.json()).map(Number).filter(Number.isFinite)
+                        : []
+                );
+            } else {
+                setFavoriteMarkets([]);
+                setFavoriteVendors([]);
             }
-            if (!allVendorsResponse.ok) {
-                const errorText = await allVendorsResponse.text();
-                throw new Error(`Failed to fetch all vendors: ${allVendorsResponse.statusText}. Response: ${errorText}`);
-            }
-
-            const allMarkets: MarketsInterface[] = await allMarketsResponse.json();
-            const allVendors: VendorsInterface[] = await allVendorsResponse.json();
-
-            // Filter based on fetched favorite IDs (all as numbers now)
-            const filteredMarkets = allMarkets.filter(
-                (market) => favMarketIdsNumbers.includes(market.id)
-            );
-
-            const filteredVendors = allVendors.filter(
-                (vendor) => {
-                    const isFavorited = favVendorIdsNumbers.includes(vendor.id);
-                    return isFavorited;
-                }
-            );
-            setFavoriteMarkets(filteredMarkets);
-            setFavoriteVendors(filteredVendors);
-
         } catch (err) {
-            console.error("[Favorites Page] Fatal error during loadFavorites:", err);
+            console.error("[UserFavouritesPage] Fatal error during data load:", err);
         } finally {
             setLoading(false);
         }
-    }, [user]); // loadFavorites depends on 'user'
+    }, [isLoaded, user, requeryUserId]);
 
-    // This useEffect handles the initial load and re-fetches on window focus
     useEffect(() => {
-        loadFavorites(); // Initial load
+        if (!isLoaded) return;
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+        if (didFetchRef.current) return;
+        didFetchRef.current = true;
+        setSearchTerm('');
+        fetchAllData();
+    }, [isLoaded, user, fetchAllData]);
 
-        const handleFocus = () => {
-            loadFavorites();
-        };
-
-        window.addEventListener('focus', handleFocus);
-
-        return () => {
-            window.removeEventListener('focus', handleFocus);
-        };
-    }, [loadFavorites]); // Dependency on loadFavorites (which is a useCallback)
-
-    const handleToggleMarketFavorite = async (marketId: number) => {
+    const handleToggleMarketFavorite = async (marketId: number, isFavorited: boolean) => {
         if (!dbUserId) {
             console.error("DB User ID is not available. Cannot toggle market favorite.");
             return;
         }
-
         setTogglingItemId(marketId);
         try {
-            const response = await fetch(`/api/users/${dbUserId}/favourite-markets/${marketId.toString()}`, {
-                method: 'DELETE'
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || `Failed to remove favorite market: ${response.statusText}`);
-            }
-
-            setFavoriteMarkets(prev => {
-                const updated = prev.filter(m => m.id !== marketId);
-                return updated;
-            });
+            const method = isFavorited ? 'DELETE' : 'POST';
+            const body = isFavorited ? null : JSON.stringify({market_id: marketId});
+            const response = await fetch(
+                `/api/users/${dbUserId}/favourite-markets/${isFavorited ? marketId.toString() : ''}`,
+                {method, headers: {'Content-Type': 'application/json'}, body}
+            );
+            if (!response.ok) throw new Error(`Failed to toggle favorite status: ${response.statusText}`);
+            setFavoriteMarkets(prev => isFavorited ? prev.filter(id => id !== marketId) : [...prev, marketId]);
         } catch (err) {
-            console.error("Error removing favorite market:", err);
+            console.error("Error toggling favorite market:", err);
         } finally {
             setTogglingItemId(null);
         }
     };
 
-    const handleToggleVendorFavorite = async (vendorId: number) => {
+    const handleToggleVendorFavorite = async (vendorId: number, isFavorited: boolean) => {
         if (!dbUserId) {
             console.error("DB User ID is not available. Cannot toggle vendor favorite.");
             return;
         }
-
         setTogglingItemId(vendorId);
         try {
-            const response = await fetch(`/api/users/${dbUserId}/favourite-vendors/${vendorId.toString()}`, {
-                method: 'DELETE'
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || `Failed to remove favorite vendor: ${response.statusText}`);
-            }
-
-            setFavoriteVendors(prev => {
-                const updated = prev.filter(v => v.id !== vendorId);
-                return updated;
-            });
+            const method = isFavorited ? 'DELETE' : 'POST';
+            const body = isFavorited ? null : JSON.stringify({vendor_id: vendorId});
+            const response = await fetch(
+                `/api/users/${dbUserId}/favourite-vendors/${isFavorited ? vendorId.toString() : ''}`,
+                {method, headers: {'Content-Type': 'application/json'}, body}
+            );
+            if (!response.ok) throw new Error(`Failed to toggle favorite status: ${response.statusText}`);
+            setFavoriteVendors(prev => isFavorited ? prev.filter(id => id !== vendorId) : [...prev, vendorId]);
         } catch (err) {
-            console.error("Error removing favorite vendor:", err);
+            console.error("Error toggling favorite vendor:", err);
         } finally {
             setTogglingItemId(null);
         }
     };
 
     const renderCards = () => {
-        if (loading) {
-            return (
-                <AppShell>
-                    <AppShellSection>
-                        <Center h="400px">
-                            <Container size="md" py="xl">
-                                <Card>
-                                    <Flex
-                                        justify="center"
-                                        align="center"
-                                        direction="column"
-                                    >
-                                        <Text size="xl" fw={800} c="balck">Loading your favorites...</Text>
-                                        <Loader size={50} color="green"/>
-                                    </Flex>
-                                </Card>
-                            </Container>
-                        </Center>
-                    </AppShellSection>
-                </AppShell>
-            );
+        // Only block on Clerk readiness plus first data load
+        if (!isLoaded || loading) {
+            return <LoadingScreenComp pageName={'Favs'}/>;
         }
 
+        // Precompute favorites and filters
+        const favoriteMarketsInAll = allMarkets.filter(market => favoriteMarkets.includes(market.id));
+        const favoriteVendorsInAll = allVendors.filter(vendor => favoriteVendors.includes(vendor.id));
+
+        const filterBySearch = (text: string) => text.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // --- Markets segment: ONLY favorites ---
         if (activeSegment === 'Markets') {
-            const filtered = favoriteMarkets.filter(m => m.label.toLowerCase().includes(searchTerm.toLowerCase()));
-            if (filtered.length === 0) {
+            const filteredFavorites = favoriteMarketsInAll.filter(m => filterBySearch(m.label));
+            const hasAnyFavorites = favoriteMarketsInAll.length > 0;
+
+            if (!hasAnyFavorites && !searchTerm) {
+                return <NoFavsSetMessageComp favType="Markets"/>;
+            }
+            if (searchTerm && filteredFavorites.length === 0) {
                 return (
-                    <>
-                        <Center h="400px">
-                            <Container size="md" py="xl">
-                                <Card>
-                                    <Flex
-                                        justify="center"
-                                        align="center"
-                                        direction="column"
-                                    >
-                                        <Text size="xl" fw={800} c="balck">No current favorites, visit Market page find to favourites</Text>
-                                        <Button component="a" href="/markets" mt="sm" fullWidth>
-                                            markets
-                                        </Button>
-                                    </Flex>
-                                </Card>
-                            </Container>
-                        </Center>
-                    </>
+                    <Center h="400px">
+                        <Container size="md" py="xl">
+                            <Card>
+                                <Flex justify="center" align="center" direction="column">
+                                    <Text size="xl" fw={800} c="black">No markets found matching your search.</Text>
+                                </Flex>
+                            </Card>
+                        </Container>
+                    </Center>
                 );
             }
+
+            const toRender = searchTerm ? filteredFavorites : favoriteMarketsInAll;
             return (
                 <Grid gutter="xl">
-                    {filtered.map((market) => (
-                        <GridCol key={market.id} span={{base: 12, sm: 6, md: 4}}>
-                            <MarketCard
-                                market={market}
-                                isFavorited={true}
-                                onToggleFavorite={() => handleToggleMarketFavorite(market.id)}
-                                isTogglingFavorite={togglingItemId === market.id}
-                            />
-                        </GridCol>
-                    ))}
+                    {toRender.map((market) => {
+                        const isFavorited = favoriteMarkets.includes(market.id);
+                        return (
+                            <GridCol key={market.id} span={{base: 12, sm: 6, md: 4}}>
+                                <MarketCard
+                                    market={market}
+                                    isFavorited={isFavorited}
+                                    onToggleFavorite={() => handleToggleMarketFavorite(market.id, isFavorited)}
+                                    isTogglingFavorite={togglingItemId === market.id}
+                                />
+                            </GridCol>
+                        );
+                    })}
                 </Grid>
             );
         }
 
+        // --- Vendors segment: ONLY favorites ---
         if (activeSegment === 'Vendors') {
-            const filtered = favoriteVendors.filter(v => v.name.toLowerCase().includes(searchTerm.toLowerCase()));
-            if (filtered.length === 0) {
+            const filteredFavorites = favoriteVendorsInAll.filter(v => filterBySearch(v.name));
+            const hasAnyFavorites = favoriteVendorsInAll.length > 0;
+
+            if (!hasAnyFavorites && !searchTerm) {
+                return <NoFavsSetMessageComp favType="Vendors"/>;
+            }
+            if (searchTerm && filteredFavorites.length === 0) {
                 return (
-                    <>
-                        <Center h="400px">
-                            <Container size="md" py="xl">
-                                <Card>
-                                    <Flex
-                                        justify="center"
-                                        align="center"
-                                        direction="column"
-                                    >
-                                        <Text size="xl" fw={800} c="balck">No current favorites, visit Vendor page find to favourites</Text>
-                                        <Button component="a" href="/vendors" mt="sm" fullWidth>
-                                            Vendors
-                                        </Button>
-                                    </Flex>
-                                </Card>
-                            </Container>
-                        </Center>
-                    </>
+                    <Center h="400px">
+                        <Container size="md" py="xl">
+                            <Card>
+                                <Flex justify="center" align="center" direction="column">
+                                    <Text size="xl" fw={800} c="black">No vendors found matching your search.</Text>
+                                </Flex>
+                            </Card>
+                        </Container>
+                    </Center>
                 );
             }
-            return (
-                <Grid gutter="xl">
-                    {filtered.map((vendor) => (
-                        <GridCol key={vendor.id} span={{base: 12, sm: 6, md: 4}}>
-                            <VendorCard
-                                vendor={vendor}
-                                isFavorited={true}
-                                onToggleFavorite={() => handleToggleVendorFavorite(vendor.id)}
-                                isTogglingFavorite={togglingItemId === vendor.id}
-                            />
-                        </GridCol>
-                    ))}
-                </Grid>
+
+            const toRender = searchTerm ? filteredFavorites : favoriteVendorsInAll;
+            return (<>
+                    <Grid gutter="xl">
+                        {toRender.map((vendor) => {
+                            const isFavorited = favoriteVendors.includes(vendor.id);
+                            return (
+                                <GridCol key={vendor.id} span={{base: 12, sm: 6, md: 4}}>
+                                    <VendorCard
+                                        vendor={vendor}
+                                        isFavorited={isFavorited}
+                                        onToggleFavorite={() => handleToggleVendorFavorite(vendor.id, isFavorited)}
+                                        isTogglingFavorite={togglingItemId === vendor.id}
+                                    />
+                                </GridCol>
+                            );
+                        })}
+                    </Grid>
+                </>
             );
         }
+
+        // --- Find Favs segment: ALL items (fav + non-fav), filtered by search if present ---
+        if (activeSegment === 'Find Favs') {
+            const filteredMarkets = searchTerm ? allMarkets.filter(m => filterBySearch(m.label)) : allMarkets;
+            const filteredVendors = searchTerm ? allVendors.filter(v => filterBySearch(v.name)) : allVendors;
+
+            const hasSearchResults = filteredMarkets.length > 0 || filteredVendors.length > 0;
+            if (searchTerm && !hasSearchResults) {
+                return (
+                    <Center h="400px">
+                        <Container size="md" py="xl">
+                            <Card>
+                                <Flex justify="center" align="center" direction="column">
+                                    <Text size="xl" fw={800} c="black">No markets or vendors found matching your
+                                        search.</Text>
+                                </Flex>
+                            </Card>
+                        </Container>
+                    </Center>
+                );
+            }
+
+            return (
+                <DisplayMarketsAndVendors
+                    filteredMarkets={filteredMarkets}
+                    filteredVendors={filteredVendors}
+                    favoriteMarkets={favoriteMarkets}
+                    favoriteVendors={favoriteVendors}
+                    handleToggleMarketFavorite={handleToggleMarketFavorite}
+                    handleToggleVendorFavorite={handleToggleVendorFavorite}
+                    togglingItemId={togglingItemId}
+                />
+            );
+        }
+
+        return null;
     };
 
     return (
-        <Container size="xl" py="xl">
-            <Stack gap="xl">
-                <Paper shadow="md" p="lg" withBorder radius="md" bg="white">
-                    <Group justify="space-between">
-                        <Box>
-                            {/* Conditional rendering for the Title */}
-                            {user?.firstName ? (
-                                <Title
-                                    order={1}
-                                    mb={4}
-                                    style={{
-                                        fontSize: "2rem",
-                                        fontWeight: 700,
-                                        color: "#1f4d2e",
-                                        fontFamily: "Georgia, serif"
-                                    }}
-                                >
-                                    {user.firstName}&apos;s Favourites
-                                </Title>
-                            ) : (
-                                // Render a placeholder title while the name is loading
-                                <Title
-                                    order={1}
-                                    mb={4}
-                                    style={{
-                                        fontSize: "2rem",
-                                        fontWeight: 700,
-                                        color: "#1f4d2e",
-                                        fontFamily: "Georgia, serif"
-                                    }}
-                                >
-                                    Your Favourites
-                                </Title>
-                            )}
-                            <Text size="sm" c="dimmed" mb="md">
-                                See what is happening with your favourite markets and vendors
-                            </Text>
-                        </Box>
-                        <SegmentedControl
-                            value={activeSegment}
-                            onChange={(value) => setActiveSegment(value as 'Markets' | 'Vendors')}
-                            transitionDuration={500}
-                            transitionTimingFunction="ease-in-out"
-                            color="blue"
-                            data={['Markets', 'Vendors']}
-                        />
-                    </Group>
-                    <Group mt="lg" grow>
-                        <TextInput
-                            placeholder="Search by name"
-                            leftSection={<IconSearch size={16}/>}
-                            radius="md"
-                            size="md"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.currentTarget.value)}
-                        />
-                    </Group>
-                </Paper>
-
-                <Box>
-                    {renderCards()}
-                </Box>
-            </Stack>
-        </Container>
+        <MainUserPageReturn
+            user={user}
+            activeSegment={activeSegment}
+            setActiveSegment={setActiveSegment}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            renderCards={renderCards}
+        />
     );
 }
