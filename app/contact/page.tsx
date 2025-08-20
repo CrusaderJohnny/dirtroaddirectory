@@ -20,7 +20,6 @@ import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import NavMT from '@/app/_components/navcomps/navmt';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_EXPRESS_BACKEND_URL;
 
 export default function Page() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -43,7 +42,7 @@ export default function Page() {
   const handleSubmit = async (values: typeof form.values) => {
     setSubmitError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/contact`, {
+      const response = await fetch(`/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
