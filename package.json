@@ -31,7 +31,7 @@
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.18.1",
-    "next": "15.3.3",
+    "next": "15.3.8",
     "next-cloudinary": "^6.16.0",
     "openai": "^5.11.0",
     "pg": "^8.16.0",
